@@ -1,10 +1,6 @@
-var test = require("tape")
-var VNode = require("../../vnode/vnode")
-var VText = require("../../vnode/vtext")
-var diff = require("../../vtree/diff")
-
-var createElement = require("../create-element")
-var patch = require("../patch")
+import test from "tape";
+import { VirtualNode as vnodevnode_VirtualNodejs } from "../../vnode/vnode";
+import { patch as patch_patchjs } from "../patch";
 
 test("overrided patch function is correctly used and received correct options", function (assert) {
 
@@ -17,11 +13,11 @@ test("overrided patch function is correctly used and received correct options", 
     }
     function createElementCustom(vnode) {}
 
-    var rootNode = new VNode("div")
+    var rootNode = new vnodevnode_VirtualNodejs("div")
     var patches = {}
     var renderOptions = { patch: patchCustom, render: createElementCustom }
 
-    var result = patch(rootNode, patches, renderOptions)
+    var result = patch_patchjs(rootNode, patches, renderOptions)
     assert.equal(result.rootNode, rootNode)
     assert.equal(result.patches, patches)
     assert.equal(result.renderOptions, renderOptions)

@@ -1,29 +1,28 @@
-var test = require("tape")
-var EvStore = require("ev-store")
-
-var h = require("../index.js")
-var createElement = require("../../vdom/create-element")
-var patch = require("../../vdom/patch")
-var diff = require("../../vtree/diff")
+import test from "tape";
+import EvStore from "ev-store";
+import { h as index_hjs } from "../index.js";
+import { createElement as vdomcreateelement_createElementjs } from "../../vdom/create-element";
+import { patch as vdompatch_patchjs } from "../../vdom/patch";
+import { diff as vtreediff_diffjs } from "../../vtree/diff";
 
 test("h with events", function (assert) {
     function one() {}
 
-    var left = h(".foo", {
+    var left = index_hjs(".foo", {
         "ev-click": one
     })
 
-    var right = h(".bar", {})
+    var right = index_hjs(".bar", {})
 
-    var elem = createElement(left)
+    var elem = vdomcreateelement_createElementjs(left)
 
     var ds1 = EvStore(elem)
     assert.ok(ds1)
     assert.equal(ds1.click, one)
 
-    var patches = diff(left, right)
+    var patches = vtreediff_diffjs(left, right)
 
-    patch(elem, patches)
+    vdompatch_patchjs(elem, patches)
 
     var ds2 = EvStore(elem)
     assert.ok(ds2)

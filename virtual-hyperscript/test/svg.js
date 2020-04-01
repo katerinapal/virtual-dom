@@ -1,18 +1,17 @@
-var test = require("tape")
-var doc = require("global/document")
-
-var svg = require("../svg")
-var attributeHook = require("../hooks/attribute-hook")
+import test from "tape";
+import doc from "global/document";
+import { svg as svg_svgjs } from "../svg";
+import { AttributeHook as hooksattributehook_AttributeHookjs } from "../hooks/attribute-hook";
 
 test("svg returns a vnode", function (assert) {
-    assert.equal(svg("circle").tagName, "circle")
-    assert.equal(svg("circle").namespace, "http://www.w3.org/2000/svg")
+    assert.equal(svg_svgjs("circle").tagName, "circle")
+    assert.equal(svg_svgjs("circle").namespace, "http://www.w3.org/2000/svg")
 
     assert.end()
 })
 
 test("svg with text", function (assert) {
-    var node = svg("circle", "dat text")
+    var node = svg_svgjs("circle", "dat text")
 
     assert.equal(node.children[0].text, "dat text")
 
@@ -20,7 +19,7 @@ test("svg with text", function (assert) {
 })
 
 test("svg with properties", function (assert) {
-    var node = svg("circle", { width: "40px" })
+    var node = svg_svgjs("circle", { width: "40px" })
 
     assert.strictEqual(node.properties.attributes.width, "40px")
 
@@ -28,7 +27,7 @@ test("svg with properties", function (assert) {
 })
 
 test("svg properties are set", function (assert) {
-    var node = svg("circle.test", {
+    var node = svg_svgjs("circle.test", {
         style: {
             border: "1px solid #000"
         },
@@ -46,18 +45,18 @@ test("svg properties are set", function (assert) {
 })
 
 test("namespaced attributes are set with correct namespace", function(assert) {
-    var node = svg("image", {
+    var node = svg_svgjs("image", {
         "xlink:href": "http://example.com/image.png",
         "xml:space": "preserve",
      })
 
     assert.strictEqual(node.properties.attributes["xlink:href"], undefined)
-    assert.strictEqual(node.hooks["xlink:href"].constructor, attributeHook)
+    assert.strictEqual(node.hooks["xlink:href"].constructor, hooksattributehook_AttributeHookjs)
     assert.strictEqual(node.hooks["xlink:href"].value, "http://example.com/image.png")
     assert.strictEqual(node.hooks["xlink:href"].namespace, "http://www.w3.org/1999/xlink")
 
     assert.strictEqual(node.properties.attributes["xml:space"], undefined)
-    assert.strictEqual(node.hooks["xml:space"].constructor, attributeHook)
+    assert.strictEqual(node.hooks["xml:space"].constructor, hooksattributehook_AttributeHookjs)
     assert.strictEqual(node.hooks["xml:space"].value, "preserve")
     assert.strictEqual(node.hooks["xml:space"].namespace, "http://www.w3.org/XML/1998/namespace")
 

@@ -1,16 +1,10 @@
+import isArray from "x-is-array";
+import { h as index_hjs } from "./index.js";
+import { SVGAttributeNamespace as svgattributenamespace_SVGAttributeNamespacejs } from "./svg-attribute-namespace";
+import { AttributeHook as hooksattributehook_AttributeHookjs } from "./hooks/attribute-hook";
 'use strict';
 
-var isArray = require('x-is-array');
-
-var h = require('./index.js');
-
-
-var SVGAttributeNamespace = require('./svg-attribute-namespace');
-var attributeHook = require('./hooks/attribute-hook');
-
 var SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
-
-module.exports = svg;
 
 function svg(tagName, properties, children) {
     if (!children && isChildren(properties)) {
@@ -30,7 +24,7 @@ function svg(tagName, properties, children) {
             continue;
         }
 
-        var namespace = SVGAttributeNamespace(key);
+        var namespace = svgattributenamespace_SVGAttributeNamespacejs(key);
 
         if (namespace === undefined) { // not a svg attribute
             continue;
@@ -46,7 +40,7 @@ function svg(tagName, properties, children) {
         }
 
         if (namespace !== null) { // namespaced attribute
-            properties[key] = attributeHook(namespace, value);
+            properties[key] = hooksattributehook_AttributeHookjs(namespace, value);
             continue;
         }
 
@@ -54,9 +48,11 @@ function svg(tagName, properties, children) {
         properties[key] = undefined
     }
 
-    return h(tagName, properties, children);
+    return index_hjs(tagName, properties, children);
 }
 
 function isChildren(x) {
     return typeof x === 'string' || isArray(x);
 }
+var exported_svg = svg;
+export { exported_svg as svg };
