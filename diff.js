@@ -1,3 +1,5 @@
-var diff = require("./vtree/diff.js")
+import { diff as vtreediff_diffjs } from "./vtree/diff.js";
+var diff_diff;
 
-module.exports = diff
+diff_diff = vtreediff_diffjs
+export { diff_diff as diff };

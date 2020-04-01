@@ -304,10 +304,10 @@ var SVG_PROPERTIES = {
     'zoomAndPan': DEFAULT_NAMESPACE
 };
 
-module.exports = SVGAttributeNamespace;
-
 function SVGAttributeNamespace(value) {
   if (SVG_PROPERTIES.hasOwnProperty(value)) {
     return SVG_PROPERTIES[value];
   }
 }
+var exported_SVGAttributeNamespace = SVGAttributeNamespace;
+export { exported_SVGAttributeNamespace as SVGAttributeNamespace };

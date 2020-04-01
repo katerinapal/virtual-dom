@@ -1,8 +1,5 @@
+import EvStore from "ev-store";
 'use strict';
-
-var EvStore = require('ev-store');
-
-module.exports = EvHook;
 
 function EvHook(value) {
     if (!(this instanceof EvHook)) {
@@ -25,3 +22,5 @@ EvHook.prototype.unhook = function(node, propertyName) {
 
     es[propName] = undefined;
 };
+var exported_EvHook = EvHook;
+export { exported_EvHook as EvHook };

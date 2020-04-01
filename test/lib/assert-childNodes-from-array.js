@@ -1,5 +1,3 @@
-module.exports = assertChildNodesFromArray;
-
 function assertChildNodesFromArray(assert, items, childNodes) {
     // ensure that the output has the same number of nodes as required
     assert.equal(childNodes.length, items.length)
@@ -9,3 +7,5 @@ function assertChildNodesFromArray(assert, items, childNodes) {
         assert.equal(childNodes[i].id, key != null ? String(key) : 'no-key-' + i)
     }
 }
+var exported_assertChildNodesFromArray = assertChildNodesFromArray;
+export { exported_assertChildNodesFromArray as assertChildNodesFromArray };

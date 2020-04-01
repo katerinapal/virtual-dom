@@ -1,7 +1,5 @@
-var isObject = require("is-object")
-var isHook = require("../vnode/is-vhook.js")
-
-module.exports = applyProperties
+import isObject from "is-object";
+import { isHook as vnodeisvhook_isHookjs } from "../vnode/is-vhook.js";
 
 function applyProperties(node, props, previous) {
     for (var propName in props) {
@@ -9,7 +7,7 @@ function applyProperties(node, props, previous) {
 
         if (propValue === undefined) {
             removeProperty(node, propName, propValue, previous);
-        } else if (isHook(propValue)) {
+        } else if (vnodeisvhook_isHookjs(propValue)) {
             removeProperty(node, propName, propValue, previous)
             if (propValue.hook) {
                 propValue.hook(node,
@@ -30,7 +28,7 @@ function removeProperty(node, propName, propValue, previous) {
     if (previous) {
         var previousValue = previous[propName]
 
-        if (!isHook(previousValue)) {
+        if (!vnodeisvhook_isHookjs(previousValue)) {
             if (propName === "attributes") {
                 for (var attrName in previousValue) {
                     node.removeAttribute(attrName)
@@ -95,3 +93,5 @@ function getPrototype(value) {
         return value.constructor.prototype
     }
 }
+var exported_applyProperties = applyProperties;
+export { exported_applyProperties as applyProperties };

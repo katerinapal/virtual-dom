@@ -1,34 +1,32 @@
-var test = require("tape")
-var document = require("global/document")
-
-var h = require("../h")
-var diff = require("../diff")
-var patch = require("../patch")
-var render = require("../create-element")
-
-var patchCount = require("./lib/patch-count")
+import test from "tape";
+import document from "global/document";
+import { h as h_hjs } from "../h";
+import { diff as diff_diffjs } from "../diff";
+import { patch as patch_patchjs } from "../patch";
+import { createElement as createelement_createElementjs } from "../create-element";
+import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count";
 
 
 test("style patches correctly", function (assert) {
-    var leftNode = h("div", {
+    var leftNode = h_hjs("div", {
         style: {
             border: "1px solid #000"
         }
     })
 
-    var rightNode = h("div", {
+    var rightNode = h_hjs("div", {
         style: {
             padding: "5px"
         }
     })
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1);
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1);
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     assert.equal(rootNode.style.border, style("border", "1px solid #000"))
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(rootNode, newRoot)
 
     assert.equal(newRoot.style.padding, style("padding", "5px"))

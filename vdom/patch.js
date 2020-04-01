@@ -1,15 +1,13 @@
-var document = require("global/document")
-var isArray = require("x-is-array")
-
-var render = require("./create-element")
-var domIndex = require("./dom-index")
-var patchOp = require("./patch-op")
-module.exports = patch
+import document from "global/document";
+import isArray from "x-is-array";
+import { createElement as createelement_createElementjs } from "./create-element";
+import { domIndex as domindex_domIndexjs } from "./dom-index";
+import { applyPatch as patchop_applyPatchjs } from "./patch-op";
 
 function patch(rootNode, patches, renderOptions) {
     renderOptions = renderOptions || {}
     renderOptions.patch = renderOptions.patch || patchRecursive
-    renderOptions.render = renderOptions.render || render
+    renderOptions.render = renderOptions.render || createelement_createElementjs
 
     return renderOptions.patch(rootNode, patches, renderOptions)
 }
@@ -21,7 +19,7 @@ function patchRecursive(rootNode, patches, renderOptions) {
         return rootNode
     }
 
-    var index = domIndex(rootNode, patches.a, indices)
+    var index = domindex_domIndexjs(rootNode, patches.a, indices)
     var ownerDocument = rootNode.ownerDocument
 
     if (!renderOptions.document && ownerDocument !== document) {
@@ -48,14 +46,14 @@ function applyPatch(rootNode, domNode, patchList, renderOptions) {
 
     if (isArray(patchList)) {
         for (var i = 0; i < patchList.length; i++) {
-            newNode = patchOp(patchList[i], domNode, renderOptions)
+            newNode = patchop_applyPatchjs(patchList[i], domNode, renderOptions)
 
             if (domNode === rootNode) {
                 rootNode = newNode
             }
         }
     } else {
-        newNode = patchOp(patchList, domNode, renderOptions)
+        newNode = patchop_applyPatchjs(patchList, domNode, renderOptions)
 
         if (domNode === rootNode) {
             rootNode = newNode
@@ -76,3 +74,5 @@ function patchIndices(patches) {
 
     return indices
 }
+var exported_patch = patch;
+export { exported_patch as patch };

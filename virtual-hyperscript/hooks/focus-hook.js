@@ -1,9 +1,10 @@
+import document from "global/document";
+import nextTick from "next-tick";
 'use strict';
 
-var document = require("global/document");
-var nextTick = require("next-tick");
+var encapsulated_MutableFocusHook;
 
-module.exports = MutableFocusHook;
+encapsulated_MutableFocusHook = MutableFocusHook;
 
 function MutableFocusHook() {
     if (!(this instanceof MutableFocusHook)) {

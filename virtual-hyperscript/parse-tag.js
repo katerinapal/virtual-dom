@@ -1,11 +1,8 @@
+import split from "browser-split";
 'use strict';
-
-var split = require('browser-split');
 
 var classIdSplit = /([\.#]?[a-zA-Z0-9\u007F-\uFFFF_:-]+)/;
 var notClassId = /^\.|#/;
-
-module.exports = parseTag;
 
 function parseTag(tag, props) {
     if (!tag) {
@@ -52,3 +49,5 @@ function parseTag(tag, props) {
 
     return props.namespace ? tagName : tagName.toUpperCase();
 }
+var exported_parseTag = parseTag;
+export { exported_parseTag as parseTag };
