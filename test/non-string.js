@@ -1,14 +1,24 @@
-import test from "tape";
-import { h as h_hjs } from "../h.js";
-import { diff as diff_diffjs } from "../diff.js";
-import { patch as patch_patchjs } from "../patch.js";
-import { createElement as createelement_createElementjs } from "../create-element.js";
+"use strict";
 
-test("coerce numbers to strings in children array", function (assert) {
-    var leftNode = h_hjs
-    var rightNode = h_hjs
-    var rootNode = createelement_createElementjs
-    var newRoot = patch_patchjs
-    assert.equal(newRoot.toString(), '<div>clicked 1337 times</div>')
-    assert.end()
-})
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _h = require("../h.js");
+
+var _diff = require("../diff.js");
+
+var _patch = require("../patch.js");
+
+var _createElement = require("../create-element.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _tape2.default)("coerce numbers to strings in children array", function (assert) {
+    var leftNode = _h.h;
+    var rightNode = _h.h;
+    var rootNode = _createElement.createElement;
+    var newRoot = _patch.patch;
+    assert.equal(newRoot.toString(), '<div>clicked 1337 times</div>');
+    assert.end();
+});

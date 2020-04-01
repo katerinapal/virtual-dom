@@ -1,17 +1,30 @@
-import { diff as diff_diffjs } from "./diff.js";
-import { patch as patch_patchjs } from "./patch.js";
-import { h as h_hjs } from "./h.js";
-import { createElement as createelement_createElementjs } from "./create-element.js";
-import { VirtualNode as vnodevnode_VirtualNodejs } from "./vnode/vnode.js";
-import { VirtualText as vnodevtext_VirtualTextjs } from "./vnode/vtext.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.indexjs = undefined;
+
+var _diff = require("./diff.js");
+
+var _patch = require("./patch.js");
+
+var _h = require("./h.js");
+
+var _createElement = require("./create-element.js");
+
+var _vnode = require("./vnode/vnode.js");
+
+var _vtext = require("./vnode/vtext.js");
+
 var indexjs_indexjs;
 
-indexjs_indexjs = {
-    diff_diffjs,
-    patch_patchjs,
-    h_hjs,
-    createelement_createElementjs,
-    VNode: vnodevnode_VirtualNodejs,
-    VText: vnodevtext_VirtualTextjs
-}
-export { indexjs_indexjs as indexjs };
+exports.indexjs = indexjs_indexjs = {
+    diff_diffjs: _diff.diff,
+    patch_patchjs: _patch.patch,
+    h_hjs: _h.h,
+    createelement_createElementjs: _createElement.createElement,
+    VNode: _vnode.VirtualNode,
+    VText: _vtext.VirtualText
+};
+exports.indexjs = indexjs_indexjs;

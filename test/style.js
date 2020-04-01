@@ -1,35 +1,47 @@
-import test from "tape";
-import document from "global/document";
-import { h as h_hjs } from "../h";
-import { diff as diff_diffjs } from "../diff";
-import { patch as patch_patchjs } from "../patch";
-import { createElement as createelement_createElementjs } from "../create-element";
-import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count";
+"use strict";
 
+var _tape = require("tape");
 
-test("style patches correctly", function (assert) {
-    var leftNode = h_hjs
+var _tape2 = _interopRequireDefault(_tape);
 
-    var rightNode = h_hjs
+var _document = require("global/document");
 
-    var patches = diff_diffjs
-    assert.equal(libpatchcount_patchCountjs(patches), 1);
+var _document2 = _interopRequireDefault(_document);
 
-    var rootNode = createelement_createElementjs
-    assert.equal(rootNode.style.border, style("border", "1px solid #000"))
+var _h = require("../h");
 
-    var newRoot = patch_patchjs
-    assert.equal(rootNode, newRoot)
+var _diff = require("../diff");
 
-    assert.equal(newRoot.style.padding, style("padding", "5px"))
-    assert.equal(newRoot.style.border, style("border", ""))
+var _patch = require("../patch");
 
-    assert.end()
-})
+var _createElement = require("../create-element");
+
+var _patchCount = require("./lib/patch-count");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _tape2.default)("style patches correctly", function (assert) {
+    var leftNode = _h.h;
+
+    var rightNode = _h.h;
+
+    var patches = _diff.diff;
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
+
+    var rootNode = _createElement.createElement;
+    assert.equal(rootNode.style.border, style("border", "1px solid #000"));
+
+    var newRoot = _patch.patch;
+    assert.equal(rootNode, newRoot);
+
+    assert.equal(newRoot.style.padding, style("padding", "5px"));
+    assert.equal(newRoot.style.border, style("border", ""));
+
+    assert.end();
+});
 
 function style(name, setValue) {
-    var div = document.createElement("div")
-    div.style[name] = setValue
-    return div.style[name]
+    var div = _document2.default.createElement("div");
+    div.style[name] = setValue;
+    return div.style[name];
 }
-

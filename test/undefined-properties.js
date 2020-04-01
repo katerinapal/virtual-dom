@@ -1,135 +1,147 @@
-import test from "tape";
-import isObject from "is-object";
-import { h as h_hjs } from "../h.js";
-import { diff as diff_diffjs } from "../diff.js";
-import { patch as patch_patchjs } from "../patch.js";
-import { createElement as createelement_createElementjs } from "../create-element.js";
+"use strict";
 
-test("undefined props are not set in create-element", function (assert) {
-    var node = h_hjs
-    var rootNode = createelement_createElementjs
-    assert.ok(!("special" in rootNode))
-    assert.end()
-})
+var _tape = require("tape");
 
-test("undefined removes all previous styles", function (assert) {
-    var leftNode = h_hjs
+var _tape2 = _interopRequireDefault(_tape);
 
-    var rightNode = h_hjs
+var _isObject = require("is-object");
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+var _isObject2 = _interopRequireDefault(_isObject);
 
-    assert.equal(rootNode.style.display, style("display", ""))
-    assert.equal(rootNode.style.border, style("border", ""))
+var _h = require("../h.js");
+
+var _diff = require("../diff.js");
+
+var _patch = require("../patch.js");
+
+var _createElement = require("../create-element.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _tape2.default)("undefined props are not set in create-element", function (assert) {
+    var node = _h.h;
+    var rootNode = _createElement.createElement;
+    assert.ok(!("special" in rootNode));
     assert.end();
-})
+});
 
-test("undefined style removes individual styles", function (assert) {
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+(0, _tape2.default)("undefined removes all previous styles", function (assert) {
+    var leftNode = _h.h;
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    var rightNode = _h.h;
 
-    assert.equal(rootNode.style.display, style("display", ""))
-    assert.end()
-})
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-test("undefined ignored for hooks", function (assert) {
+    assert.equal(rootNode.style.display, style("display", ""));
+    assert.equal(rootNode.style.border, style("border", ""));
+    assert.end();
+});
+
+(0, _tape2.default)("undefined style removes individual styles", function (assert) {
+    var leftNode = _h.h;
+    var rightNode = _h.h;
+
+    var rootNode = createAndPatch(leftNode, rightNode);
+
+    assert.equal(rootNode.style.display, style("display", ""));
+    assert.end();
+});
+
+(0, _tape2.default)("undefined ignored for hooks", function (assert) {
     function CheckNodeBeforeSet(value) {
-        this.value = value
+        this.value = value;
     }
     CheckNodeBeforeSet.prototype.hook = function (rootNode, propName) {
-        var value = this.value
+        var value = this.value;
         if (value !== rootNode[propName]) {
-            rootNode[propName] = value
+            rootNode[propName] = value;
         }
-    }
+    };
 
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
-    assert.equal(rootNode.value, "hello")
+    var rootNode = _createElement.createElement;
+    assert.equal(rootNode.value, "hello");
 
-    var newRoot = patch_patchjs
-    assert.equal(newRoot.value, "hello")
+    var newRoot = _patch.patch;
+    assert.equal(newRoot.value, "hello");
 
-    assert.end()
-})
+    assert.end();
+});
 
-test("undefined nulls other complex types", function (assert) {
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+(0, _tape2.default)("undefined nulls other complex types", function (assert) {
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
-    assert.ok(isObject(rootNode.special))
+    var rootNode = _createElement.createElement;
+    assert.ok((0, _isObject2.default)(rootNode.special));
 
+    var newRoot = _patch.patch;
+    assert.equal(newRoot.special, null);
 
-    var newRoot = patch_patchjs
-    assert.equal(newRoot.special, null)
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("null not ignored for value", function (assert) {
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-test("null not ignored for value", function (assert) {
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    assert.equal(rootNode.value, property("input", "value", null));
+    assert.end();
+});
 
-    assert.equal(rootNode.value, property("input", "value", null))
-    assert.end()
-})
+(0, _tape2.default)("null not ignored for objects", function (assert) {
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-test("null not ignored for objects", function (assert) {
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    assert.equal(rootNode.test, null);
+    assert.end();
+});
 
-    assert.equal(rootNode.test, null)
-    assert.end()
-})
-
-test("null not ignored for hooks", function (assert) {
+(0, _tape2.default)("null not ignored for hooks", function (assert) {
     function CheckNodeBeforeSet(value) {
-        this.value = value
+        this.value = value;
     }
     CheckNodeBeforeSet.prototype.hook = function (rootNode, propName) {
-        var value = this.value
+        var value = this.value;
         if (value !== rootNode[propName]) {
-            rootNode.value = value
+            rootNode.value = value;
         }
-    }
+    };
 
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
-    assert.equal(rootNode.value, "hello")
+    var rootNode = _createElement.createElement;
+    assert.equal(rootNode.value, "hello");
 
-    var newRoot = patch_patchjs
-    assert.equal(newRoot.value, property("input", "value", null))
+    var newRoot = _patch.patch;
+    assert.equal(newRoot.value, property("input", "value", null));
 
-    assert.end()
-})
+    assert.end();
+});
 
 function createAndPatch(prev, curr) {
-    var elem = createelement_createElementjs
-    var patches = diff_diffjs
-    return patch_patchjs;
+    var elem = _createElement.createElement;
+    var patches = _diff.diff;
+    return _patch.patch;
 }
 
 // Safely translates style values using the DOM in the browser
 function style(name, value) {
-    var node = createelement_createElementjs
-    node.style[name] = value
-    return node.style[name]
+    var node = _createElement.createElement;
+    node.style[name] = value;
+    return node.style[name];
 }
 
 // Safely transaltes node property using the DOM in the browser
 function property(tag, prop, value) {
-    var node = createelement_createElementjs
-    node[prop] = value
-    return node[prop]
+    var node = _createElement.createElement;
+    node[prop] = value;
+    return node[prop];
 }

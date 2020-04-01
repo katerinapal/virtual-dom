@@ -1,985 +1,990 @@
-import test from "tape";
-import { h as h_hjs } from "../h.js";
-import { diff as diff_diffjs } from "../diff.js";
-import { patch as patch_patchjs } from "../patch.js";
-import { createElement as createelement_createElementjs } from "../create-element.js";
-import { VirtualNode as vnodevnode_VirtualNodejs } from "../vnode/vnode";
-import { VirtualText as vnodevtext_VirtualTextjs } from "../vnode/vtext";
-import { versionjs as vnodeversion_versionjsjs } from "../vnode/version";
-import { assertEqualDom as libassertequaldom_assertEqualDomjs } from "./lib/assert-equal-dom.js";
-import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count.js";
+"use strict";
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _h = require("../h.js");
+
+var _diff = require("../diff.js");
+
+var _patch = require("../patch.js");
+
+var _createElement = require("../create-element.js");
+
+var _vnode = require("../vnode/vnode");
+
+var _vtext = require("../vnode/vtext");
+
+var _version = require("../vnode/version");
+
+var _assertEqualDom = require("./lib/assert-equal-dom.js");
+
+var _patchCount = require("./lib/patch-count.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // VirtualNode tests
-test("Node is a function", function (assert) {
-    assert.equal(typeof vnodevnode_VirtualNodejs, "function")
-    assert.end()
-})
+(0, _tape2.default)("Node is a function", function (assert) {
+    assert.equal(typeof _vnode.VirtualNode === "undefined" ? "undefined" : _typeof(_vnode.VirtualNode), "function");
+    assert.end();
+});
 
-test("Node type and version are set", function (assert) {
-    assert.equal(vnodevnode_VirtualNodejs.prototype.type, "VirtualNode")
-    assert.deepEqual(vnodevnode_VirtualNodejs.prototype.version, vnodeversion_versionjsjs)
-    assert.end()
-})
+(0, _tape2.default)("Node type and version are set", function (assert) {
+    assert.equal(_vnode.VirtualNode.prototype.type, "VirtualNode");
+    assert.deepEqual(_vnode.VirtualNode.prototype.version, _version.versionjs);
+    assert.end();
+});
 
-test("TextNode is a function", function (assert) {
-    assert.equal(typeof vnodevtext_VirtualTextjs, "function")
-    assert.end()
-})
+(0, _tape2.default)("TextNode is a function", function (assert) {
+    assert.equal(typeof _vtext.VirtualText === "undefined" ? "undefined" : _typeof(_vtext.VirtualText), "function");
+    assert.end();
+});
 
-test("TextNode type and version are set", function (assert) {
-    assert.equal(vnodevtext_VirtualTextjs.prototype.type, "VirtualText")
-    assert.deepEqual(vnodevtext_VirtualTextjs.prototype.version, vnodeversion_versionjsjs)
-    assert.end()
-})
+(0, _tape2.default)("TextNode type and version are set", function (assert) {
+    assert.equal(_vtext.VirtualText.prototype.type, "VirtualText");
+    assert.deepEqual(_vtext.VirtualText.prototype.version, _version.versionjs);
+    assert.end();
+});
 
 // h tests
 
-test("h is a function", function (assert) {
-    assert.equal(h_hjs, "function")
-    assert.end()
-})
+(0, _tape2.default)("h is a function", function (assert) {
+    assert.equal(_h.h, "function");
+    assert.end();
+});
 
-test("defaults to div node", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV")
-    assert.end()
-})
+(0, _tape2.default)("defaults to div node", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV");
+    assert.end();
+});
 
-test("can use class selector", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { className: "pretty" })
-    assert.end()
-})
+(0, _tape2.default)("can use class selector", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { className: "pretty" });
+    assert.end();
+});
 
-test("can use non-ascii class selector", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { className: "ΑΒΓΔΕΖ" })
-    assert.end()
-})
+(0, _tape2.default)("can use non-ascii class selector", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { className: "ΑΒΓΔΕΖ" });
+    assert.end();
+});
 
-test("class selectors combine with className property", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { className: "very pretty" })
-    assert.end()
-})
+(0, _tape2.default)("class selectors combine with className property", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { className: "very pretty" });
+    assert.end();
+});
 
-test("can use id selector", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { id: "important" })
-    assert.end()
-})
+(0, _tape2.default)("can use id selector", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { id: "important" });
+    assert.end();
+});
 
-test("can use non-ascii id selector", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { id: "ΑΒΓΔΕΖ" })
-    assert.end()
-})
+(0, _tape2.default)("can use non-ascii id selector", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { id: "ΑΒΓΔΕΖ" });
+    assert.end();
+});
 
-test("properties id overrides selector id", function (assert) {
-    var node = h_hjs
-    assertNode(assert, node, "DIV", { id: "important" })
-    assert.end()
-})
+(0, _tape2.default)("properties id overrides selector id", function (assert) {
+    var node = _h.h;
+    assertNode(assert, node, "DIV", { id: "important" });
+    assert.end();
+});
 
-test("defaults to div when using selectors", function (assert) {
-    var node1 = h_hjs
-    var node2 = h_hjs
-    var node3 = h_hjs
-    var node4 = h_hjs
+(0, _tape2.default)("defaults to div when using selectors", function (assert) {
+    var node1 = _h.h;
+    var node2 = _h.h;
+    var node3 = _h.h;
+    var node4 = _h.h;
 
-    assertNode(assert, node1, "DIV", { id: "important" })
-    assertNode(assert, node2, "DIV", { className: "pretty" })
-    assertNode(assert, node3, "DIV", { id: "important", className: "pretty" })
-    assertNode(assert, node4, "DIV", { id: "important", className: "pretty" })
-    assert.end()
-})
+    assertNode(assert, node1, "DIV", { id: "important" });
+    assertNode(assert, node2, "DIV", { className: "pretty" });
+    assertNode(assert, node3, "DIV", { id: "important", className: "pretty" });
+    assertNode(assert, node4, "DIV", { id: "important", className: "pretty" });
+    assert.end();
+});
 
-test("second argument can be children", function (assert) {
-    var node1 = h_hjs
-    var node2 = h_hjs
-    var node3 = h_hjs
-    var node4 = h_hjs
+(0, _tape2.default)("second argument can be children", function (assert) {
+    var node1 = _h.h;
+    var node2 = _h.h;
+    var node3 = _h.h;
+    var node4 = _h.h;
 
-    var props = { id: "important", className: "pretty" }
+    var props = { id: "important", className: "pretty" };
 
-    assertNode(assert, node1, "DIV", props, ["test"])
-    assertNode(assert, node2, "DIV", props, ["test"])
-    assertNode(assert, node3, "DIV", props, [["P", {}, ["testing"]]])
-    assertNode(assert, node4, "DIV", props, [["P", {}, ["testing"]]])
-    assert.end()
-})
+    assertNode(assert, node1, "DIV", props, ["test"]);
+    assertNode(assert, node2, "DIV", props, ["test"]);
+    assertNode(assert, node3, "DIV", props, [["P", {}, ["testing"]]]);
+    assertNode(assert, node4, "DIV", props, [["P", {}, ["testing"]]]);
+    assert.end();
+});
 
-test("third argument can be child or children", function (assert) {
-    var node1 = h_hjs
-    var node2 = h_hjs
-    var node3 = h_hjs
-    var node4 = h_hjs
+(0, _tape2.default)("third argument can be child or children", function (assert) {
+    var node1 = _h.h;
+    var node2 = _h.h;
+    var node3 = _h.h;
+    var node4 = _h.h;
 
-    var props = { a: "b", id: "important", className: "pretty" }
+    var props = { a: "b", id: "important", className: "pretty" };
 
-    assertNode(assert, node1, "DIV", props, ["test"])
-    assertNode(assert, node2, "DIV", props, ["test"])
-    assertNode(assert, node3, "DIV", props, [["P", {}, ["testing"]]])
-    assertNode(assert, node4, "DIV", props, [["P", {}, ["testing"]]])
-    assert.end()
-})
+    assertNode(assert, node1, "DIV", props, ["test"]);
+    assertNode(assert, node2, "DIV", props, ["test"]);
+    assertNode(assert, node3, "DIV", props, [["P", {}, ["testing"]]]);
+    assertNode(assert, node4, "DIV", props, [["P", {}, ["testing"]]]);
+    assert.end();
+});
 
 function assertNode(assert, node, tagName, properties, children) {
-    properties = properties || {}
-    children = children || []
+    properties = properties || {};
+    children = children || [];
 
-    assert.ok(node instanceof vnodevnode_VirtualNodejs, "node is a VirtualNode")
-    assert.equal(node.tagName, tagName, "tag names are equal")
-    assert.deepEqual(node.properties, properties, "propeties are equal")
-    assert.equal(node.children.length, children.length, "child count equal")
+    assert.ok(node instanceof _vnode.VirtualNode, "node is a VirtualNode");
+    assert.equal(node.tagName, tagName, "tag names are equal");
+    assert.deepEqual(node.properties, properties, "propeties are equal");
+    assert.equal(node.children.length, children.length, "child count equal");
     for (var i = 0; i < children.length; i++) {
-        var child = children[i]
+        var child = children[i];
 
         if (typeof child === "string") {
-            assert.equal(node.children[i].text, child)
+            assert.equal(node.children[i].text, child);
         } else {
-            assertNode(assert,
-                node.children[i],
-                child[0],
-                child[1],
-                child[2])
+            assertNode(assert, node.children[i], child[0], child[1], child[2]);
         }
     }
 }
 
-
-
 // render tests
-test("render is a function", function (assert) {
-    assert.equal(h_hjs, "function")
-    assert.end()
-})
+(0, _tape2.default)("render is a function", function (assert) {
+    assert.equal(_h.h, "function");
+    assert.end();
+});
 
-test("render text node", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.equal(dom.tagName, "SPAN")
-    assert.notOk(dom.id)
-    assert.notOk(dom.className)
-    assert.equal(dom.childNodes.length, 1)
-    assert.equal(dom.childNodes[0].data, "hello")
-    assert.end()
-})
+(0, _tape2.default)("render text node", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.equal(dom.tagName, "SPAN");
+    assert.notOk(dom.id);
+    assert.notOk(dom.className);
+    assert.equal(dom.childNodes.length, 1);
+    assert.equal(dom.childNodes[0].data, "hello");
+    assert.end();
+});
 
-test("render div", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.notOk(dom.id)
-    assert.notOk(dom.className)
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("render div", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.notOk(dom.id);
+    assert.notOk(dom.className);
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("node id is applied correctly", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.equal(dom.id, "important")
-    assert.notOk(dom.className)
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("node id is applied correctly", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.equal(dom.id, "important");
+    assert.notOk(dom.className);
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("node class name is applied correctly", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.notOk(dom.id)
-    assert.equal(dom.className, "pretty")
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("node class name is applied correctly", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.notOk(dom.id);
+    assert.equal(dom.className, "pretty");
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("mixture of node/classname applied correctly", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.equal(dom.id, "important")
-    assert.equal(dom.className, "very pretty")
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("mixture of node/classname applied correctly", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.equal(dom.id, "important");
+    assert.equal(dom.className, "very pretty");
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("style object is applied correctly", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.equal(dom.id, "important")
-    assert.equal(dom.className, "pretty")
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.style.border, style("border", "1px solid rgb(0, 0, 0)"))
-    assert.equal(dom.style.padding, style("padding", "2px"))
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("style object is applied correctly", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.equal(dom.id, "important");
+    assert.equal(dom.className, "pretty");
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.style.border, style("border", "1px solid rgb(0, 0, 0)"));
+    assert.equal(dom.style.padding, style("padding", "2px"));
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("children are added", function (assert) {
-    var vdom = h_hjs
+(0, _tape2.default)("children are added", function (assert) {
+    var vdom = _h.h;
 
-    var dom = createelement_createElementjs
+    var dom = _createElement.createElement;
 
-    assert.equal(dom.childNodes.length, 3)
+    assert.equal(dom.childNodes.length, 3);
 
-    var nodes = dom.childNodes
-    assert.equal(nodes.length, 3)
-    assert.equal(nodes[0].tagName, "DIV")
-    assert.equal(nodes[1].data, "hello")
-    assert.equal(nodes[2].tagName, "SPAN")
+    var nodes = dom.childNodes;
+    assert.equal(nodes.length, 3);
+    assert.equal(nodes[0].tagName, "DIV");
+    assert.equal(nodes[1].data, "hello");
+    assert.equal(nodes[2].tagName, "SPAN");
 
-    var subNodes0 = nodes[0].childNodes
-    assert.equal(subNodes0.length, 3)
-    assert.equal(subNodes0[0].data, "just testing")
-    assert.equal(subNodes0[1].data, "multiple")
-    assert.equal(subNodes0[2].tagName, "B")
+    var subNodes0 = nodes[0].childNodes;
+    assert.equal(subNodes0.length, 3);
+    assert.equal(subNodes0[0].data, "just testing");
+    assert.equal(subNodes0[1].data, "multiple");
+    assert.equal(subNodes0[2].tagName, "B");
 
-    var subNodes0_2 = subNodes0[2].childNodes
-    assert.equal(subNodes0_2.length, 1)
-    assert.equal(subNodes0_2[0].data, "nodes")
+    var subNodes0_2 = subNodes0[2].childNodes;
+    assert.equal(subNodes0_2.length, 1);
+    assert.equal(subNodes0_2[0].data, "nodes");
 
-    var subNodes2 = nodes[2].childNodes
-    assert.equal(subNodes2.length, 1)
-    assert.equal(subNodes2[0].data, "test")
-    assert.end()
-})
+    var subNodes2 = nodes[2].childNodes;
+    assert.equal(subNodes2.length, 1);
+    assert.equal(subNodes2[0].data, "test");
+    assert.end();
+});
 
-test("incompatible children are ignored", function (assert) {
-    var vdom = h_hjs
-    var dom = createelement_createElementjs
-    assert.equal(dom.id, "important")
-    assert.equal(dom.className, "pretty")
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.style.cssText, style("cssText", "color: red;"))
-    assert.equal(dom.childNodes.length, 0)
-    assert.end()
-})
+(0, _tape2.default)("incompatible children are ignored", function (assert) {
+    var vdom = _h.h;
+    var dom = _createElement.createElement;
+    assert.equal(dom.id, "important");
+    assert.equal(dom.className, "pretty");
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.style.cssText, style("cssText", "color: red;"));
+    assert.equal(dom.childNodes.length, 0);
+    assert.end();
+});
 
-test("injected document object is used", function (assert) {
-    var vdom = h_hjs
-    var count = 0
+(0, _tape2.default)("injected document object is used", function (assert) {
+    var vdom = _h.h;
+    var count = 0;
     var doc = {
         createElement: function createElement(tagName) {
-            assert.equal(tagName, "DIV")
-            count++
-            return { tagName: "DIV", appendChild: function (t) {
-                assert.equal(t, "hello")
-                count++
-            } }
+            assert.equal(tagName, "DIV");
+            count++;
+            return { tagName: "DIV", appendChild: function appendChild(t) {
+                    assert.equal(t, "hello");
+                    count++;
+                } };
         },
         createTextNode: function createTextNode(text) {
-            assert.equal(text, "hello")
-            count++
-            return text
+            assert.equal(text, "hello");
+            count++;
+            return text;
         }
-    }
-    createelement_createElementjs
-    assert.equal(count, 3)
-    assert.end()
-})
+    };
+    _createElement.createElement;
+    assert.equal(count, 3);
+    assert.end();
+});
 
-test("injected warning is used", function (assert) {
-    var badObject = {}
-    var vdom = h_hjs
+(0, _tape2.default)("injected warning is used", function (assert) {
+    var badObject = {};
+    var vdom = _h.h;
 
-    vdom.children = [
-        badObject, null
-    ]
+    vdom.children = [badObject, null];
 
-    var i = 0
+    var i = 0;
     function warn(warning, node) {
-        assert.equal(warning, "Item is not a valid virtual dom node")
+        assert.equal(warning, "Item is not a valid virtual dom node");
 
         if (i === 0) {
-            assert.equal(node, badObject)
+            assert.equal(node, badObject);
         } else if (i === 1) {
-            assert.equal(node, null)
+            assert.equal(node, null);
         } else {
-            assert.error("Too many warnings")
+            assert.error("Too many warnings");
         }
 
-        i++
+        i++;
     }
 
-    var dom = createelement_createElementjs
-    assert.equal(dom.id, "important")
-    assert.equal(dom.className, "pretty")
-    assert.equal(dom.tagName, "DIV")
-    assert.equal(dom.style.cssText, style("cssText", "color: red;"))
-    assert.equal(dom.childNodes.length, 0)
-    assert.equal(i, 2)
-    assert.end()
-})
+    var dom = _createElement.createElement;
+    assert.equal(dom.id, "important");
+    assert.equal(dom.className, "pretty");
+    assert.equal(dom.tagName, "DIV");
+    assert.equal(dom.style.cssText, style("cssText", "color: red;"));
+    assert.equal(dom.childNodes.length, 0);
+    assert.equal(i, 2);
+    assert.end();
+});
 
 // Complete patch tests
-test("textnode update test", function (assert) {
-    var hello = h_hjs
-    var goodbye = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("textnode update test", function (assert) {
+    var hello = _h.h;
+    var goodbye = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("textnode replace test", function (assert) {
-    var hello = h_hjs
-    var goodbye = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("textnode replace test", function (assert) {
+    var hello = _h.h;
+    var goodbye = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("textnode insert test", function (assert) {
-    var hello = h_hjs
-    var again = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("textnode insert test", function (assert) {
+    var hello = _h.h;
+    var again = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("textnode remove", function (assert) {
-    var again = h_hjs
-    var hello = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("textnode remove", function (assert) {
+    var again = _h.h;
+    var hello = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("dom node update test", function (assert) {
-    var hello = h_hjs
-    var goodbye = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("dom node update test", function (assert) {
+    var hello = _h.h;
+    var goodbye = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("dom node replace test", function (assert) {
-    var hello = h_hjs
-    var goodbye = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("dom node replace test", function (assert) {
+    var hello = _h.h;
+    var goodbye = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("dom node insert", function (assert) {
-    var hello = h_hjs
-    var again = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("dom node insert", function (assert) {
+    var hello = _h.h;
+    var again = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-test("dom node remove", function (assert) {
-    var hello = h_hjs
-    var again = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
-    assert.end()
-})
+(0, _tape2.default)("dom node remove", function (assert) {
+    var hello = _h.h;
+    var again = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
+    assert.end();
+});
 
-
-test("reuse dom node without breaking", function (assert) {
-    var hSpan = h_hjs
-    var hello = h_hjs
-    var goodbye = h_hjs
-    var rootNode = createelement_createElementjs
-    var equalNode = createelement_createElementjs
-    var patches = diff_diffjs
-    var newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
+(0, _tape2.default)("reuse dom node without breaking", function (assert) {
+    var hSpan = _h.h;
+    var hello = _h.h;
+    var goodbye = _h.h;
+    var rootNode = _createElement.createElement;
+    var equalNode = _createElement.createElement;
+    var patches = _diff.diff;
+    var newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, equalNode);
 
     // Undo the rendering with new trees
-    hello = h_hjs
-    goodbye = h_hjs
-    patches = diff_diffjs
-    newRoot = patch_patchjs
-    libassertequaldom_assertEqualDomjs(assert, newRoot, rootNode)
+    hello = _h.h;
+    goodbye = _h.h;
+    patches = _diff.diff;
+    newRoot = _patch.patch;
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, rootNode);
 
-    assert.end()
-})
+    assert.end();
+});
 
-test("Allow empty textnode", function (assert) {
-    var empty = h_hjs
-    var rootNode = createelement_createElementjs
-    assert.equal(rootNode.childNodes.length, 1)
-    assert.equal(rootNode.childNodes[0].data, "")
-    assert.end()
-})
+(0, _tape2.default)("Allow empty textnode", function (assert) {
+    var empty = _h.h;
+    var rootNode = _createElement.createElement;
+    assert.equal(rootNode.childNodes.length, 1);
+    assert.equal(rootNode.childNodes[0].data, "");
+    assert.end();
+});
 
-test("Can replace vnode with vtext", function (assert) {
+(0, _tape2.default)("Can replace vnode with vtext", function (assert) {
 
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
+    var rootNode = _createElement.createElement;
 
-    assert.equal(rootNode.childNodes.length, 1)
-    assert.equal(rootNode.childNodes[0].nodeType, 1)
+    assert.equal(rootNode.childNodes.length, 1);
+    assert.equal(rootNode.childNodes[0].nodeType, 1);
 
-    var patches = diff_diffjs
+    var patches = _diff.diff;
 
-    var newRoot = patch_patchjs
+    var newRoot = _patch.patch;
 
-    assert.equal(newRoot, rootNode)
+    assert.equal(newRoot, rootNode);
 
-    assert.equal(newRoot.childNodes.length, 1)
-    assert.equal(newRoot.childNodes[0].nodeType, 3)
+    assert.equal(newRoot.childNodes.length, 1);
+    assert.equal(newRoot.childNodes[0].nodeType, 3);
 
-    assert.end()
-})
+    assert.end();
+});
 
 // Widget tests
-test("Widget is initialised on render", function (assert) {
-    var initCount = 0
-    var testNode = createelement_createElementjs
+(0, _tape2.default)("Widget is initialised on render", function (assert) {
+    var initCount = 0;
+    var testNode = _createElement.createElement;
     var Widget = {
-        init: function () {
-            initCount++
-            return testNode
+        init: function init() {
+            initCount++;
+            return testNode;
         },
-        update: function () {
-            initCount = 1000000
+        update: function update() {
+            initCount = 1000000;
         },
         type: "Widget"
-    }
+    };
 
-    var result = createelement_createElementjs
+    var result = _createElement.createElement;
 
-    assert.equal(initCount, 1)
-    assert.equal(result, testNode)
-    assert.end()
-})
+    assert.equal(initCount, 1);
+    assert.equal(result, testNode);
+    assert.end();
+});
 
-test("Nested widget is initialised on render", function (assert) {
-    var initCount = 0
-    var testNode = createelement_createElementjs
+(0, _tape2.default)("Nested widget is initialised on render", function (assert) {
+    var initCount = 0;
+    var testNode = _createElement.createElement;
     var Widget = {
-        init: function () {
-            initCount++
-            return testNode
+        init: function init() {
+            initCount++;
+            return testNode;
         },
-        update: function () {
-            initCount = 1000000
+        update: function update() {
+            initCount = 1000000;
         },
         type: "Widget"
-    }
+    };
 
-    var vdom = h_hjs
+    var vdom = _h.h;
 
-    var result = createelement_createElementjs
+    var result = _createElement.createElement;
 
-    assert.equal(initCount, 1)
-    assert.equal(result.childNodes[1].childNodes[0], testNode)
-    assert.end()
-})
+    assert.equal(initCount, 1);
+    assert.equal(result.childNodes[1].childNodes[0], testNode);
+    assert.end();
+});
 
-test("Patch widgets at the root", function (assert) {
-    var initCount = 0
-    var updateCount = 0
-    var leftState = { a: 1 }
-    var rightState = { a: 2 }
-    var domNode
+(0, _tape2.default)("Patch widgets at the root", function (assert) {
+    var initCount = 0;
+    var updateCount = 0;
+    var leftState = { a: 1 };
+    var rightState = { a: 2 };
+    var domNode;
 
     function Widget(state) {
-        this.state = state
-        this.vdom = this.render(state)
+        this.state = state;
+        this.vdom = this.render(state);
     }
 
     Widget.prototype.init = function () {
-        initCount++
-        return createelement_createElementjs;
-    }
+        initCount++;
+        return _createElement.createElement;
+    };
 
     Widget.prototype.update = function (leftNode, dom) {
-        updateCount++
-        assert.equal(this.state, rightState)
-        assert.equal(leftNode.state, leftState)
-        assert.equal(dom, domNode)
-        patch_patchjs
-    }
+        updateCount++;
+        assert.equal(this.state, rightState);
+        assert.equal(leftNode.state, leftState);
+        assert.equal(dom, domNode);
+        _patch.patch;
+    };
 
     Widget.prototype.render = function (state) {
-        return h_hjs;
-    }
+        return _h.h;
+    };
 
-    Widget.prototype.type = "Widget"
+    Widget.prototype.type = "Widget";
 
-    var leftTree = new Widget(leftState)
-    var rightTree = new Widget(rightState)
-    domNode = createelement_createElementjs
-    assert.equal(initCount, 1, "initCount after left render")
-    assert.equal(updateCount, 0, "updateCount after left render")
+    var leftTree = new Widget(leftState);
+    var rightTree = new Widget(rightState);
+    domNode = _createElement.createElement;
+    assert.equal(initCount, 1, "initCount after left render");
+    assert.equal(updateCount, 0, "updateCount after left render");
 
-    var patches = diff_diffjs
-    assert.equal(libpatchcount_patchCountjs(patches), 1)
-    assert.equal(initCount, 1, "initCount after diff")
-    assert.equal(updateCount, 0, "updateCount after diff")
+    var patches = _diff.diff;
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
+    assert.equal(initCount, 1, "initCount after diff");
+    assert.equal(updateCount, 0, "updateCount after diff");
 
-    var newRoot = patch_patchjs
-    assert.equal(initCount, 1, "initCount after patch")
-    assert.equal(updateCount, 1, "updateCount after patch")
+    var newRoot = _patch.patch;
+    assert.equal(initCount, 1, "initCount after patch");
+    assert.equal(updateCount, 1, "updateCount after patch");
 
     // The patch should only update sibling value in this use case
-    var expectedNode = createelement_createElementjs
-    assert.equal(newRoot, domNode)
-    libassertequaldom_assertEqualDomjs(assert, newRoot, expectedNode)
-    assert.end()
-})
+    var expectedNode = _createElement.createElement;
+    assert.equal(newRoot, domNode);
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, expectedNode);
+    assert.end();
+});
 
-test("Patch nested widgets", function (assert) {
-    var initCount = 0
-    var updateCount = 0
-    var leftState = { a: 1 }
-    var rightState = { a: 2 }
-    var domNode
+(0, _tape2.default)("Patch nested widgets", function (assert) {
+    var initCount = 0;
+    var updateCount = 0;
+    var leftState = { a: 1 };
+    var rightState = { a: 2 };
+    var domNode;
 
     function Widget(state) {
-        this.state = state
-        this.vdom = this.render(state)
+        this.state = state;
+        this.vdom = this.render(state);
     }
 
     Widget.prototype.init = function () {
-        initCount++
-        return createelement_createElementjs;
-    }
+        initCount++;
+        return _createElement.createElement;
+    };
 
     Widget.prototype.update = function (leftNode, dom) {
-        updateCount++
-        assert.equal(this.state, rightState)
-        assert.equal(leftNode.state, leftState)
-        assert.equal(dom, domNode.childNodes[1].childNodes[0])
-        patch_patchjs
-    }
+        updateCount++;
+        assert.equal(this.state, rightState);
+        assert.equal(leftNode.state, leftState);
+        assert.equal(dom, domNode.childNodes[1].childNodes[0]);
+        _patch.patch;
+    };
 
     Widget.prototype.render = function (state) {
-        return h_hjs;
-    }
+        return _h.h;
+    };
 
-    Widget.prototype.type = "Widget"
+    Widget.prototype.type = "Widget";
 
-    var leftWidget = new Widget(leftState)
-    var rightWidget = new Widget(rightState)
+    var leftWidget = new Widget(leftState);
+    var rightWidget = new Widget(rightState);
 
-    var leftTree = h_hjs
+    var leftTree = _h.h;
 
-    var rightTree = h_hjs
+    var rightTree = _h.h;
 
-    domNode = createelement_createElementjs
-    assert.equal(initCount, 1, "initCount after left render")
-    assert.equal(updateCount, 0, "updateCount after left render")
+    domNode = _createElement.createElement;
+    assert.equal(initCount, 1, "initCount after left render");
+    assert.equal(updateCount, 0, "updateCount after left render");
 
-    var patches = diff_diffjs
-    assert.equal(libpatchcount_patchCountjs(patches), 1)
-    assert.equal(initCount, 1, "initCount after diff")
-    assert.equal(updateCount, 0, "updateCount after diff")
+    var patches = _diff.diff;
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
+    assert.equal(initCount, 1, "initCount after diff");
+    assert.equal(updateCount, 0, "updateCount after diff");
 
-    var newRoot = patch_patchjs
-    assert.equal(initCount, 1, "initCount after patch")
-    assert.equal(updateCount, 1, "updateCount after patch")
+    var newRoot = _patch.patch;
+    assert.equal(initCount, 1, "initCount after patch");
+    assert.equal(updateCount, 1, "updateCount after patch");
 
     // The patch should only update sibling value in this use case
-    var expectedNode = createelement_createElementjs
-    assert.equal(newRoot, domNode)
-    libassertequaldom_assertEqualDomjs(assert, newRoot, expectedNode)
-    assert.end()
-})
+    var expectedNode = _createElement.createElement;
+    assert.equal(newRoot, domNode);
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, expectedNode);
+    assert.end();
+});
 
-test("Can replace stateful widget with vnode", function (assert) {
-    var statefulWidget  = {
-        init: function () {
-            return createelement_createElementjs;
+(0, _tape2.default)("Can replace stateful widget with vnode", function (assert) {
+    var statefulWidget = {
+        init: function init() {
+            return _createElement.createElement;
         },
-        update: function () {},
-        destroy: function () {},
+        update: function update() {},
+        destroy: function destroy() {},
         type: "Widget"
-    }
+    };
 
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
+    var rootNode = _createElement.createElement;
 
-    assert.equal(rootNode.childNodes.length, 1)
-    assert.equal(rootNode.childNodes[0].className, 'widget')
+    assert.equal(rootNode.childNodes.length, 1);
+    assert.equal(rootNode.childNodes[0].className, 'widget');
 
-    var patches = diff_diffjs
+    var patches = _diff.diff;
 
-    var newRoot = patch_patchjs
+    var newRoot = _patch.patch;
 
-    assert.equal(newRoot, rootNode)
+    assert.equal(newRoot, rootNode);
 
-    assert.equal(newRoot.childNodes.length, 1)
-    assert.equal(newRoot.childNodes[0].className, 'vnode')
+    assert.equal(newRoot.childNodes.length, 1);
+    assert.equal(newRoot.childNodes[0].className, 'vnode');
 
-    assert.end()
-})
+    assert.end();
+});
 
-test("Can replace vnode with stateful widget with vnode", function (assert) {
-    var statefulWidget  = {
-        init: function () {
-            return createelement_createElementjs;
+(0, _tape2.default)("Can replace vnode with stateful widget with vnode", function (assert) {
+    var statefulWidget = {
+        init: function init() {
+            return _createElement.createElement;
         },
-        update: function () {},
-        destroy: function () {},
+        update: function update() {},
+        destroy: function destroy() {},
         type: "Widget"
-    }
+    };
 
-    var leftNode = h_hjs
-    var rightNode = h_hjs
+    var leftNode = _h.h;
+    var rightNode = _h.h;
 
-    var rootNode = createelement_createElementjs
+    var rootNode = _createElement.createElement;
 
-    assert.equal(rootNode.childNodes.length, 1)
-    assert.equal(rootNode.childNodes[0].className, 'vnode')
+    assert.equal(rootNode.childNodes.length, 1);
+    assert.equal(rootNode.childNodes[0].className, 'vnode');
 
-    var patches = diff_diffjs
+    var patches = _diff.diff;
 
-    var newRoot = patch_patchjs
+    var newRoot = _patch.patch;
 
-    assert.equal(newRoot, rootNode)
+    assert.equal(newRoot, rootNode);
 
-    assert.equal(newRoot.childNodes.length, 1)
-    assert.equal(newRoot.childNodes[0].className, 'widget')
+    assert.equal(newRoot.childNodes.length, 1);
+    assert.equal(newRoot.childNodes[0].className, 'widget');
 
-    assert.end()
-})
+    assert.end();
+});
 
-test("Ensure children are not rendered more than once", function (assert) {
-    var initCount = 0
-    var updateCount = 0
-    var rightState = { a: 1 }
-    var domNode
+(0, _tape2.default)("Ensure children are not rendered more than once", function (assert) {
+    var initCount = 0;
+    var updateCount = 0;
+    var rightState = { a: 1 };
+    var domNode;
 
     function Widget(state) {
-        this.state = state
-        this.vdom = this.render(state)
+        this.state = state;
+        this.vdom = this.render(state);
     }
 
     Widget.prototype.init = function () {
-        initCount++
-        return createelement_createElementjs;
-    }
+        initCount++;
+        return _createElement.createElement;
+    };
 
     Widget.prototype.update = function (leftNode, dom) {
-        updateCount++
-        patch_patchjs
-    }
+        updateCount++;
+        _patch.patch;
+    };
 
     Widget.prototype.render = function (state) {
-        return h_hjs;
-    }
+        return _h.h;
+    };
 
-    Widget.prototype.type = "Widget"
+    Widget.prototype.type = "Widget";
 
-    var rightWidget = new Widget(rightState)
+    var rightWidget = new Widget(rightState);
 
-    var leftTree = h_hjs
+    var leftTree = _h.h;
 
-    var rightTree = h_hjs
+    var rightTree = _h.h;
 
-    domNode = createelement_createElementjs
-    assert.equal(initCount, 0, "initCount after left render")
-    assert.equal(updateCount, 0, "updateCount after left render")
+    domNode = _createElement.createElement;
+    assert.equal(initCount, 0, "initCount after left render");
+    assert.equal(updateCount, 0, "updateCount after left render");
 
-    var patches = diff_diffjs
-    assert.equal(libpatchcount_patchCountjs(patches), 1)
-    assert.equal(initCount, 0, "initCount after diff")
-    assert.equal(updateCount, 0, "updateCount after diff")
+    var patches = _diff.diff;
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
+    assert.equal(initCount, 0, "initCount after diff");
+    assert.equal(updateCount, 0, "updateCount after diff");
 
-    var newRoot = patch_patchjs
-    assert.equal(initCount, 1, "initCount after patch")
-    assert.equal(updateCount, 0, "updateCount after patch")
+    var newRoot = _patch.patch;
+    assert.equal(initCount, 1, "initCount after patch");
+    assert.equal(updateCount, 0, "updateCount after patch");
 
     // The patch should only update sibling value in this use case
-    var expectedNode = createelement_createElementjs
-    assert.equal(newRoot, domNode)
-    libassertequaldom_assertEqualDomjs(assert, newRoot, expectedNode)
-    assert.end()
-})
+    var expectedNode = _createElement.createElement;
+    assert.equal(newRoot, domNode);
+    (0, _assertEqualDom.assertEqualDom)(assert, newRoot, expectedNode);
+    assert.end();
+});
 
-test("VNode indicates stateful sibling", function (assert) {
-    var statefulWidget  = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {},
+(0, _tape2.default)("VNode indicates stateful sibling", function (assert) {
+    var statefulWidget = {
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {},
         type: "Widget"
-    }
+    };
 
     var pureWidget = {
-        init: function () {},
-        update: function () {},
+        init: function init() {},
+        update: function update() {},
         type: "Widget"
-    }
+    };
 
-    var stateful = h_hjs
-    var pure = h_hjs
+    var stateful = _h.h;
+    var pure = _h.h;
 
-    assert.ok(stateful.hasWidgets)
-    assert.notOk(pure.hasWidgets)
-    assert.end()
-})
+    assert.ok(stateful.hasWidgets);
+    assert.notOk(pure.hasWidgets);
+    assert.end();
+});
 
-test("Replacing stateful widget with vnode calls destroy", function (assert) {
-    var count = 0
-    var statefulWidget  = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {
-            count++
+(0, _tape2.default)("Replacing stateful widget with vnode calls destroy", function (assert) {
+    var count = 0;
+    var statefulWidget = {
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {
+            count++;
         },
         type: "Widget"
-    }
+    };
 
-    var rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 1)
-    assert.end()
-})
+    var rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 1);
+    assert.end();
+});
 
-test("Replacing stateful widget with stateful widget", function (assert) {
-    var count = 0
-    var statefulWidget  = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {
-            count++
+(0, _tape2.default)("Replacing stateful widget with stateful widget", function (assert) {
+    var count = 0;
+    var statefulWidget = {
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {
+            count++;
         },
         type: "Widget"
-    }
+    };
 
     var newWidget = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {
-            count = 10000000
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {
+            count = 10000000;
         },
         type: "Widget"
-    }
+    };
 
-    var rootNode = createelement_createElementjs
-    var patches = diff_diffjs
-    patch_patchjs
-    assert.equal(count, 1)
-    assert.end()
-})
+    var rootNode = _createElement.createElement;
+    var patches = _diff.diff;
+    _patch.patch;
+    assert.equal(count, 1);
+    assert.end();
+});
 
-test("Replacing stateful widget with pure widget", function (assert) {
-    var count = 0
-    var statefulWidget  = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {
-            count++
+(0, _tape2.default)("Replacing stateful widget with pure widget", function (assert) {
+    var count = 0;
+    var statefulWidget = {
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {
+            count++;
         },
         type: "Widget"
-    }
+    };
 
     var newWidget = {
-        init: function () {},
-        update: function () {},
+        init: function init() {},
+        update: function update() {},
         type: "Widget"
-    }
+    };
 
-    var rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 1)
-    assert.end()
-})
+    var rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 1);
+    assert.end();
+});
 
-test("Removing stateful widget calls destroy", function (assert) {
-    var count = 0
-    var statefulWidget  = {
-        init: function () {},
-        update: function () {},
-        destroy: function () {
-            count++
-        },
-        type: "Widget"
-    }
-
-    var rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 1)
-    assert.end()
-})
-
-test("Patching parent destroys stateful sibling", function (assert) {
-    var count = 0
-    var widgetRoot = createelement_createElementjs
-    var statefulWidget  = {
-        init: function () {
-            return widgetRoot
-        },
-        update: function () {
-            assert.error()
-        },
-        destroy: function (domNode) {
-            assert.equal(domNode, widgetRoot)
-            count++
+(0, _tape2.default)("Removing stateful widget calls destroy", function (assert) {
+    var count = 0;
+    var statefulWidget = {
+        init: function init() {},
+        update: function update() {},
+        destroy: function destroy() {
+            count++;
         },
         type: "Widget"
-    }
+    };
 
-    var deepTree = h_hjs
+    var rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 1);
+    assert.end();
+});
 
-    var rootNode
+(0, _tape2.default)("Patching parent destroys stateful sibling", function (assert) {
+    var count = 0;
+    var widgetRoot = _createElement.createElement;
+    var statefulWidget = {
+        init: function init() {
+            return widgetRoot;
+        },
+        update: function update() {
+            assert.error();
+        },
+        destroy: function destroy(domNode) {
+            assert.equal(domNode, widgetRoot);
+            count++;
+        },
+        type: "Widget"
+    };
 
-    rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 1)
+    var deepTree = _h.h;
 
-    rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 2)
+    var rootNode;
 
-    rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 3)
+    rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 1);
 
-    assert.end()
-})
+    rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 2);
 
-test("Widget update can replace domNode", function (assert) {
-    var widgetInit = createelement_createElementjs
-    var widgetUpdate = createelement_createElementjs
+    rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 3);
 
-    function Widget () {}
+    assert.end();
+});
+
+(0, _tape2.default)("Widget update can replace domNode", function (assert) {
+    var widgetInit = _createElement.createElement;
+    var widgetUpdate = _createElement.createElement;
+
+    function Widget() {}
     Widget.prototype.init = function () {
-        return widgetInit
-    }
+        return widgetInit;
+    };
     Widget.prototype.update = function () {
-        return widgetUpdate
-    }
-    Widget.prototype.destroy = function () {}
-    Widget.prototype.type = "Widget"
+        return widgetUpdate;
+    };
+    Widget.prototype.destroy = function () {};
+    Widget.prototype.type = "Widget";
 
-    var initTree = h_hjs
-    var updateTree = h_hjs
-    var rootNode
+    var initTree = _h.h;
+    var updateTree = _h.h;
+    var rootNode;
 
-    rootNode = createelement_createElementjs
-    assert.equal(rootNode.childNodes[0], widgetInit)
+    rootNode = _createElement.createElement;
+    assert.equal(rootNode.childNodes[0], widgetInit);
 
-    patch_patchjs
+    _patch.patch;
 
-    assert.equal(rootNode.childNodes[0], widgetUpdate)
-    assert.end()
-})
+    assert.equal(rootNode.childNodes[0], widgetUpdate);
+    assert.end();
+});
 
-test("Destroy widget nested in removed thunk", function (assert) {
-    var count = 0
-    var widgetRoot = createelement_createElementjs
-    var statefulWidget  = {
-        init: function () {
-            return widgetRoot
+(0, _tape2.default)("Destroy widget nested in removed thunk", function (assert) {
+    var count = 0;
+    var widgetRoot = _createElement.createElement;
+    var statefulWidget = {
+        init: function init() {
+            return widgetRoot;
         },
-        update: function () {
-            assert.error()
+        update: function update() {
+            assert.error();
         },
-        destroy: function (domNode) {
-            assert.equal(domNode, widgetRoot)
-            count++
+        destroy: function destroy(domNode) {
+            assert.equal(domNode, widgetRoot);
+            count++;
         },
         type: "Widget"
-    }
-    var vnode = h_hjs
+    };
+    var vnode = _h.h;
 
     function Thunk() {}
 
     Thunk.prototype.render = function () {
-        return vnode
-    }
+        return vnode;
+    };
 
-    Thunk.prototype.type = "Thunk"
+    Thunk.prototype.type = "Thunk";
 
-    var thunkTree = h_hjs
+    var thunkTree = _h.h;
 
-    var empty = h_hjs
+    var empty = _h.h;
 
-    var rootNode = createelement_createElementjs
-    patch_patchjs
-    assert.equal(count, 1)
+    var rootNode = _createElement.createElement;
+    _patch.patch;
+    assert.equal(count, 1);
 
-    assert.end()
-})
+    assert.end();
+});
 
-test("Create element respects namespace", function (assert) {
+(0, _tape2.default)("Create element respects namespace", function (assert) {
     if (!supportsNamespace()) {
         assert.skip("browser doesn't support namespaces");
         return assert.end();
     }
 
-    var svgURI = "http://www.w3.org/2000/svg"
-    var vnode = new vnodevnode_VirtualNodejs("svg", {}, [], null, svgURI)
-    var node = createelement_createElementjs
+    var svgURI = "http://www.w3.org/2000/svg";
+    var vnode = new _vnode.VirtualNode("svg", {}, [], null, svgURI);
+    var node = _createElement.createElement;
 
-    assert.equal(node.tagName, "svg")
-    assert.equal(node.namespaceURI, svgURI)
-    assert.end()
-})
+    assert.equal(node.tagName, "svg");
+    assert.equal(node.namespaceURI, svgURI);
+    assert.end();
+});
 
-test("Different namespaces creates a patch", function (assert) {
+(0, _tape2.default)("Different namespaces creates a patch", function (assert) {
     if (!supportsNamespace()) {
         assert.skip("browser doesn't support namespaces");
         return assert.end();
     }
 
-    var leftNode = new vnodevnode_VirtualNodejs("div", {}, [], null, "testing")
-    var rightNode = new vnodevnode_VirtualNodejs("div", {}, [], null, "undefined")
+    var leftNode = new _vnode.VirtualNode("div", {}, [], null, "testing");
+    var rightNode = new _vnode.VirtualNode("div", {}, [], null, "undefined");
 
-    var rootNode = createelement_createElementjs
-    assert.equal(rootNode.tagName, "div")
-    assert.equal(rootNode.namespaceURI, "testing")
+    var rootNode = _createElement.createElement;
+    assert.equal(rootNode.tagName, "div");
+    assert.equal(rootNode.namespaceURI, "testing");
 
-    var patches = diff_diffjs
-    assert.equal(libpatchcount_patchCountjs(patches), 1)
+    var patches = _diff.diff;
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
 
-    rootNode = patch_patchjs
+    rootNode = _patch.patch;
 
-    assert.equal(rootNode.tagName, "div")
-    assert.equal(rootNode.namespaceURI, "undefined")
+    assert.equal(rootNode.tagName, "div");
+    assert.equal(rootNode.namespaceURI, "undefined");
 
-    assert.end()
-})
+    assert.end();
+});
 
 // Safely translates style values using the DOM in the browser
 function style(name, value) {
-    var node = createelement_createElementjs
-    node.style[name] = value
-    return node.style[name]
+    var node = _createElement.createElement;
+    node.style[name] = value;
+    return node.style[name];
 }
 
 // Determine if namespace is supported by the DOM
 function supportsNamespace() {
-    var node = createelement_createElementjs
+    var node = _createElement.createElement;
     return 'namespaceURI' in node;
 }
-

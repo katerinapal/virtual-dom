@@ -1,4 +1,9 @@
-import "./h.js";
-import "./svg.js";
-import "./ev-hook.js";
-import "./attribute-hook.js";
+"use strict";
+
+require("./h.js");
+
+require("./svg.js");
+
+require("./ev-hook.js");
+
+require("./attribute-hook.js");

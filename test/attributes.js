@@ -1,54 +1,63 @@
-import test from "tape";
-import { h as h_hjs } from "../h.js";
-import { createElement as createelement_createElementjs } from "../create-element.js";
-import { diff as diff_diffjs } from "../diff.js";
-import { patch as patch_patchjs } from "../patch.js";
+"use strict";
 
-test("attributes can be set", function (assert) {
-    var leftTree = h_hjs
+var _tape = require("tape");
 
-    var rightTree = h_hjs
+var _tape2 = _interopRequireDefault(_tape);
 
-    var rootNode = createelement_createElementjs
-    var patches = diff_diffjs
+var _h = require("../h.js");
 
-    var newRootNode = patch_patchjs
+var _createElement = require("../create-element.js");
 
-    assert.equal(newRootNode.getAttribute("src"), "test.jpg")
-    assert.end()
-})
+var _diff = require("../diff.js");
 
-test("individual attributes can be unset", function (assert) {
-    var leftTree = h_hjs
+var _patch = require("../patch.js");
 
-    var rightTree = h_hjs
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    var rootNode = createelement_createElementjs
-    var patches = diff_diffjs
+(0, _tape2.default)("attributes can be set", function (assert) {
+    var leftTree = _h.h;
 
-    var newRootNode = patch_patchjs
+    var rightTree = _h.h;
 
-    assert.equal(newRootNode, rootNode)
-    assert.equal(newRootNode.getAttribute("a"), "1")
-    assert.ok(newRootNode.getAttribute("b") == null)
-    assert.equal(newRootNode.getAttribute("c"), "3")
-    assert.end()
-})
+    var rootNode = _createElement.createElement;
+    var patches = _diff.diff;
 
-test("attributes can be completely unset", function (assert) {
-    var leftTree = h_hjs
+    var newRootNode = _patch.patch;
 
-    var rightTree = h_hjs
+    assert.equal(newRootNode.getAttribute("src"), "test.jpg");
+    assert.end();
+});
 
-    var rootNode = createelement_createElementjs
-    var patches = diff_diffjs
+(0, _tape2.default)("individual attributes can be unset", function (assert) {
+    var leftTree = _h.h;
 
+    var rightTree = _h.h;
 
-    var newRootNode = patch_patchjs
+    var rootNode = _createElement.createElement;
+    var patches = _diff.diff;
 
-    assert.equal(newRootNode, rootNode)
-    assert.ok(newRootNode.getAttribute("a") == null)
-    assert.ok(newRootNode.getAttribute("b") == null)
-    assert.ok(newRootNode.getAttribute("c") == null)
-    assert.end()
-})
+    var newRootNode = _patch.patch;
+
+    assert.equal(newRootNode, rootNode);
+    assert.equal(newRootNode.getAttribute("a"), "1");
+    assert.ok(newRootNode.getAttribute("b") == null);
+    assert.equal(newRootNode.getAttribute("c"), "3");
+    assert.end();
+});
+
+(0, _tape2.default)("attributes can be completely unset", function (assert) {
+    var leftTree = _h.h;
+
+    var rightTree = _h.h;
+
+    var rootNode = _createElement.createElement;
+    var patches = _diff.diff;
+
+    var newRootNode = _patch.patch;
+
+    assert.equal(newRootNode, rootNode);
+    assert.ok(newRootNode.getAttribute("a") == null);
+    assert.ok(newRootNode.getAttribute("b") == null);
+    assert.ok(newRootNode.getAttribute("c") == null);
+    assert.end();
+});

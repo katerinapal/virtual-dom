@@ -1,30 +1,36 @@
-import { h as h_hjs } from "../../h.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.nodesFromArray = undefined;
+
+var _h = require("../../h.js");
 
 function nodesFromArray(array) {
-    var i =0
-    var children = []
-    var key
-    var properties
+    var i = 0;
+    var children = [];
+    var key;
+    var properties;
 
-    for(; i < array.length; i++) {
-        key = array[i]
+    for (; i < array.length; i++) {
+        key = array[i];
 
         if (key != null) {
             properties = {
                 key: key,
                 id: String(key)
-            }
-        }
-        else {
+            };
+        } else {
             properties = {
                 id: 'no-key-' + i
-            }
+            };
         }
 
-        children.push(h_hjs)
+        children.push(_h.h);
     }
 
-    return h_hjs;
+    return _h.h;
 }
 var exported_nodesFromArray = nodesFromArray;
-export { exported_nodesFromArray as nodesFromArray };
+exports.nodesFromArray = exported_nodesFromArray;

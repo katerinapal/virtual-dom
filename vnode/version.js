@@ -1,3 +1,8 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 var versionjs_versionjs;
-versionjs_versionjs = "2"
-export { versionjs_versionjs as versionjs };
+exports.versionjs = versionjs_versionjs = "2";
+exports.versionjs = versionjs_versionjs;
