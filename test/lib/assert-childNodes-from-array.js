@@ -1,11 +1,16 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 function assertChildNodesFromArray(assert, items, childNodes) {
     // ensure that the output has the same number of nodes as required
-    assert.equal(childNodes.length, items.length)
+    assert.equal(childNodes.length, items.length);
 
     for (var i = 0; i < items.length; i++) {
-        var key = items[i]
-        assert.equal(childNodes[i].id, key != null ? String(key) : 'no-key-' + i)
+        var key = items[i];
+        assert.equal(childNodes[i].id, key != null ? String(key) : 'no-key-' + i);
     }
 }
 var exported_assertChildNodesFromArray = assertChildNodesFromArray;
-export { exported_assertChildNodesFromArray as assertChildNodesFromArray };
+exports.assertChildNodesFromArray = exported_assertChildNodesFromArray;

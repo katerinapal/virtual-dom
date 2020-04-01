@@ -1,40 +1,48 @@
-import { isVirtualNode as isvnode_isVirtualNodejs } from "./is-vnode";
-import { isVirtualText as isvtext_isVirtualTextjs } from "./is-vtext";
-import { isWidget as iswidget_isWidgetjs } from "./is-widget";
-import { isThunk as isthunk_isThunkjs } from "./is-thunk";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.handleThunk = undefined;
+
+var _isVnode = require("./is-vnode");
+
+var _isVtext = require("./is-vtext");
+
+var _isWidget = require("./is-widget");
+
+var _isThunk = require("./is-thunk");
 
 function handleThunk(a, b) {
-    var renderedA = a
-    var renderedB = b
+    var renderedA = a;
+    var renderedB = b;
 
-    if (isthunk_isThunkjs(b)) {
-        renderedB = renderThunk(b, a)
+    if ((0, _isThunk.isThunk)(b)) {
+        renderedB = renderThunk(b, a);
     }
 
-    if (isthunk_isThunkjs(a)) {
-        renderedA = renderThunk(a, null)
+    if ((0, _isThunk.isThunk)(a)) {
+        renderedA = renderThunk(a, null);
     }
 
     return {
         a: renderedA,
         b: renderedB
-    }
+    };
 }
 
 function renderThunk(thunk, previous) {
-    var renderedThunk = thunk.vnode
+    var renderedThunk = thunk.vnode;
 
     if (!renderedThunk) {
-        renderedThunk = thunk.vnode = thunk.render(previous)
+        renderedThunk = thunk.vnode = thunk.render(previous);
     }
 
-    if (!(isvnode_isVirtualNodejs(renderedThunk) ||
-            isvtext_isVirtualTextjs(renderedThunk) ||
-            iswidget_isWidgetjs(renderedThunk))) {
+    if (!((0, _isVnode.isVirtualNode)(renderedThunk) || (0, _isVtext.isVirtualText)(renderedThunk) || (0, _isWidget.isWidget)(renderedThunk))) {
         throw new Error("thunk did not return a valid node");
     }
 
-    return renderedThunk
+    return renderedThunk;
 }
 var exported_handleThunk = handleThunk;
-export { exported_handleThunk as handleThunk };
+exports.handleThunk = exported_handleThunk;

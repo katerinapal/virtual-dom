@@ -1,67 +1,78 @@
-import test from "tape";
-import { isThunk as vnodeisthunk_isThunkjs } from "../vnode/is-thunk";
-import { isVirtualNode as vnodeisvnode_isVirtualNodejs } from "../vnode/is-vnode";
-import { VirtualNode as vnodevnode_VirtualNodejs } from "../vnode/vnode";
-import { diff as diff_diffjs } from "../diff.js";
-import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count.js";
+"use strict";
+
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _isThunk = require("../vnode/is-thunk");
+
+var _isVnode = require("../vnode/is-vnode");
+
+var _vnode = require("../vnode/vnode");
+
+var _diff = require("../diff.js");
+
+var _patchCount = require("./lib/patch-count.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function Thunk(tagName) {
-    this.tagName = tagName
+    this.tagName = tagName;
 }
 
 Thunk.prototype.render = function () {
-    return new vnodevnode_VirtualNodejs(this.tagName);
-}
+    return new _vnode.VirtualNode(this.tagName);
+};
 
-Thunk.prototype.type = "Thunk"
+Thunk.prototype.type = "Thunk";
 
-test("is thunk", function (assert) {
-    var notThunk = {}
+(0, _tape2.default)("is thunk", function (assert) {
+    var notThunk = {};
     var thunkLiteral = {
         type: "Thunk",
-        render: function () {}
-    }
+        render: function render() {}
+    };
 
-    assert.notOk(vnodeisthunk_isThunkjs(notThunk))
-    assert.ok(vnodeisthunk_isThunkjs(thunkLiteral))
-    assert.ok(vnodeisthunk_isThunkjs(new Thunk("div")))
-    assert.end()
-})
+    assert.notOk((0, _isThunk.isThunk)(notThunk));
+    assert.ok((0, _isThunk.isThunk)(thunkLiteral));
+    assert.ok((0, _isThunk.isThunk)(new Thunk("div")));
+    assert.end();
+});
 
-test("null or undefined previous renders thunk", function (assert) {
-    var n = new Thunk("first")
-    var u = new Thunk("second")
-    var nullPatches = diff_diffjs(null, n)
-    var undefPatches = diff_diffjs(undefined, u)
+(0, _tape2.default)("null or undefined previous renders thunk", function (assert) {
+    var n = new Thunk("first");
+    var u = new Thunk("second");
+    var nullPatches = (0, _diff.diff)(null, n);
+    var undefPatches = (0, _diff.diff)(undefined, u);
 
-    assert.ok(vnodeisvnode_isVirtualNodejs(n.vnode))
-    assert.ok(vnodeisvnode_isVirtualNodejs(u.vnode))
-    assert.equal(n.vnode.tagName, "first")
-    assert.equal(u.vnode.tagName, "second")
-    assert.equal(libpatchcount_patchCountjs(nullPatches), 1)
-    assert.equal(libpatchcount_patchCountjs(undefPatches), 1)
-    assert.end()
-})
+    assert.ok((0, _isVnode.isVirtualNode)(n.vnode));
+    assert.ok((0, _isVnode.isVirtualNode)(u.vnode));
+    assert.equal(n.vnode.tagName, "first");
+    assert.equal(u.vnode.tagName, "second");
+    assert.equal((0, _patchCount.patchCount)(nullPatches), 1);
+    assert.equal((0, _patchCount.patchCount)(undefPatches), 1);
+    assert.end();
+});
 
-test("previous thunk passed to render", function (assert) {
-    var renderCount = 0
+(0, _tape2.default)("previous thunk passed to render", function (assert) {
+    var renderCount = 0;
 
-    var previousThunk = new Thunk("div")
+    var previousThunk = new Thunk("div");
 
     var nextThunk = {
         type: "Thunk",
-        render: function (previous) {
-            renderCount++
-            assert.equal(previous, previousThunk)
-            return new vnodevnode_VirtualNodejs("test");
+        render: function render(previous) {
+            renderCount++;
+            assert.equal(previous, previousThunk);
+            return new _vnode.VirtualNode("test");
         }
-    }
+    };
 
-    var patches = diff_diffjs(previousThunk, nextThunk)
+    var patches = (0, _diff.diff)(previousThunk, nextThunk);
 
-    assert.equal(renderCount, 1)
-    assert.equal(libpatchcount_patchCountjs(patches), 1)
-    assert.ok(vnodeisvnode_isVirtualNodejs(nextThunk.vnode))
-    assert.equal(nextThunk.vnode.tagName, "test")
-    assert.end()
-})
+    assert.equal(renderCount, 1);
+    assert.equal((0, _patchCount.patchCount)(patches), 1);
+    assert.ok((0, _isVnode.isVirtualNode)(nextThunk.vnode));
+    assert.equal(nextThunk.vnode.tagName, "test");
+    assert.end();
+});
