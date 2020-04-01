@@ -1,32 +1,31 @@
-var test = require("tape")
-var EvStore = require('ev-store')
-
-var h = require("../index")
+import test from "tape";
+import EvStore from "ev-store";
+import { h as index_hjs } from "../index";
 
 test("h is a function", function (assert) {
-    assert.equal(typeof h, "function")
+    assert.equal(typeof index_hjs, "function")
     assert.end()
 })
 
 test("h returns a vnode", function (assert) {
-    assert.equal(h("div").tagName, "DIV")
+    assert.equal(index_hjs("div").tagName, "DIV")
 
     assert.end()
 })
 
 test("h defaults tagName to uppercase", function (assert) {
-    assert.equal(h("").tagName, "DIV")
-    assert.equal(h("div").tagName, "DIV")
+    assert.equal(index_hjs("").tagName, "DIV")
+    assert.equal(index_hjs("div").tagName, "DIV")
     assert.end()
 })
 
 test("h preserves tagName case if namespace is given", function (assert) {
-    assert.equal(h("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test")
+    assert.equal(index_hjs("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test")
     assert.end()
 })
 
 test("h has props", function (assert) {
-    assert.equal(h("div", {
+    assert.equal(index_hjs("div", {
         foo: "bar"
     }).properties.foo, "bar")
 
@@ -34,7 +33,7 @@ test("h has props", function (assert) {
 })
 
 test("h with text", function (assert) {
-    var node = h("div", "text")
+    var node = index_hjs("div", "text")
 
     assert.equal(node.children[0].text, "text")
 
@@ -42,7 +41,7 @@ test("h with text", function (assert) {
 })
 
 test("h with key", function (assert) {
-    var node = h("div", { key: "bar" })
+    var node = index_hjs("div", { key: "bar" })
 
     assert.equal(node.key, "bar")
 
@@ -51,7 +50,7 @@ test("h with key", function (assert) {
 
 
 test("h with ev-", function (assert) {
-    var node = h("div", { "ev-foo": "bar" })
+    var node = index_hjs("div", { "ev-foo": "bar" })
 
     assert.ok(node.properties["ev-foo"])
 
@@ -64,7 +63,7 @@ test("h with ev-", function (assert) {
 })
 
 test("input.value soft hook", function (assert) {
-    var node = h("input", { value: "text" })
+    var node = index_hjs("input", { value: "text" })
 
     assert.equal(typeof node.properties.value, "object")
     var elem = {}
@@ -76,7 +75,7 @@ test("input.value soft hook", function (assert) {
 })
 
 test("h with child", function (assert) {
-    var node = h("div", h("span"))
+    var node = index_hjs("div", index_hjs("span"))
 
     assert.equal(node.children[0].tagName, "SPAN")
 
@@ -84,7 +83,7 @@ test("h with child", function (assert) {
 })
 
 test("h with children", function (assert) {
-    var node = h("div", [h("span")])
+    var node = index_hjs("div", [index_hjs("span")])
 
     assert.equal(node.children[0].tagName, "SPAN")
 
@@ -92,8 +91,8 @@ test("h with children", function (assert) {
 })
 
 test("h with null", function (assert) {
-    var node = h("div", null)
-    var node2 = h("div", [null])
+    var node = index_hjs("div", null)
+    var node2 = index_hjs("div", [null])
 
     assert.equal(node.children.length, 0)
     assert.equal(node2.children.length, 0)
@@ -102,8 +101,8 @@ test("h with null", function (assert) {
 })
 
 test("h with undefined", function (assert) {
-    var node = h("div", undefined)
-    var node2 = h("div", [undefined])
+    var node = index_hjs("div", undefined)
+    var node2 = index_hjs("div", [undefined])
 
     assert.equal(node.children.length, 0)
     assert.equal(node2.children.length, 0)
@@ -115,7 +114,7 @@ test("h with foreign object", function (assert) {
     var errorSingleChild
 
     try {
-        h("div", null, { foreign: "object" })
+        index_hjs("div", null, { foreign: "object" })
     } catch (e) {
         errorSingleChild = e
     }
@@ -123,7 +122,7 @@ test("h with foreign object", function (assert) {
     var errorChildren
 
     try {
-        h("div", [{ foreign: "object" }])
+        index_hjs("div", [{ foreign: "object" }])
     } catch (e) {
         errorChildren = e
     }
@@ -138,7 +137,7 @@ test("h with foreign object", function (assert) {
 })
 
 test("h with class", function (assert) {
-    var node = h(".foo")
+    var node = index_hjs(".foo")
 
     assert.equal(node.properties.className, "foo")
 
@@ -146,7 +145,7 @@ test("h with class", function (assert) {
 })
 
 test("h with id", function (assert) {
-    var node = h("#foo")
+    var node = index_hjs("#foo")
 
     assert.equal(node.properties.id, "foo")
 
@@ -154,7 +153,7 @@ test("h with id", function (assert) {
 })
 
 test("h with empty string", function (assert) {
-    var node = h("")
+    var node = index_hjs("")
 
     assert.equal(node.tagName, "DIV")
 
@@ -162,7 +161,7 @@ test("h with empty string", function (assert) {
 })
 
 test("h with two classes", function (assert) {
-    var node = h(".foo", { className: "bar" })
+    var node = index_hjs(".foo", { className: "bar" })
 
     assert.equal(node.properties.className, "foo bar")
 
@@ -170,7 +169,7 @@ test("h with two classes", function (assert) {
 })
 
 test("h with two ids", function (assert) {
-    var node = h("#foo", { id: "bar" })
+    var node = index_hjs("#foo", { id: "bar" })
 
     assert.equal(node.properties.id, "bar")
 

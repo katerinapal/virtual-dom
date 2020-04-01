@@ -1,11 +1,13 @@
-var test = require("tape")
-
-var h = require("../h.js")
-var Node = require("../vnode/vnode.js")
-var create = require("../create-element.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
-var patchCount = require("./lib/patch-count.js")
+import test from "tape";
+import { h as h_hjs } from "../h.js";
+import { VirtualNode as vnodevnode_VirtualNodejs } from "../vnode/vnode.js";
+import { createElement as createelement_createElementjs } from "../create-element.js";
+import { diff as diff_diffjs } from "../diff.js";
+import { patch as patch_patchjs } from "../patch.js";
+import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count.js";
+var hooker2;
+var hooker;
+var unhookCallCount;
 
 test("Stateful hooks are added to a hooks object on a node", function (assert) {
     function StatefulHook() {}
@@ -17,7 +19,7 @@ test("Stateful hooks are added to a hooks object on a node", function (assert) {
     StatelessHook.prototype.hook = function () {}
     var statelessValue = new StatelessHook()
 
-    var node = new Node("div", {
+    var node = new vnodevnode_VirtualNodejs("div", {
         stateful: statefulValue,
         stateless: statelessValue,
         value: "not a hook"
@@ -34,12 +36,12 @@ test("Node child stateless hooks are not identified", function (assert) {
     Prop.prototype.hook = function () {}
     var propValue = new Prop()
 
-    var node = new Node("div", {
+    var node = new vnodevnode_VirtualNodejs("div", {
         "id": propValue,
         "value": "not a hook"
     }, [], undefined, undefined)
 
-    var parentNode = new Node("div", {
+    var parentNode = new vnodevnode_VirtualNodejs("div", {
         "id": "not a hook"
     }, [node], undefined, undefined)
 
@@ -55,12 +57,12 @@ test("Node child stateful hooks are identified", function (assert) {
     Prop.prototype.unhook = function () {}
     var propValue = new Prop()
 
-    var node = new Node("div", {
+    var node = new vnodevnode_VirtualNodejs("div", {
         "id": propValue,
         "value": "not a hook"
     }, [], undefined, undefined)
 
-    var parentNode = new Node("div", {
+    var parentNode = new vnodevnode_VirtualNodejs("div", {
         "id": "not a hook"
     }, [node], undefined, undefined)
 
@@ -72,7 +74,7 @@ test("Node child stateful hooks are identified", function (assert) {
 
 test("hooks get called in render", function (assert) {
     var counter = 0
-    var vtree = h("div", {
+    var vtree = h_hjs("div", {
         "some-key": hook(function (elem, prop) {
             counter++
             assert.equal(prop, "some-key")
@@ -82,7 +84,7 @@ test("hooks get called in render", function (assert) {
         })
     })
 
-    var elem = create(vtree)
+    var elem = createelement_createElementjs(vtree)
     assert.equal(elem.className, "bar")
     assert.equal(counter, 1)
 
@@ -94,11 +96,11 @@ test("functions are not hooks in render", function (assert) {
     var fakeHook = function () {
         counter++
     }
-    var vtree = h("div", {
+    var vtree = h_hjs("div", {
         "someProp": fakeHook
     })
 
-    var elem = create(vtree)
+    var elem = createelement_createElementjs(vtree)
     assert.equal(elem.someProp, fakeHook)
     assert.equal(counter, 0)
 
@@ -107,8 +109,8 @@ test("functions are not hooks in render", function (assert) {
 
 test("hooks get called in patch", function (assert) {
     var counter = 0
-    var prev = h("div")
-    var curr = h("div", {
+    var prev = h_hjs("div")
+    var curr = h_hjs("div", {
         "some-key": hook(function (elem, prop) {
             counter++
             assert.equal(prop, "some-key")
@@ -141,24 +143,24 @@ test("hooks are called with DOM node, property name, and previous/next value", f
     var hook1 = new Hook('hook1')
     var hook2 = new Hook('hook2')
 
-    var first = h("div", { id: 'first', hook: hook1 })
-    var second = h("div", { id: 'second', hook: hook2 })
-    var third = h("div")
+    var first = h_hjs("div", { id: 'first', hook: hook1 })
+    var second = h_hjs("div", { id: 'second', hook: hook2 })
+    var third = h_hjs("div")
 
-    var elem = create(first)
+    var elem = createelement_createElementjs(first)
     assert.equal(hook1.hookArgs.length, 1)
     assert.deepEqual(hook1.hookArgs[0], [elem, 'hook', undefined])
     assert.equal(hook1.unhookArgs.length, 0)
 
-    var patches = diff(first, second)
-    elem = patch(elem, patches)
+    var patches = diff_diffjs(first, second)
+    elem = patch_patchjs(elem, patches)
     assert.equal(hook2.hookArgs.length, 1)
     assert.deepEqual(hook2.hookArgs[0], [elem, 'hook', hook1])
     assert.equal(hook1.unhookArgs.length, 1)
     assert.deepEqual(hook1.unhookArgs[0], [elem, 'hook', hook2])
 
-    patches = diff(second, third)
-    elem = patch(elem, patches)
+    patches = diff_diffjs(second, third)
+    elem = patch_patchjs(elem, patches)
     assert.equal(hook2.hookArgs.length, 1)
     assert.equal(hook2.unhookArgs.length, 1)
     assert.deepEqual(hook2.unhookArgs[0], [elem, 'hook', undefined])
@@ -172,8 +174,8 @@ test("functions are not hooks in render", function (assert) {
         counter++
     }
 
-    var prev = h("div")
-    var curr = h("div", { someProp: fakeHook })
+    var prev = h_hjs("div")
+    var curr = h_hjs("div", { someProp: fakeHook })
 
     var elem = createAndPatch(prev, curr)
     assert.equal(elem.someProp, fakeHook)
@@ -184,10 +186,10 @@ test("functions are not hooks in render", function (assert) {
 
 test("two different hooks", function (assert) {
     var counters = { a: 0, b: 0 }
-    var prev = h("div", { propA: hook(function () {
+    var prev = h_hjs("div", { propA: hook(function () {
         counters.a++
     }) })
-    var curr = h("div", { propB: hook(function () {
+    var curr = h_hjs("div", { propB: hook(function () {
         counters.b++
     }) })
 
@@ -202,10 +204,10 @@ test("two different hooks", function (assert) {
 
 test("two hooks on same property", function (assert) {
     var counters = { a: 0, b: 0 }
-    var prev = h("div", { propA: hook(function () {
+    var prev = h_hjs("div", { propA: hook(function () {
         counters.a++
     }) })
-    var curr = h("div", { propA: hook(function () {
+    var curr = h_hjs("div", { propA: hook(function () {
         counters.b++
     }) })
 
@@ -226,8 +228,8 @@ test("two hooks of same interface", function (assert) {
     }
 
     var counters = { a: 0, b: 0 }
-    var prev = h("div", { propA: new Hook("a") })
-    var curr = h("div", { propA: new Hook("b") })
+    var prev = h_hjs("div", { propA: new Hook("a") })
+    var curr = h_hjs("div", { propA: new Hook("b") })
 
     var elem = createAndPatch(prev, curr)
     assert.equal(elem.propA, undefined)
@@ -244,24 +246,24 @@ test("hooks are not called on trivial diff", function (assert) {
         c: 0
     }
 
-    var vnode = h("div", {
+    var vnode = h_hjs("div", {
         test: hook(function () {
             counters.a++
         })
     }, [
-        h("div", { test: hook(function () { counters.b++ }) }),
-        h("div", { test: hook(function () { counters.c++ }) })
+        h_hjs("div", { test: hook(function () { counters.b++ }) }),
+        h_hjs("div", { test: hook(function () { counters.c++ }) })
     ])
 
-    var rootNode = create(vnode)
+    var rootNode = createelement_createElementjs(vnode)
     assert.equal(counters.a, 1, "counters.a")
     assert.equal(counters.b, 1, "counters.b")
     assert.equal(counters.c, 1, "counters.c")
 
-    var patches = diff(vnode, vnode)
-    assert.equal(patchCount(patches), 0)
+    var patches = diff_diffjs(vnode, vnode)
+    assert.equal(libpatchcount_patchCountjs(patches), 0)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
     assert.equal(counters.a, 1, "counters.a patch")
     assert.equal(counters.b, 1, "counters.b patch")
@@ -286,18 +288,18 @@ test("property-replacing diff calls unhook", function (assert) {
   hooker = new zhook('ONE')
   hooker2 = new zhook('TWO')
 
-  var firstTree = h("div", {roothook: hooker})
-  var secondTree = h("div", {roothook: hooker2})
-  var thirdTree = h("span")
+  var firstTree = h_hjs("div", {roothook: hooker})
+  var secondTree = h_hjs("div", {roothook: hooker2})
+  var thirdTree = h_hjs("span")
 
-  var rootNode = create(firstTree)
+  var rootNode = createelement_createElementjs(firstTree)
 
-  var firstPatches = diff(firstTree, secondTree)
-  rootNode = patch(rootNode, firstPatches)
+  var firstPatches = diff_diffjs(firstTree, secondTree)
+  rootNode = patch_patchjs(rootNode, firstPatches)
 
 
-  var secondPatches = diff(secondTree, thirdTree)
-  rootNode = patch(rootNode, secondPatches)
+  var secondPatches = diff_diffjs(secondTree, thirdTree)
+  rootNode = patch_patchjs(rootNode, secondPatches)
 
   assert.strictEqual(unhookCallCount, 2, "Missing unhook calls")
 
@@ -315,15 +317,15 @@ test("unhook-only hook is a valid hook", function (assert) {
 
     var hook = new UnhookHook()
 
-    var firstTree = h('div', {hook: hook})
-    var secondTree = h('div', {})
+    var firstTree = h_hjs('div', {hook: hook})
+    var secondTree = h_hjs('div', {})
 
-    var rootNode = create(firstTree)
+    var rootNode = createelement_createElementjs(firstTree)
 
     assert.notOk(unhookCalled)
 
-    var patches = diff(firstTree, secondTree)
-    rootNode = patch(rootNode, patches)
+    var patches = diff_diffjs(firstTree, secondTree)
+    rootNode = patch_patchjs(rootNode, patches)
 
     assert.ok(unhookCalled)
     assert.end()
@@ -370,79 +372,79 @@ test("all hooks are unhooked", function (assert) {
     function Thunky() {}
 
     Thunky.prototype.render = function () {
-        return h("div", {
+        return h_hjs("div", {
             rootHook: thunkyRootHook
         }, [
-            h("div", {
+            h_hjs("div", {
                 childHook: thunkyChildHookA
             }),
-            h("div", {
+            h_hjs("div", {
                 childHook: thunkyChildHookB
             }),
-            h("div", {
+            h_hjs("div", {
                 childHook: thunkyChildHookC
             })
-        ])
+        ]);
     }
 
     Thunky.prototype.type = "Thunk"
 
 
-    var firstTree = h("div", {
+    var firstTree = h_hjs("div", {
         rootHook: rootHook
     }, [
-        h("div", {
+        h_hjs("div", {
             childHook: childHookA
         }),
-        h("div", {
+        h_hjs("div", {
             childHook: childHookB
         }, [
             new Thunky()
         ]),
-        h("div", {
+        h_hjs("div", {
             childHook: childHookC
         })
     ])
 
-    var secondTree = h("div", {
+    var secondTree = h_hjs("div", {
         rootHook: rootHook
     }, [
-        h("div", {
+        h_hjs("div", {
             childHook: childHookA
         }),
-        h("div", {
+        h_hjs("div", {
             childHook: childHookB
         }, [
             new Thunky()
         ]),
-        h("div", {
+        h_hjs("div", {
             childHook: childHookC
         })
     ])
 
-    var thirdTree = h('span')
+    var thirdTree = h_hjs('span')
 
-    var rootNode = create(firstTree)
-
-    assertHooked();
-
-    var firstPatches = diff(firstTree, secondTree)
+    var rootNode = createelement_createElementjs(firstTree)
 
     assertHooked();
 
-    assert.strictEqual(patchCount(firstPatches), 0, "No patches for identical")
-    rootNode = patch(rootNode, firstPatches)
+    var firstPatches = diff_diffjs(firstTree, secondTree)
 
     assertHooked();
 
-    var secondPatches = diff(secondTree, thirdTree)
+    assert.strictEqual(libpatchcount_patchCountjs(firstPatches), 0, "No patches for identical")
+    rootNode = patch_patchjs(rootNode, firstPatches)
+
+    assertHooked();
+
+    var secondPatches = diff_diffjs(secondTree, thirdTree)
 
     assertHooked();
 
     // Expect 1 root patch, 3 unhook patches and a thunk patch
-    assert.strictEqual(patchCount(secondPatches), 5, "Expect unhook patches")
+    assert.strictEqual(libpatchcount_patchCountjs(secondPatches), 5, "Expect unhook patches")
 
-    rootNode = patch(rootNode, secondPatches)
+    rootNode = patch_patchjs(rootNode, secondPatches)
 
     assertUnhooked()
 
@@ -488,9 +490,9 @@ test("all hooks are unhooked", function (assert) {
 })
 
 function createAndPatch(prev, curr) {
-    var elem = create(prev)
-    var patches = diff(prev, curr)
-    elem = patch(elem, patches)
+    var elem = createelement_createElementjs(prev)
+    var patches = diff_diffjs(prev, curr)
+    elem = patch_patchjs(elem, patches)
 
     return elem
 }

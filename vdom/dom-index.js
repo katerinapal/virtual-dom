@@ -6,8 +6,6 @@
 
 var noChild = {}
 
-module.exports = domIndex
-
 function domIndex(rootNode, tree, indices, nodes) {
     if (!indices || indices.length === 0) {
         return {}
@@ -83,3 +81,5 @@ function indexInRange(indices, left, right) {
 function ascending(a, b) {
     return a > b ? 1 : -1
 }
+var exported_domIndex = domIndex;
+export { exported_domIndex as domIndex };
