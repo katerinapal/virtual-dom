@@ -1,40 +1,27 @@
-var test = require("tape")
-
-var h = require("../h.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
-var render = require("../create-element.js")
-var assertEqualDom = require("./lib/assert-equal-dom.js")
+import test from "tape";
+import { h as h_hjs } from "../h.js";
+import { diff as diff_diffjs } from "../diff.js";
+import { patch as patch_patchjs } from "../patch.js";
+import { createElement as createelement_createElementjs } from "../create-element.js";
+import { assertEqualDom as libassertequaldom_assertEqualDomjs } from "./lib/assert-equal-dom.js";
 
 test("dom node style", function (assert) {
-    var a = h("div", {
-        style: {
-            border: "none",
-            className: "oops",
-            display: "none"
-        }
-    })
+    var a = h_hjs
 
-    var b = h("div", {
-        style: {
-            border: "1px solid #000",
-            className: "oops",
-            display: ""
-        }
-    })
+    var b = h_hjs
 
-    var rootNode = render(a)
+    var rootNode = createelement_createElementjs
     assert.equal(rootNode.style.border, style("border", "none"))
     assert.equal(rootNode.style.className, style("className", "oops"))
     assert.equal(rootNode.style.display, style("display", "none"))
     var s1 = rootNode.style
-    var equalNode = render(b)
+    var equalNode = createelement_createElementjs
     assert.equal(equalNode.style.border, style("border", "1px solid #000"))
     assert.equal(equalNode.style.className, style("className", "oops"))
     assert.equal(equalNode.style.display, style("display", ""))
-    var newRoot = patch(rootNode, diff(a, b))
+    var newRoot = patch_patchjs
     var s2 = newRoot.style
-    assertEqualDom(assert, newRoot, equalNode)
+    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
     assert.equal(newRoot.style.border, style("border", "1px solid #000"))
     assert.equal(newRoot.style.className, style("className", "oops"))
     assert.equal(newRoot.style.display, style("display", ""))
@@ -43,16 +30,16 @@ test("dom node style", function (assert) {
 })
 
 test("dom node dataset", function (assert) {
-    var a = h("div", { dataset: { foo: "bar", bar: "oops" } })
-    var b = h("div", { dataset: { foo: "baz", bar: "oops" } })
-    var rootNode = render(a)
+    var a = h_hjs
+    var b = h_hjs
+    var rootNode = createelement_createElementjs
     var d1 = rootNode.dataset
     assert.equal(rootNode.dataset.foo, "bar")
     assert.equal(rootNode.dataset.bar, "oops")
-    var equalNode = render(b)
-    var newRoot = patch(rootNode, diff(a, b))
+    var equalNode = createelement_createElementjs
+    var newRoot = patch_patchjs
     var d2 = newRoot.dataset
-    assertEqualDom(assert, newRoot, equalNode)
+    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
     assert.equal(newRoot.dataset.foo, "baz")
     assert.equal(newRoot.dataset.bar, "oops")
     assert.equal(d1, d2)
@@ -60,22 +47,22 @@ test("dom node dataset", function (assert) {
 })
 
 test("dom node attributes", function (assert) {
-    var a = h("div", { attributes: { foo: "bar", bar: "oops" } })
-    var b = h("div", { attributes: { foo: "baz", bar: "oops" } })
-    var rootNode = render(a)
-    var equalNode = render(b)
+    var a = h_hjs
+    var b = h_hjs
+    var rootNode = createelement_createElementjs
+    var equalNode = createelement_createElementjs
 
-    var newRoot = patch(rootNode, diff(a, b))
+    var newRoot = patch_patchjs
 
-    assertEqualDom(assert, newRoot, equalNode)
+    libassertequaldom_assertEqualDomjs(assert, newRoot, equalNode)
     assert.equal(newRoot.getAttribute("foo"), "baz")
     assert.equal(newRoot.getAttribute("bar"), "oops")
     assert.end()
 })
 
 test("patch nested properties in right only", function (assert) {
-    var prev = h("div")
-    var curr = h("div", { style: { display: "none" } })
+    var prev = h_hjs
+    var curr = h_hjs
 
     var elem = createAndPatch(prev, curr)
 
@@ -85,8 +72,8 @@ test("patch nested properties in right only", function (assert) {
 })
 
 test("null properties", function (assert) {
-    var prev = h("div", { propA: "bar", propC: {} })
-    var curr = h("div", { propB: "apples" })
+    var prev = h_hjs
+    var curr = h_hjs
 
     var elem = createAndPatch(prev, curr)
 
@@ -98,8 +85,8 @@ test("null properties", function (assert) {
 })
 
 test("replace object with value", function (assert) {
-    var prev = h("div", { propA: { foo: "bar" } })
-    var curr = h("div", { propA: null })
+    var prev = h_hjs
+    var curr = h_hjs
 
     var elem = createAndPatch(prev, curr)
 
@@ -108,8 +95,8 @@ test("replace object with value", function (assert) {
 })
 
 test("create object on node for nested properties", function (assert) {
-    var prev = h("div", { propA: null })
-    var curr = h("div", { propA: { nested: true } })
+    var prev = h_hjs
+    var curr = h_hjs
 
     var elem = createAndPatch(prev, curr)
 
@@ -118,14 +105,14 @@ test("create object on node for nested properties", function (assert) {
 })
 
 function createAndPatch(prev, curr) {
-    var elem = render(prev)
-    var patches = diff(prev, curr)
-    return patch(elem, patches)
+    var elem = createelement_createElementjs
+    var patches = diff_diffjs
+    return patch_patchjs;
 }
 
 // Safely translates style values using the DOM in the browser
 function style(name, value) {
-    var node = render(h())
+    var node = createelement_createElementjs
     node.style[name] = value
     return node.style[name]
 }

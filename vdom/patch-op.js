@@ -1,11 +1,7 @@
-var applyProperties = require("./apply-properties")
-
-var isWidget = require("../vnode/is-widget.js")
-var VPatch = require("../vnode/vpatch.js")
-
-var updateWidget = require("./update-widget")
-
-module.exports = applyPatch
+import { applyProperties as applyproperties_applyPropertiesjs } from "./apply-properties";
+import { isWidget as vnodeiswidget_isWidgetjs } from "../vnode/is-widget.js";
+import { VirtualPatch as vnodevpatch_VirtualPatchjs } from "../vnode/vpatch.js";
+import { updateWidget as updatewidget_updateWidgetjs } from "./update-widget";
 
 function applyPatch(vpatch, domNode, renderOptions) {
     var type = vpatch.type
@@ -13,23 +9,23 @@ function applyPatch(vpatch, domNode, renderOptions) {
     var patch = vpatch.patch
 
     switch (type) {
-        case VPatch.REMOVE:
+        case vnodevpatch_VirtualPatchjs.REMOVE:
             return removeNode(domNode, vNode)
-        case VPatch.INSERT:
+        case vnodevpatch_VirtualPatchjs.INSERT:
             return insertNode(domNode, patch, renderOptions)
-        case VPatch.VTEXT:
+        case vnodevpatch_VirtualPatchjs.VTEXT:
             return stringPatch(domNode, vNode, patch, renderOptions)
-        case VPatch.WIDGET:
+        case vnodevpatch_VirtualPatchjs.WIDGET:
             return widgetPatch(domNode, vNode, patch, renderOptions)
-        case VPatch.VNODE:
+        case vnodevpatch_VirtualPatchjs.VNODE:
             return vNodePatch(domNode, vNode, patch, renderOptions)
-        case VPatch.ORDER:
+        case vnodevpatch_VirtualPatchjs.ORDER:
             reorderChildren(domNode, patch)
             return domNode
-        case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties)
+        case vnodevpatch_VirtualPatchjs.PROPS:
+            applyproperties_applyPropertiesjs(domNode, patch, vNode.properties)
             return domNode
-        case VPatch.THUNK:
+        case vnodevpatch_VirtualPatchjs.THUNK:
             return replaceRoot(domNode,
                 renderOptions.patch(domNode, patch, renderOptions))
         default:
@@ -78,7 +74,7 @@ function stringPatch(domNode, leftVNode, vText, renderOptions) {
 }
 
 function widgetPatch(domNode, leftVNode, widget, renderOptions) {
-    var updating = updateWidget(leftVNode, widget)
+    var updating = updatewidget_updateWidgetjs(leftVNode, widget)
     var newNode
 
     if (updating) {
@@ -112,7 +108,7 @@ function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
 }
 
 function destroyWidget(domNode, w) {
-    if (typeof w.destroy === "function" && isWidget(w)) {
+    if (typeof w.destroy === "function" && vnodeiswidget_isWidgetjs(w)) {
         w.destroy(domNode)
     }
 }
@@ -149,3 +145,5 @@ function replaceRoot(oldRoot, newRoot) {
 
     return newRoot;
 }
+var exported_applyPatch = applyPatch;
+export { exported_applyPatch as applyPatch };

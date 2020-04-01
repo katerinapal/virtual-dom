@@ -1,5 +1,3 @@
-module.exports = patchCount
-
 function patchCount(patch) {
     var count = 0
 
@@ -11,3 +9,5 @@ function patchCount(patch) {
 
     return count
 }
+var exported_patchCount = patchCount;
+export { exported_patchCount as patchCount };
