@@ -1,5 +1,13 @@
-import { h as virtualhyperscriptindex_hjs } from "./virtual-hyperscript/index.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.h = undefined;
+
+var _index = require("./virtual-hyperscript/index.js");
+
 var h_h;
 
-h_h = virtualhyperscriptindex_hjs
-export { h_h as h };
+exports.h = h_h = _index.h;
+exports.h = h_h;

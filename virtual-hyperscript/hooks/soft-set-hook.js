@@ -1,5 +1,8 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 function SoftSetHook(value) {
     if (!(this instanceof SoftSetHook)) {
         return new SoftSetHook(value);
@@ -14,4 +17,4 @@ SoftSetHook.prototype.hook = function (node, propertyName) {
     }
 };
 var exported_SoftSetHook = SoftSetHook;
-export { exported_SoftSetHook as SoftSetHook };
+exports.SoftSetHook = exported_SoftSetHook;

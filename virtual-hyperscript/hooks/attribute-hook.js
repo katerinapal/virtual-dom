@@ -1,5 +1,8 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 function AttributeHook(namespace, value) {
     if (!(this instanceof AttributeHook)) {
         return new AttributeHook(namespace, value);
@@ -10,9 +13,7 @@ function AttributeHook(namespace, value) {
 }
 
 AttributeHook.prototype.hook = function (node, prop, prev) {
-    if (prev && prev.type === 'AttributeHook' &&
-        prev.value === this.value &&
-        prev.namespace === this.namespace) {
+    if (prev && prev.type === 'AttributeHook' && prev.value === this.value && prev.namespace === this.namespace) {
         return;
     }
 
@@ -20,8 +21,7 @@ AttributeHook.prototype.hook = function (node, prop, prev) {
 };
 
 AttributeHook.prototype.unhook = function (node, prop, next) {
-    if (next && next.type === 'AttributeHook' &&
-        next.namespace === this.namespace) {
+    if (next && next.type === 'AttributeHook' && next.namespace === this.namespace) {
         return;
     }
 
@@ -32,4 +32,4 @@ AttributeHook.prototype.unhook = function (node, prop, next) {
 
 AttributeHook.prototype.type = 'AttributeHook';
 var exported_AttributeHook = AttributeHook;
-export { exported_AttributeHook as AttributeHook };
+exports.AttributeHook = exported_AttributeHook;

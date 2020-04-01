@@ -1,7 +1,22 @@
-import isArray from "x-is-array";
-import { h as index_hjs } from "./index.js";
-import { SVGAttributeNamespace as svgattributenamespace_SVGAttributeNamespacejs } from "./svg-attribute-namespace";
-import { AttributeHook as hooksattributehook_AttributeHookjs } from "./hooks/attribute-hook";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.svg = undefined;
+
+var _xIsArray = require("x-is-array");
+
+var _xIsArray2 = _interopRequireDefault(_xIsArray);
+
+var _index = require("./index.js");
+
+var _svgAttributeNamespace = require("./svg-attribute-namespace");
+
+var _attributeHook = require("./hooks/attribute-hook");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 'use strict';
 
 var SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
@@ -24,35 +39,34 @@ function svg(tagName, properties, children) {
             continue;
         }
 
-        var namespace = svgattributenamespace_SVGAttributeNamespacejs(key);
+        var namespace = (0, _svgAttributeNamespace.SVGAttributeNamespace)(key);
 
-        if (namespace === undefined) { // not a svg attribute
+        if (namespace === undefined) {
+            // not a svg attribute
             continue;
         }
 
         var value = properties[key];
 
-        if (typeof value !== 'string' &&
-            typeof value !== 'number' &&
-            typeof value !== 'boolean'
-        ) {
+        if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') {
             continue;
         }
 
-        if (namespace !== null) { // namespaced attribute
-            properties[key] = hooksattributehook_AttributeHookjs(namespace, value);
+        if (namespace !== null) {
+            // namespaced attribute
+            properties[key] = (0, _attributeHook.AttributeHook)(namespace, value);
             continue;
         }
 
-        attributes[key] = value
-        properties[key] = undefined
+        attributes[key] = value;
+        properties[key] = undefined;
     }
 
-    return index_hjs(tagName, properties, children);
+    return (0, _index.h)(tagName, properties, children);
 }
 
 function isChildren(x) {
-    return typeof x === 'string' || isArray(x);
+    return typeof x === 'string' || (0, _xIsArray2.default)(x);
 }
 var exported_svg = svg;
-export { exported_svg as svg };
+exports.svg = exported_svg;
