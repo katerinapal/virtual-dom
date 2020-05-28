@@ -1,5 +1,13 @@
-import { patch as vdompatch_patchjs } from "./vdom/patch.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.patch = undefined;
+
+var _patch = require("./vdom/patch.js");
+
 var patch_patch;
 
-patch_patch = vdompatch_patchjs
-export { patch_patch as patch };
+exports.patch = patch_patch = _patch.patch;
+exports.patch = patch_patch;

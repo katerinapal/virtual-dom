@@ -1,333 +1,320 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.diff = undefined;
+
+var _xIsArray = require("x-is-array");
+
+var _xIsArray2 = _interopRequireDefault(_xIsArray);
+
+var _vpatch = require("../vnode/vpatch");
+
+var _isVnode = require("../vnode/is-vnode");
+
+var _isVtext = require("../vnode/is-vtext");
+
+var _isWidget = require("../vnode/is-widget");
+
+var _isThunk = require("../vnode/is-thunk");
+
+var _handleThunk = require("../vnode/handle-thunk");
+
+var _diffProps = require("./diff-props");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var diff_diff = diff;
-import ext_xisarray_isArray from "x-is-array";
 
-import {
-    VTEXT as vpatchjs_VTEXT,
-    VNODE as vpatchjs_VNODE,
-    WIDGET as vpatchjs_WIDGET,
-    PROPS as vpatchjs_PROPS,
-    ORDER as vpatchjs_ORDER,
-    INSERT as vpatchjs_INSERT,
-    REMOVE as vpatchjs_REMOVE,
-    THUNK as vpatchjs_THUNK,
-    VirtualPatch as vnodevpatch_VirtualPatchjs,
-} from "../vnode/vpatch";
-
-import { isVirtualNode as vnodeisvnode_isVirtualNodejs } from "../vnode/is-vnode";
-import { isVirtualText as vnodeisvtext_isVirtualTextjs } from "../vnode/is-vtext";
-import { isWidget as vnodeiswidget_isWidgetjs } from "../vnode/is-widget";
-import { isThunk as vnodeisthunk_isThunkjs } from "../vnode/is-thunk";
-import { handleThunk as vnodehandlethunk_handleThunkjs } from "../vnode/handle-thunk";
-import { diffProps as diffprops_diffPropsjs } from "./diff-props";
 
 function diff(a, b) {
-    var patch = { a: a }
-    walk(a, b, patch, 0)
-    return patch
+    var patch = { a: a };
+    walk(a, b, patch, 0);
+    return patch;
 }
 
 function walk(a, b, patch, index) {
     if (a === b) {
-        return
+        return;
     }
 
-    var apply = patch[index]
-    var applyClear = false
+    var apply = patch[index];
+    var applyClear = false;
 
-    if (vnodeisthunk_isThunkjs(a) || vnodeisthunk_isThunkjs(b)) {
-        thunks(a, b, patch, index)
+    if ((0, _isThunk.isThunk)(a) || (0, _isThunk.isThunk)(b)) {
+        thunks(a, b, patch, index);
     } else if (b == null) {
 
         // If a is a widget we will add a remove patch for it
         // Otherwise any child widgets/hooks must be destroyed.
         // This prevents adding two remove patches for a widget.
-        if (!vnodeiswidget_isWidgetjs(a)) {
-            clearState(a, patch, index)
-            apply = patch[index]
+        if (!(0, _isWidget.isWidget)(a)) {
+            clearState(a, patch, index);
+            apply = patch[index];
         }
 
-        apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_REMOVE, a, b))
-    } else if (vnodeisvnode_isVirtualNodejs(b)) {
-        if (vnodeisvnode_isVirtualNodejs(a)) {
-            if (a.tagName === b.tagName &&
-                a.namespace === b.namespace &&
-                a.key === b.key) {
-                var propsPatch = diffprops_diffPropsjs(a.properties, b.properties)
+        apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.REMOVE, a, b));
+    } else if ((0, _isVnode.isVirtualNode)(b)) {
+        if ((0, _isVnode.isVirtualNode)(a)) {
+            if (a.tagName === b.tagName && a.namespace === b.namespace && a.key === b.key) {
+                var propsPatch = (0, _diffProps.diffProps)(a.properties, b.properties);
                 if (propsPatch) {
-                    apply = appendPatch(apply,
-                        new vnodevpatch_VirtualPatchjs(vpatchjs_PROPS, a, propsPatch))
+                    apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.PROPS, a, propsPatch));
                 }
-                apply = diffChildren(a, b, patch, apply, index)
+                apply = diffChildren(a, b, patch, apply, index);
             } else {
-                apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_VNODE, a, b))
-                applyClear = true
+                apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.VNODE, a, b));
+                applyClear = true;
             }
         } else {
-            apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_VNODE, a, b))
-            applyClear = true
+            apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.VNODE, a, b));
+            applyClear = true;
         }
-    } else if (vnodeisvtext_isVirtualTextjs(b)) {
-        if (!vnodeisvtext_isVirtualTextjs(a)) {
-            apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_VTEXT, a, b))
-            applyClear = true
+    } else if ((0, _isVtext.isVirtualText)(b)) {
+        if (!(0, _isVtext.isVirtualText)(a)) {
+            apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.VTEXT, a, b));
+            applyClear = true;
         } else if (a.text !== b.text) {
-            apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_VTEXT, a, b))
+            apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.VTEXT, a, b));
         }
-    } else if (vnodeiswidget_isWidgetjs(b)) {
-        if (!vnodeiswidget_isWidgetjs(a)) {
-            applyClear = true
+    } else if ((0, _isWidget.isWidget)(b)) {
+        if (!(0, _isWidget.isWidget)(a)) {
+            applyClear = true;
         }
 
-        apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(vpatchjs_WIDGET, a, b))
+        apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.WIDGET, a, b));
     }
 
     if (apply) {
-        patch[index] = apply
+        patch[index] = apply;
     }
 
     if (applyClear) {
-        clearState(a, patch, index)
+        clearState(a, patch, index);
     }
 }
 
 function diffChildren(a, b, patch, apply, index) {
-    var aChildren = a.children
-    var orderedSet = reorder(aChildren, b.children)
-    var bChildren = orderedSet.children
+    var aChildren = a.children;
+    var orderedSet = reorder(aChildren, b.children);
+    var bChildren = orderedSet.children;
 
-    var aLen = aChildren.length
-    var bLen = bChildren.length
-    var len = aLen > bLen ? aLen : bLen
+    var aLen = aChildren.length;
+    var bLen = bChildren.length;
+    var len = aLen > bLen ? aLen : bLen;
 
     for (var i = 0; i < len; i++) {
-        var leftNode = aChildren[i]
-        var rightNode = bChildren[i]
-        index += 1
+        var leftNode = aChildren[i];
+        var rightNode = bChildren[i];
+        index += 1;
 
         if (!leftNode) {
             if (rightNode) {
                 // Excess nodes in b need to be added
-                apply = appendPatch(apply,
-                    new vnodevpatch_VirtualPatchjs(vpatchjs_INSERT, null, rightNode))
+                apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.INSERT, null, rightNode));
             }
         } else {
-            walk(leftNode, rightNode, patch, index)
+            walk(leftNode, rightNode, patch, index);
         }
 
-        if (vnodeisvnode_isVirtualNodejs(leftNode) && leftNode.count) {
-            index += leftNode.count
+        if ((0, _isVnode.isVirtualNode)(leftNode) && leftNode.count) {
+            index += leftNode.count;
         }
     }
 
     if (orderedSet.moves) {
         // Reorder nodes last
-        apply = appendPatch(apply, new vnodevpatch_VirtualPatchjs(
-            vpatchjs_ORDER,
-            a,
-            orderedSet.moves
-        ))
+        apply = appendPatch(apply, new _vpatch.VirtualPatch(_vpatch.ORDER, a, orderedSet.moves));
     }
 
-    return apply
+    return apply;
 }
 
 function clearState(vNode, patch, index) {
     // TODO: Make this a single walk, not two
-    unhook(vNode, patch, index)
-    destroyWidgets(vNode, patch, index)
+    unhook(vNode, patch, index);
+    destroyWidgets(vNode, patch, index);
 }
 
 // Patch records for all destroyed widgets must be added because we need
 // a DOM node reference for the destroy function
 function destroyWidgets(vNode, patch, index) {
-    if (vnodeiswidget_isWidgetjs(vNode)) {
+    if ((0, _isWidget.isWidget)(vNode)) {
         if (typeof vNode.destroy === "function") {
-            patch[index] = appendPatch(
-                patch[index],
-                new vnodevpatch_VirtualPatchjs(vpatchjs_REMOVE, vNode, null)
-            )
+            patch[index] = appendPatch(patch[index], new _vpatch.VirtualPatch(_vpatch.REMOVE, vNode, null));
         }
-    } else if (vnodeisvnode_isVirtualNodejs(vNode) && (vNode.hasWidgets || vNode.hasThunks)) {
-        var children = vNode.children
-        var len = children.length
+    } else if ((0, _isVnode.isVirtualNode)(vNode) && (vNode.hasWidgets || vNode.hasThunks)) {
+        var children = vNode.children;
+        var len = children.length;
         for (var i = 0; i < len; i++) {
-            var child = children[i]
-            index += 1
+            var child = children[i];
+            index += 1;
 
-            destroyWidgets(child, patch, index)
+            destroyWidgets(child, patch, index);
 
-            if (vnodeisvnode_isVirtualNodejs(child) && child.count) {
-                index += child.count
+            if ((0, _isVnode.isVirtualNode)(child) && child.count) {
+                index += child.count;
             }
         }
-    } else if (vnodeisthunk_isThunkjs(vNode)) {
-        thunks(vNode, null, patch, index)
+    } else if ((0, _isThunk.isThunk)(vNode)) {
+        thunks(vNode, null, patch, index);
     }
 }
 
 // Create a sub-patch for thunks
 function thunks(a, b, patch, index) {
-    var nodes = vnodehandlethunk_handleThunkjs(a, b)
-    var thunkPatch = diff(nodes.a, nodes.b)
+    var nodes = (0, _handleThunk.handleThunk)(a, b);
+    var thunkPatch = diff(nodes.a, nodes.b);
     if (hasPatches(thunkPatch)) {
-        patch[index] = new vnodevpatch_VirtualPatchjs(vpatchjs_THUNK, null, thunkPatch)
+        patch[index] = new _vpatch.VirtualPatch(_vpatch.THUNK, null, thunkPatch);
     }
 }
 
 function hasPatches(patch) {
     for (var index in patch) {
         if (index !== "a") {
-            return true
+            return true;
         }
     }
 
-    return false
+    return false;
 }
 
 // Execute hooks when two nodes are identical
 function unhook(vNode, patch, index) {
-    if (vnodeisvnode_isVirtualNodejs(vNode)) {
+    if ((0, _isVnode.isVirtualNode)(vNode)) {
         if (vNode.hooks) {
-            patch[index] = appendPatch(
-                patch[index],
-                new vnodevpatch_VirtualPatchjs(
-                    vpatchjs_PROPS,
-                    vNode,
-                    undefinedKeys(vNode.hooks)
-                )
-            )
+            patch[index] = appendPatch(patch[index], new _vpatch.VirtualPatch(_vpatch.PROPS, vNode, undefinedKeys(vNode.hooks)));
         }
 
         if (vNode.descendantHooks || vNode.hasThunks) {
-            var children = vNode.children
-            var len = children.length
+            var children = vNode.children;
+            var len = children.length;
             for (var i = 0; i < len; i++) {
-                var child = children[i]
-                index += 1
+                var child = children[i];
+                index += 1;
 
-                unhook(child, patch, index)
+                unhook(child, patch, index);
 
-                if (vnodeisvnode_isVirtualNodejs(child) && child.count) {
-                    index += child.count
+                if ((0, _isVnode.isVirtualNode)(child) && child.count) {
+                    index += child.count;
                 }
             }
         }
-    } else if (vnodeisthunk_isThunkjs(vNode)) {
-        thunks(vNode, null, patch, index)
+    } else if ((0, _isThunk.isThunk)(vNode)) {
+        thunks(vNode, null, patch, index);
     }
 }
 
 function undefinedKeys(obj) {
-    var result = {}
+    var result = {};
 
     for (var key in obj) {
-        result[key] = undefined
+        result[key] = undefined;
     }
 
-    return result
+    return result;
 }
 
 // List diff, naive left to right reordering
 function reorder(aChildren, bChildren) {
     // O(M) time, O(M) memory
-    var bChildIndex = keyIndex(bChildren)
-    var bKeys = bChildIndex.keys
-    var bFree = bChildIndex.free
+    var bChildIndex = keyIndex(bChildren);
+    var bKeys = bChildIndex.keys;
+    var bFree = bChildIndex.free;
 
     if (bFree.length === bChildren.length) {
         return {
             children: bChildren,
             moves: null
-        }
+        };
     }
 
     // O(N) time, O(N) memory
-    var aChildIndex = keyIndex(aChildren)
-    var aKeys = aChildIndex.keys
-    var aFree = aChildIndex.free
+    var aChildIndex = keyIndex(aChildren);
+    var aKeys = aChildIndex.keys;
+    var aFree = aChildIndex.free;
 
     if (aFree.length === aChildren.length) {
         return {
             children: bChildren,
             moves: null
-        }
+        };
     }
 
     // O(MAX(N, M)) memory
-    var newChildren = []
+    var newChildren = [];
 
-    var freeIndex = 0
-    var freeCount = bFree.length
-    var deletedItems = 0
+    var freeIndex = 0;
+    var freeCount = bFree.length;
+    var deletedItems = 0;
 
     // Iterate through a and match a node in b
     // O(N) time,
-    for (var i = 0 ; i < aChildren.length; i++) {
-        var aItem = aChildren[i]
-        var itemIndex
+    for (var i = 0; i < aChildren.length; i++) {
+        var aItem = aChildren[i];
+        var itemIndex;
 
         if (aItem.key) {
             if (bKeys.hasOwnProperty(aItem.key)) {
                 // Match up the old keys
-                itemIndex = bKeys[aItem.key]
-                newChildren.push(bChildren[itemIndex])
-
+                itemIndex = bKeys[aItem.key];
+                newChildren.push(bChildren[itemIndex]);
             } else {
                 // Remove old keyed items
-                itemIndex = i - deletedItems++
-                newChildren.push(null)
+                itemIndex = i - deletedItems++;
+                newChildren.push(null);
             }
         } else {
             // Match the item in a with the next free item in b
             if (freeIndex < freeCount) {
-                itemIndex = bFree[freeIndex++]
-                newChildren.push(bChildren[itemIndex])
+                itemIndex = bFree[freeIndex++];
+                newChildren.push(bChildren[itemIndex]);
             } else {
                 // There are no free items in b to match with
                 // the free items in a, so the extra free nodes
                 // are deleted.
-                itemIndex = i - deletedItems++
-                newChildren.push(null)
+                itemIndex = i - deletedItems++;
+                newChildren.push(null);
             }
         }
     }
 
-    var lastFreeIndex = freeIndex >= bFree.length ?
-        bChildren.length :
-        bFree[freeIndex]
+    var lastFreeIndex = freeIndex >= bFree.length ? bChildren.length : bFree[freeIndex];
 
     // Iterate through b and append any new keys
     // O(M) time
     for (var j = 0; j < bChildren.length; j++) {
-        var newItem = bChildren[j]
+        var newItem = bChildren[j];
 
         if (newItem.key) {
             if (!aKeys.hasOwnProperty(newItem.key)) {
                 // Add any new keyed items
                 // We are adding new items to the end and then sorting them
                 // in place. In future we should insert new items in place.
-                newChildren.push(newItem)
+                newChildren.push(newItem);
             }
         } else if (j >= lastFreeIndex) {
             // Add any leftover non-keyed items
-            newChildren.push(newItem)
+            newChildren.push(newItem);
         }
     }
 
-    var simulate = newChildren.slice()
-    var simulateIndex = 0
-    var removes = []
-    var inserts = []
-    var simulateItem
+    var simulate = newChildren.slice();
+    var simulateIndex = 0;
+    var removes = [];
+    var inserts = [];
+    var simulateItem;
 
     for (var k = 0; k < bChildren.length;) {
-        var wantedItem = bChildren[k]
-        simulateItem = simulate[simulateIndex]
+        var wantedItem = bChildren[k];
+        simulateItem = simulate[simulateIndex];
 
         // remove items
         while (simulateItem === null && simulate.length) {
-            removes.push(remove(simulate, simulateIndex, null))
-            simulateItem = simulate[simulateIndex]
+            removes.push(remove(simulate, simulateIndex, null));
+            simulateItem = simulate[simulateIndex];
         }
 
         if (!simulateItem || simulateItem.key !== wantedItem.key) {
@@ -336,41 +323,38 @@ function reorder(aChildren, bChildren) {
                 if (simulateItem && simulateItem.key) {
                     // if an insert doesn't put this key in place, it needs to move
                     if (bKeys[simulateItem.key] !== k + 1) {
-                        removes.push(remove(simulate, simulateIndex, simulateItem.key))
-                        simulateItem = simulate[simulateIndex]
+                        removes.push(remove(simulate, simulateIndex, simulateItem.key));
+                        simulateItem = simulate[simulateIndex];
                         // if the remove didn't put the wanted item in place, we need to insert it
                         if (!simulateItem || simulateItem.key !== wantedItem.key) {
-                            inserts.push({key: wantedItem.key, to: k})
+                            inserts.push({ key: wantedItem.key, to: k });
                         }
                         // items are matching, so skip ahead
                         else {
-                            simulateIndex++
-                        }
+                                simulateIndex++;
+                            }
+                    } else {
+                        inserts.push({ key: wantedItem.key, to: k });
                     }
-                    else {
-                        inserts.push({key: wantedItem.key, to: k})
-                    }
+                } else {
+                    inserts.push({ key: wantedItem.key, to: k });
                 }
-                else {
-                    inserts.push({key: wantedItem.key, to: k})
-                }
-                k++
+                k++;
             }
             // a key in simulate has no matching wanted key, remove it
             else if (simulateItem && simulateItem.key) {
-                removes.push(remove(simulate, simulateIndex, simulateItem.key))
-            }
-        }
-        else {
-            simulateIndex++
-            k++
+                    removes.push(remove(simulate, simulateIndex, simulateItem.key));
+                }
+        } else {
+            simulateIndex++;
+            k++;
         }
     }
 
     // remove all the remaining nodes from simulate
-    while(simulateIndex < simulate.length) {
-        simulateItem = simulate[simulateIndex]
-        removes.push(remove(simulate, simulateIndex, simulateItem && simulateItem.key))
+    while (simulateIndex < simulate.length) {
+        simulateItem = simulate[simulateIndex];
+        removes.push(remove(simulate, simulateIndex, simulateItem && simulateItem.key));
     }
 
     // If the only moves we have are deletes then we can just
@@ -379,7 +363,7 @@ function reorder(aChildren, bChildren) {
         return {
             children: newChildren,
             moves: null
-        }
+        };
     }
 
     return {
@@ -388,50 +372,50 @@ function reorder(aChildren, bChildren) {
             removes: removes,
             inserts: inserts
         }
-    }
+    };
 }
 
 function remove(arr, index, key) {
-    arr.splice(index, 1)
+    arr.splice(index, 1);
 
     return {
         from: index,
         key: key
-    }
+    };
 }
 
 function keyIndex(children) {
-    var keys = {}
-    var free = []
-    var length = children.length
+    var keys = {};
+    var free = [];
+    var length = children.length;
 
     for (var i = 0; i < length; i++) {
-        var child = children[i]
+        var child = children[i];
 
         if (child.key) {
-            keys[child.key] = i
+            keys[child.key] = i;
         } else {
-            free.push(i)
+            free.push(i);
         }
     }
 
     return {
-        keys: keys,     // A hash of key name to index
-        free: free      // An array of unkeyed item indices
-    }
+        keys: keys, // A hash of key name to index
+        free: free // An array of unkeyed item indices
+    };
 }
 
 function appendPatch(apply, patch) {
     if (apply) {
-        if (ext_xisarray_isArray(apply)) {
-            apply.push(patch)
+        if ((0, _xIsArray2.default)(apply)) {
+            apply.push(patch);
         } else {
-            apply = [apply, patch]
+            apply = [apply, patch];
         }
 
-        return apply
+        return apply;
     } else {
-        return patch
+        return patch;
     }
 }
-export { diff_diff as diff };
+exports.diff = diff_diff;

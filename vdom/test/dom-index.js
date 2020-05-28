@@ -1,75 +1,76 @@
-import ext_tape_test from "tape";
-import { VirtualNode as vnodevnode_VirtualNodejs } from "../../vnode/vnode";
-import { VirtualText as vnodevtext_VirtualTextjs } from "../../vnode/vtext";
-import { diff as vtreediff_diffjs } from "../../vtree/diff";
-import { createElement as createelement_createElementjs } from "../create-element";
-import { patch as patch_patchjs } from "../patch";
+"use strict";
 
-ext_tape_test("indexing over thunk root", function (assert) {
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _vnode = require("../../vnode/vnode");
+
+var _vtext = require("../../vnode/vtext");
+
+var _diff = require("../../vtree/diff");
+
+var _createElement = require("../create-element");
+
+var _patch = require("../patch");
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _tape2.default)("indexing over thunk root", function (assert) {
     var leftThunk = {
         type: "Thunk",
-        render: function () {
-            return new vnodevnode_VirtualNodejs("div", {
-                className:"test"
-            }, [new vnodevtext_VirtualTextjs("Left")]);
+        render: function render() {
+            return new _vnode.VirtualNode("div", {
+                className: "test"
+            }, [new _vtext.VirtualText("Left")]);
         }
-    }
+    };
 
     var rightThunk = {
         type: "Thunk",
-        render: function () {
-            return new vnodevnode_VirtualNodejs("div", {
+        render: function render() {
+            return new _vnode.VirtualNode("div", {
                 className: "test"
-            }, [new vnodevtext_VirtualTextjs("Right")]);
+            }, [new _vtext.VirtualText("Right")]);
         }
-    }
+    };
 
-    var root = createelement_createElementjs(leftThunk)
-    var patches = vtreediff_diffjs(leftThunk, rightThunk)
-    var newRoot = patch_patchjs(root, patches)
+    var root = (0, _createElement.createElement)(leftThunk);
+    var patches = (0, _diff.diff)(leftThunk, rightThunk);
+    var newRoot = (0, _patch.patch)(root, patches);
 
-    assert.equal(newRoot.childNodes[0].data, "Right")
-    assert.end()
-})
+    assert.equal(newRoot.childNodes[0].data, "Right");
+    assert.end();
+});
 
-ext_tape_test("indexing over thunk child", function (assert) {
-    var leftNode = new vnodevnode_VirtualNodejs("div", {
+(0, _tape2.default)("indexing over thunk child", function (assert) {
+    var leftNode = new _vnode.VirtualNode("div", {
         className: "parent-node"
-    }, [
-        new vnodevnode_VirtualNodejs("div"),
-        new vnodevtext_VirtualTextjs("test"),
-        {
-            type: "Thunk",
-            render: function () {
-                return new vnodevnode_VirtualNodejs("div", {
-                    className:"test"
-                }, [new vnodevtext_VirtualTextjs("Left")]);
-            }
-        },
-        new vnodevnode_VirtualNodejs("div"),
-        new vnodevtext_VirtualTextjs("test")
-    ])
+    }, [new _vnode.VirtualNode("div"), new _vtext.VirtualText("test"), {
+        type: "Thunk",
+        render: function render() {
+            return new _vnode.VirtualNode("div", {
+                className: "test"
+            }, [new _vtext.VirtualText("Left")]);
+        }
+    }, new _vnode.VirtualNode("div"), new _vtext.VirtualText("test")]);
 
-    var rightNode = new vnodevnode_VirtualNodejs("div", {
+    var rightNode = new _vnode.VirtualNode("div", {
         className: "parent-node"
-    }, [
-        new vnodevnode_VirtualNodejs("div"),
-        new vnodevtext_VirtualTextjs("test"),
-        {
-            type: "Thunk",
-            render: function () {
-                return new vnodevnode_VirtualNodejs("div", {
-                    className:"test"
-                }, [new vnodevtext_VirtualTextjs("Right")]);
-            }
-        },
-        new vnodevnode_VirtualNodejs("div"),
-        new vnodevtext_VirtualTextjs("test")
-    ])
+    }, [new _vnode.VirtualNode("div"), new _vtext.VirtualText("test"), {
+        type: "Thunk",
+        render: function render() {
+            return new _vnode.VirtualNode("div", {
+                className: "test"
+            }, [new _vtext.VirtualText("Right")]);
+        }
+    }, new _vnode.VirtualNode("div"), new _vtext.VirtualText("test")]);
 
-    var root = createelement_createElementjs(leftNode)
-    var patches = vtreediff_diffjs(leftNode, rightNode)
-    patch_patchjs(root, patches)
-    assert.equal(root.childNodes[2].childNodes[0].data, "Right")
-    assert.end()
-})
+    var root = (0, _createElement.createElement)(leftNode);
+    var patches = (0, _diff.diff)(leftNode, rightNode);
+    (0, _patch.patch)(root, patches);
+    assert.equal(root.childNodes[2].childNodes[0].data, "Right");
+    assert.end();
+});

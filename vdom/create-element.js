@@ -1,44 +1,60 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.createElement = undefined;
+
+var _document = require("global/document");
+
+var _document2 = _interopRequireDefault(_document);
+
+var _applyProperties = require("./apply-properties");
+
+var _isVnode = require("../vnode/is-vnode.js");
+
+var _isVtext = require("../vnode/is-vtext.js");
+
+var _isWidget = require("../vnode/is-widget.js");
+
+var _handleThunk = require("../vnode/handle-thunk.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var createelement_createElement = createElement;
-import ext_globaldocument_document from "global/document";
-import { applyProperties as applyproperties_applyPropertiesjs } from "./apply-properties";
-import { isVirtualNode as vnodeisvnode_isVirtualNodejs } from "../vnode/is-vnode.js";
-import { isVirtualText as vnodeisvtext_isVirtualTextjs } from "../vnode/is-vtext.js";
-import { isWidget as vnodeiswidget_isWidgetjs } from "../vnode/is-widget.js";
-import { handleThunk as vnodehandlethunk_handleThunkjs } from "../vnode/handle-thunk.js";
+
 
 function createElement(vnode, opts) {
-    var doc = opts ? opts.document || ext_globaldocument_document : ext_globaldocument_document
-    var warn = opts ? opts.warn : null
+    var doc = opts ? opts.document || _document2.default : _document2.default;
+    var warn = opts ? opts.warn : null;
 
-    vnode = vnodehandlethunk_handleThunkjs(vnode).a
+    vnode = (0, _handleThunk.handleThunk)(vnode).a;
 
-    if (vnodeiswidget_isWidgetjs(vnode)) {
-        return vnode.init()
-    } else if (vnodeisvtext_isVirtualTextjs(vnode)) {
-        return doc.createTextNode(vnode.text)
-    } else if (!vnodeisvnode_isVirtualNodejs(vnode)) {
+    if ((0, _isWidget.isWidget)(vnode)) {
+        return vnode.init();
+    } else if ((0, _isVtext.isVirtualText)(vnode)) {
+        return doc.createTextNode(vnode.text);
+    } else if (!(0, _isVnode.isVirtualNode)(vnode)) {
         if (warn) {
-            warn("Item is not a valid virtual dom node", vnode)
+            warn("Item is not a valid virtual dom node", vnode);
         }
-        return null
+        return null;
     }
 
-    var node = (vnode.namespace === null) ?
-        doc.createElement(vnode.tagName) :
-        doc.createElementNS(vnode.namespace, vnode.tagName)
+    var node = vnode.namespace === null ? doc.createElement(vnode.tagName) : doc.createElementNS(vnode.namespace, vnode.tagName);
 
-    var props = vnode.properties
-    applyproperties_applyPropertiesjs(node, props)
+    var props = vnode.properties;
+    (0, _applyProperties.applyProperties)(node, props);
 
-    var children = vnode.children
+    var children = vnode.children;
 
     for (var i = 0; i < children.length; i++) {
-        var childNode = createElement(children[i], opts)
+        var childNode = createElement(children[i], opts);
         if (childNode) {
-            node.appendChild(childNode)
+            node.appendChild(childNode);
         }
     }
 
-    return node
+    return node;
 }
-export { createelement_createElement as createElement };
+exports.createElement = createelement_createElement;

@@ -1,3 +1,8 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var softsethook_SoftSetHook = SoftSetHook;
 'use strict';
 
@@ -14,4 +19,4 @@ SoftSetHook.prototype.hook = function (node, propertyName) {
         node[propertyName] = this.value;
     }
 };
-export { softsethook_SoftSetHook as SoftSetHook };
+exports.SoftSetHook = softsethook_SoftSetHook;

@@ -1,5 +1,18 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.parseTag = undefined;
+
+var _browserSplit = require('browser-split');
+
+var _browserSplit2 = _interopRequireDefault(_browserSplit);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var parsetag_parseTag = parseTag;
-import ext_browsersplit_split from "browser-split";
+
 'use strict';
 
 var classIdSplit = /([\.#]?[a-zA-Z0-9\u007F-\uFFFF_:-]+)/;
@@ -10,9 +23,9 @@ function parseTag(tag, props) {
         return 'DIV';
     }
 
-    var noId = !(props.hasOwnProperty('id'));
+    var noId = !props.hasOwnProperty('id');
 
-    var tagParts = ext_browsersplit_split(tag, classIdSplit);
+    var tagParts = (0, _browserSplit2.default)(tag, classIdSplit);
     var tagName = null;
 
     if (notClassId.test(tagParts[1])) {
@@ -50,4 +63,4 @@ function parseTag(tag, props) {
 
     return props.namespace ? tagName : tagName.toUpperCase();
 }
-export { parsetag_parseTag as parseTag };
+exports.parseTag = parsetag_parseTag;

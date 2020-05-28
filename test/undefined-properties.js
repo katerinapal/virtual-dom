@@ -1,142 +1,154 @@
-import ext_tape_test from "tape";
-import ext_isobject_isObject from "is-object";
-import { h as h_hjs } from "../h.js";
-import { diff as diff_diffjs } from "../diff.js";
-import { patch as patch_patchjs } from "../patch.js";
-import { createElement as createelement_createElementjs } from "../create-element.js";
+"use strict";
 
-ext_tape_test("undefined props are not set in create-element", function (assert) {
-    var node = h_hjs("div", { special: undefined })
-    var rootNode = createelement_createElementjs(node)
-    assert.ok(!("special" in rootNode))
-    assert.end()
-})
+var _tape = require("tape");
 
-ext_tape_test("undefined removes all previous styles", function (assert) {
-    var leftNode = h_hjs("div", {
+var _tape2 = _interopRequireDefault(_tape);
+
+var _isObject = require("is-object");
+
+var _isObject2 = _interopRequireDefault(_isObject);
+
+var _h = require("../h.js");
+
+var _diff = require("../diff.js");
+
+var _patch = require("../patch.js");
+
+var _createElement = require("../create-element.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _tape2.default)("undefined props are not set in create-element", function (assert) {
+    var node = (0, _h.h)("div", { special: undefined });
+    var rootNode = (0, _createElement.createElement)(node);
+    assert.ok(!("special" in rootNode));
+    assert.end();
+});
+
+(0, _tape2.default)("undefined removes all previous styles", function (assert) {
+    var leftNode = (0, _h.h)("div", {
         style: {
             display: "none",
             border: "1px solid #000"
         }
-    })
+    });
 
-    var rightNode = h_hjs("div", {
+    var rightNode = (0, _h.h)("div", {
         style: undefined
-    })
+    });
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    assert.equal(rootNode.style.display, style("display", ""))
-    assert.equal(rootNode.style.border, style("border", ""))
+    assert.equal(rootNode.style.display, style("display", ""));
+    assert.equal(rootNode.style.border, style("border", ""));
     assert.end();
-})
+});
 
-ext_tape_test("undefined style removes individual styles", function (assert) {
-    var leftNode = h_hjs("div", { "style": { "display": "none" }})
-    var rightNode = h_hjs("div", { "style": undefined })
+(0, _tape2.default)("undefined style removes individual styles", function (assert) {
+    var leftNode = (0, _h.h)("div", { "style": { "display": "none" } });
+    var rightNode = (0, _h.h)("div", { "style": undefined });
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    assert.equal(rootNode.style.display, style("display", ""))
-    assert.end()
-})
+    assert.equal(rootNode.style.display, style("display", ""));
+    assert.end();
+});
 
-ext_tape_test("undefined ignored for hooks", function (assert) {
+(0, _tape2.default)("undefined ignored for hooks", function (assert) {
     function CheckNodeBeforeSet(value) {
-        this.value = value
+        this.value = value;
     }
     CheckNodeBeforeSet.prototype.hook = function (rootNode, propName) {
-        var value = this.value
+        var value = this.value;
         if (value !== rootNode[propName]) {
-            rootNode[propName] = value
+            rootNode[propName] = value;
         }
-    }
+    };
 
-    var leftNode = h_hjs("input", { value: new CheckNodeBeforeSet("hello") })
-    var rightNode = h_hjs("input", { value: undefined })
+    var leftNode = (0, _h.h)("input", { value: new CheckNodeBeforeSet("hello") });
+    var rightNode = (0, _h.h)("input", { value: undefined });
 
-    var rootNode = createelement_createElementjs(leftNode)
-    assert.equal(rootNode.value, "hello")
+    var rootNode = (0, _createElement.createElement)(leftNode);
+    assert.equal(rootNode.value, "hello");
 
-    var newRoot = patch_patchjs(rootNode, diff_diffjs(leftNode, rightNode))
-    assert.equal(newRoot.value, "hello")
+    var newRoot = (0, _patch.patch)(rootNode, (0, _diff.diff)(leftNode, rightNode));
+    assert.equal(newRoot.value, "hello");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_tape_test("undefined nulls other complex types", function (assert) {
-    var leftNode = h_hjs("input", { special: {} })
-    var rightNode = h_hjs("input", { special: null })
+(0, _tape2.default)("undefined nulls other complex types", function (assert) {
+    var leftNode = (0, _h.h)("input", { special: {} });
+    var rightNode = (0, _h.h)("input", { special: null });
 
-    var rootNode = createelement_createElementjs(leftNode)
-    assert.ok(ext_isobject_isObject(rootNode.special))
+    var rootNode = (0, _createElement.createElement)(leftNode);
+    assert.ok((0, _isObject2.default)(rootNode.special));
 
+    var newRoot = (0, _patch.patch)(rootNode, (0, _diff.diff)(leftNode, rightNode));
+    assert.equal(newRoot.special, null);
 
-    var newRoot = patch_patchjs(rootNode, diff_diffjs(leftNode, rightNode))
-    assert.equal(newRoot.special, null)
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("null not ignored for value", function (assert) {
+    var leftNode = (0, _h.h)("input", { value: "hello" });
+    var rightNode = (0, _h.h)("input", { value: null });
 
-ext_tape_test("null not ignored for value", function (assert) {
-    var leftNode = h_hjs("input", { value: "hello" })
-    var rightNode = h_hjs("input", { value: null })
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    assert.equal(rootNode.value, property("input", "value", null));
+    assert.end();
+});
 
-    assert.equal(rootNode.value, property("input", "value", null))
-    assert.end()
-})
+(0, _tape2.default)("null not ignored for objects", function (assert) {
+    var leftNode = (0, _h.h)("div", { "test": { "complex": "object" } });
+    var rightNode = (0, _h.h)("div", { "test": null });
 
-ext_tape_test("null not ignored for objects", function (assert) {
-    var leftNode = h_hjs("div", { "test": { "complex": "object" }})
-    var rightNode = h_hjs("div", { "test": null })
+    var rootNode = createAndPatch(leftNode, rightNode);
 
-    var rootNode = createAndPatch(leftNode, rightNode)
+    assert.equal(rootNode.test, null);
+    assert.end();
+});
 
-    assert.equal(rootNode.test, null)
-    assert.end()
-})
-
-ext_tape_test("null not ignored for hooks", function (assert) {
+(0, _tape2.default)("null not ignored for hooks", function (assert) {
     function CheckNodeBeforeSet(value) {
-        this.value = value
+        this.value = value;
     }
     CheckNodeBeforeSet.prototype.hook = function (rootNode, propName) {
-        var value = this.value
+        var value = this.value;
         if (value !== rootNode[propName]) {
-            rootNode.value = value
+            rootNode.value = value;
         }
-    }
+    };
 
-    var leftNode = h_hjs("input", { value: new CheckNodeBeforeSet("hello") })
-    var rightNode = h_hjs("input", { value: null })
+    var leftNode = (0, _h.h)("input", { value: new CheckNodeBeforeSet("hello") });
+    var rightNode = (0, _h.h)("input", { value: null });
 
-    var rootNode = createelement_createElementjs(leftNode)
-    assert.equal(rootNode.value, "hello")
+    var rootNode = (0, _createElement.createElement)(leftNode);
+    assert.equal(rootNode.value, "hello");
 
-    var newRoot = patch_patchjs(rootNode, diff_diffjs(leftNode, rightNode))
-    assert.equal(newRoot.value, property("input", "value", null))
+    var newRoot = (0, _patch.patch)(rootNode, (0, _diff.diff)(leftNode, rightNode));
+    assert.equal(newRoot.value, property("input", "value", null));
 
-    assert.end()
-})
+    assert.end();
+});
 
 function createAndPatch(prev, curr) {
-    var elem = createelement_createElementjs(prev)
-    var patches = diff_diffjs(prev, curr)
-    return patch_patchjs(elem, patches);
+    var elem = (0, _createElement.createElement)(prev);
+    var patches = (0, _diff.diff)(prev, curr);
+    return (0, _patch.patch)(elem, patches);
 }
 
 // Safely translates style values using the DOM in the browser
 function style(name, value) {
-    var node = createelement_createElementjs(h_hjs())
-    node.style[name] = value
-    return node.style[name]
+    var node = (0, _createElement.createElement)((0, _h.h)());
+    node.style[name] = value;
+    return node.style[name];
 }
 
 // Safely transaltes node property using the DOM in the browser
 function property(tag, prop, value) {
-    var node = createelement_createElementjs(h_hjs(tag))
-    node[prop] = value
-    return node[prop]
+    var node = (0, _createElement.createElement)((0, _h.h)(tag));
+    node[prop] = value;
+    return node[prop];
 }
