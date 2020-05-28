@@ -1,7 +1,6 @@
-var isObject = require("is-object")
-var isHook = require("../vnode/is-vhook")
-
-module.exports = diffProps
+var diffprops_diffProps = diffProps;
+import ext_isobject_isObject from "is-object";
+import { isHook as vnodeisvhook_isHookjs } from "../vnode/is-vhook";
 
 function diffProps(a, b) {
     var diff
@@ -17,11 +16,11 @@ function diffProps(a, b) {
 
         if (aValue === bValue) {
             continue
-        } else if (isObject(aValue) && isObject(bValue)) {
+        } else if (ext_isobject_isObject(aValue) && ext_isobject_isObject(bValue)) {
             if (getPrototype(bValue) !== getPrototype(aValue)) {
                 diff = diff || {}
                 diff[aKey] = bValue
-            } else if (isHook(bValue)) {
+            } else if (vnodeisvhook_isHookjs(bValue)) {
                  diff = diff || {}
                  diff[aKey] = bValue
             } else {
@@ -56,3 +55,4 @@ function getPrototype(value) {
     return value.constructor.prototype
   }
 }
+export { diffprops_diffProps as diffProps };
