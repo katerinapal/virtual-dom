@@ -1,6 +1,5 @@
+var softsethook_SoftSetHook = SoftSetHook;
 'use strict';
-
-module.exports = SoftSetHook;
 
 function SoftSetHook(value) {
     if (!(this instanceof SoftSetHook)) {
@@ -15,3 +14,4 @@ SoftSetHook.prototype.hook = function (node, propertyName) {
         node[propertyName] = this.value;
     }
 };
+export { softsethook_SoftSetHook as SoftSetHook };

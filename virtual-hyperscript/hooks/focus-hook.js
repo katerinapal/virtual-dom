@@ -1,9 +1,10 @@
+import ext_globaldocument_document from "global/document";
+import ext_nexttick_nextTick from "next-tick";
 'use strict';
 
-var document = require("global/document");
-var nextTick = require("next-tick");
+var encapsulated_MutableFocusHook;
 
-module.exports = MutableFocusHook;
+encapsulated_MutableFocusHook = MutableFocusHook;
 
 function MutableFocusHook() {
     if (!(this instanceof MutableFocusHook)) {
@@ -12,8 +13,8 @@ function MutableFocusHook() {
 }
 
 MutableFocusHook.prototype.hook = function (node) {
-    nextTick(function () {
-        if (document.activeElement !== node) {
+    ext_nexttick_nextTick(function () {
+        if (ext_globaldocument_document.activeElement !== node) {
             node.focus();
         }
     });

@@ -1,30 +1,27 @@
-var test = require("tape")
+import ext_tape_test from "tape";
+import { h as h_hjs } from "../h.js";
+import { diff as diff_diffjs } from "../diff.js";
+import { patch as patch_patchjs } from "../patch.js";
+import { createElement as createelement_createElementjs } from "../create-element.js";
+import { patchCount as libpatchcount_patchCountjs } from "./lib/patch-count.js";
+import { assertEqualDom as libassertequaldom_assertEqualDomjs } from "./lib/assert-equal-dom.js";
+import { nodesFromArray as libnodesfromarray_nodesFromArrayjs } from "./lib/nodes-from-array.js";
+import {     assertChildNodesFromArray as libassertchildNodesfromarray_assertChildNodesFromArrayjs, } from "./lib/assert-childNodes-from-array.js";
+import { ORDER as vpatchjs_ORDER } from "../vnode/vpatch.js";
 
-var h = require("../h.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
-var render = require("../create-element.js")
+ext_tape_test("keys get reordered", function (assert) {
+    var leftNode = libnodesfromarray_nodesFromArrayjs(["1", "2", "3", "4", "test", "6", "good", "7"])
+    var rightNode = libnodesfromarray_nodesFromArrayjs(["7", "4", "3", "2", "6", "test", "good", "1"])
 
-var patchCount = require("./lib/patch-count.js")
-var assertEqualDom = require("./lib/assert-equal-dom.js")
-var nodesFromArray = require("./lib/nodes-from-array.js")
-var assertChildNodesFromArray = require("./lib/assert-childNodes-from-array.js")
-
-var VPatch = require("../vnode/vpatch.js")
-
-test("keys get reordered", function (assert) {
-    var leftNode = nodesFromArray(["1", "2", "3", "4", "test", "6", "good", "7"])
-    var rightNode = nodesFromArray(["7", "4", "3", "2", "6", "test", "good", "1"])
-
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
 
     var childNodes = []
     for (var i = 0; i < rootNode.childNodes.length; i++) {
         childNodes.push(rootNode.childNodes[i])
     }
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
     assertReorderEquals(assert, patches, {
         removes: [
             {from: 0, key: '1'},
@@ -42,7 +39,7 @@ test("keys get reordered", function (assert) {
         ]
     })
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, rootNode.childNodes.length)
@@ -58,40 +55,40 @@ test("keys get reordered", function (assert) {
     assert.end()
 })
 
-test("mix keys without keys", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: 1 }),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div")
+ext_tape_test("mix keys without keys", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: 1 }),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div")
     ])
 
-    var rightNode = h("div", [
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div", { key: 1 })
+    var rightNode = h_hjs("div", [
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div", { key: 1 })
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
     assertReorderEquals(assert, patches, {
         removes: [{from: 0, key: '1'}],
         inserts: [{to: 7, key: '1'}]
     })
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, rootNode.childNodes.length)
@@ -107,26 +104,26 @@ test("mix keys without keys", function (assert) {
     assert.end()
 })
 
-test("avoid unnecessary reordering", function (assert) {
-    var leftNode = h("div", [
-        h("div"),
-        h("div", { key: 1 }),
-        h("div")
+ext_tape_test("avoid unnecessary reordering", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div"),
+        h_hjs("div", { key: 1 }),
+        h_hjs("div")
     ])
 
-    var rightNode = h("div", [
-        h("div"),
-        h("div", { key: 1 }),
-        h("div")
+    var rightNode = h_hjs("div", [
+        h_hjs("div"),
+        h_hjs("div", { key: 1 }),
+        h_hjs("div")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 0)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 0)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes[0], childNodes[0])
@@ -135,40 +132,40 @@ test("avoid unnecessary reordering", function (assert) {
     assert.end()
 })
 
-test("missing key gets replaced", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: 1 }),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div")
+ext_tape_test("missing key gets replaced", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: 1 }),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div")
     ])
 
-    var rightNode = h("div", [
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div"),
-        h("div")
+    var rightNode = h_hjs("div", [
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div"),
+        h_hjs("div")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
 
     var childNodes = []
     for (var i = 0; i < rootNode.childNodes.length; i++) {
         childNodes.push(rootNode.childNodes[i])
     }
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, rootNode.childNodes.length)
@@ -184,74 +181,74 @@ test("missing key gets replaced", function (assert) {
     assert.end()
 })
 
-test("widgets can be keyed", function (assert) {
+ext_tape_test("widgets can be keyed", function (assert) {
     function DivWidget(key, state) {
         this.key = key
         this.state = state
     }
 
     DivWidget.prototype.init = function () {
-        return render(h("div", this.state))
+        return createelement_createElementjs(h_hjs("div", this.state));
     }
 
     DivWidget.prototype.update = function (rootNode, prev) {
         if (this.state !== prev.state) {
-            return render(h("div", this.state))
+            return createelement_createElementjs(h_hjs("div", this.state));
         }
     }
 
     DivWidget.prototype.type = "Widget"
 
-    var leftNode = h("div", [
+    var leftNode = h_hjs("div", [
         new DivWidget("1", "a"),
         new DivWidget("2", "b"),
         new DivWidget("3", "c")
     ])
 
-    var rightNode = h("div", [
+    var rightNode = h_hjs("div", [
         new DivWidget("3", "c"),
         new DivWidget("2", "b"),
         new DivWidget("1", "a")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 4)    // 1 reorder and 3 update patches
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 4)    // 1 reorder and 3 update patches
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, rootNode.childNodes.length)
 
-    assertEqualDom(assert, newRoot.childNodes[0], childNodes[2])
-    assertEqualDom(assert, newRoot.childNodes[1], childNodes[1])
-    assertEqualDom(assert, newRoot.childNodes[2], childNodes[0])
+    libassertequaldom_assertEqualDomjs(assert, newRoot.childNodes[0], childNodes[2])
+    libassertequaldom_assertEqualDomjs(assert, newRoot.childNodes[1], childNodes[1])
+    libassertequaldom_assertEqualDomjs(assert, newRoot.childNodes[2], childNodes[0])
     assert.end()
 })
 
-test("delete key at the start", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+ext_tape_test("delete key at the start", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rightNode = h("div", [
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+    var rightNode = h_hjs("div", [
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diffjs(leftNode, rightNode)
     // just a remove patch
-    assert.equal(patchCount(patches), 1)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 2)
@@ -261,25 +258,25 @@ test("delete key at the start", function (assert) {
     assert.end()
 })
 
-test("add key to start", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+ext_tape_test("add key to start", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rightNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+    var rightNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 3)
@@ -289,26 +286,26 @@ test("add key to start", function (assert) {
     assert.end()
 })
 
-test("delete key at the end", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+ext_tape_test("delete key at the end", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rightNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b")
+    var rightNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diffjs(leftNode, rightNode)
     // just a remove patch
-    assert.equal(patchCount(patches), 1)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 2)
@@ -318,25 +315,25 @@ test("delete key at the end", function (assert) {
     assert.end()
 })
 
-test("add key to end", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b")
+ext_tape_test("add key to end", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b")
     ])
 
-    var rightNode = h("div", [
-        h("div", { key: "a" }, "a"),
-        h("div", { key: "b" }, "b"),
-        h("div", { key: "c" }, "c")
+    var rightNode = h_hjs("div", [
+        h_hjs("div", { key: "a" }, "a"),
+        h_hjs("div", { key: "b" }, "b"),
+        h_hjs("div", { key: "c" }, "c")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 1)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 3)
@@ -346,28 +343,28 @@ test("add key to end", function (assert) {
     assert.end()
 })
 
-test("add to end and delete from center & reverse", function (assert) {
-    var leftNode = h("div", [
-        h("div", { key: "a", id: "a" }, "a"),
-        h("div", { key: "b", id: "b" }, "b"),
-        h("div", { key: "c", id: "c" }, "c"),
-        h("div", { key: "d", id: "d" }, "d")
+ext_tape_test("add to end and delete from center & reverse", function (assert) {
+    var leftNode = h_hjs("div", [
+        h_hjs("div", { key: "a", id: "a" }, "a"),
+        h_hjs("div", { key: "b", id: "b" }, "b"),
+        h_hjs("div", { key: "c", id: "c" }, "c"),
+        h_hjs("div", { key: "d", id: "d" }, "d")
     ])
 
-    var rightNode = h("div", [
-        h("div", { key: "e", id: "e" }, "e"),
-        h("div", { key: "d", id: "d" }, "d"),
-        h("div", { key: "c", id: "c" }, "c"),
-        h("div", { key: "a", id: "a" }, "a")
+    var rightNode = h_hjs("div", [
+        h_hjs("div", { key: "e", id: "e" }, "e"),
+        h_hjs("div", { key: "d", id: "d" }, "d"),
+        h_hjs("div", { key: "c", id: "c" }, "c"),
+        h_hjs("div", { key: "a", id: "a" }, "a")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 2)
+    var patches = diff_diffjs(leftNode, rightNode)
+    assert.equal(libpatchcount_patchCountjs(patches), 2)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 4)
@@ -378,25 +375,25 @@ test("add to end and delete from center & reverse", function (assert) {
     assert.end()
 })
 
-test("add to front and remove", function (assert) {
-    var leftNode = h("ul", [
-        h("li", { key: "c" }, "c"),
-        h("li", { key: "d" }, "d")
+ext_tape_test("add to front and remove", function (assert) {
+    var leftNode = h_hjs("ul", [
+        h_hjs("li", { key: "c" }, "c"),
+        h_hjs("li", { key: "d" }, "d")
     ])
 
-    var rightNode = h("ul", [
-        h("li", { key: "a" }, "a"),
-        h("li", { key: "b" }, "b"),
-        h("li", { key: "c" }, "c"),
-        h("li", { key: "e" }, "e")
+    var rightNode = h_hjs("ul", [
+        h_hjs("li", { key: "a" }, "a"),
+        h_hjs("li", { key: "b" }, "b"),
+        h_hjs("li", { key: "c" }, "c"),
+        h_hjs("li", { key: "e" }, "e")
     ])
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElementjs(leftNode)
     var childNodes = childNodesArray(rootNode)
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diffjs(leftNode, rightNode)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
     assert.equal(newRoot, rootNode)
 
     assert.equal(newRoot.childNodes.length, 4)
@@ -405,7 +402,7 @@ test("add to front and remove", function (assert) {
     assert.end()
 })
 
-test("adding multiple widgets", function (assert) {
+ext_tape_test("adding multiple widgets", function (assert) {
     function FooWidget(foo) {
         this.foo = foo
         this.counter = 0
@@ -413,7 +410,7 @@ test("adding multiple widgets", function (assert) {
     }
 
     FooWidget.prototype.init = function () {
-        return render(h("div", String(this.foo)))
+        return createelement_createElementjs(h_hjs("div", String(this.foo)));
     }
 
     FooWidget.prototype.update = function (prev, elem) {
@@ -423,26 +420,26 @@ test("adding multiple widgets", function (assert) {
 
     FooWidget.prototype.type = "Widget"
 
-    var firstTree = h("div", [])
-    var rootNode = render(firstTree)
+    var firstTree = h_hjs("div", [])
+    var rootNode = createelement_createElementjs(firstTree)
 
     assert.equal(rootNode.tagName, "DIV")
 
-    var secondTree = h("div", [
+    var secondTree = h_hjs("div", [
         new FooWidget("foo")
     ])
-    rootNode = patch(rootNode, diff(firstTree, secondTree))
+    rootNode = patch_patchjs(rootNode, diff_diffjs(firstTree, secondTree))
 
     assert.equal(rootNode.tagName, "DIV")
     assert.equal(rootNode.childNodes.length, 1)
     assert.equal(rootNode.childNodes[0].tagName, "DIV")
     assert.equal(rootNode.childNodes[0].childNodes[0].data, "foo")
 
-    var thirdTree = h("div", [
+    var thirdTree = h_hjs("div", [
         new FooWidget("foo"),
         new FooWidget("bar")
     ])
-    rootNode = patch(rootNode, diff(secondTree, thirdTree))
+    rootNode = patch_patchjs(rootNode, diff_diffjs(secondTree, thirdTree))
 
     assert.equal(rootNode.tagName, "DIV")
     assert.equal(rootNode.childNodes.length, 2)
@@ -453,11 +450,11 @@ test("adding multiple widgets", function (assert) {
 var itemHelpers = {
     item: function (key) {
         key = key.toString()
-        return h('div', { key: key, id: key }, ["" + key])
+        return h_hjs('div', { key: key, id: key }, ["" + key]);
     },
 
     container: function (children) {
-        return h('div', children)
+        return h_hjs('div', children);
     },
 
     itemsInContainer: function () {
@@ -492,12 +489,12 @@ var itemHelpers = {
     }
 }
 
-test('3 elements in a container, insert an element after each', function (assert) {
+ext_tape_test('3 elements in a container, insert an element after each', function (assert) {
     var threeItems = itemHelpers.itemsInContainer().from(0).to(4).by(2)
     var sixItems = itemHelpers.itemsInContainer().from(0).to(5).by(1)
 
-    var rootNode = render(threeItems)
-    rootNode = patch(rootNode, diff(threeItems, sixItems))
+    var rootNode = createelement_createElementjs(threeItems)
+    rootNode = patch_patchjs(rootNode, diff_diffjs(threeItems, sixItems))
 
     for (var i = 0; i <= 5; i++) {
         itemHelpers.expectTextOfChild(assert, rootNode, i, i.toString())
@@ -506,17 +503,17 @@ test('3 elements in a container, insert an element after each', function (assert
     assert.end()
 })
 
-test('10 elements in a container, remove every second element', function(assert) {
+ext_tape_test('10 elements in a container, remove every second element', function(assert) {
     var  fiveItems = itemHelpers.itemsInContainer().from(0).to(9).by(2)
     var tenItems = itemHelpers.itemsInContainer().from(0).to(9).by(1)
 
-    var rootNode = render(tenItems)
-    var patches = diff(tenItems, fiveItems)
+    var rootNode = createelement_createElementjs(tenItems)
+    var patches = diff_diffjs(tenItems, fiveItems)
 
     // 5 remove patches only
-    assert.equal(patchCount(patches), 5)
+    assert.equal(libpatchcount_patchCountjs(patches), 5)
 
-    rootNode = patch(rootNode, patches)
+    rootNode = patch_patchjs(rootNode, patches)
 
     for (var i = 0; i < 5; i++) {
         itemHelpers.expectTextOfChild(assert, rootNode, i, (i * 2).toString())
@@ -525,14 +522,14 @@ test('10 elements in a container, remove every second element', function(assert)
     assert.end()
 })
 
-test('3 elements in a container, add 3 elements after each', function (assert) {
+ext_tape_test('3 elements in a container, add 3 elements after each', function (assert) {
     var first = itemHelpers.itemsInContainer().from(0).to(11).by(4)
     var second = itemHelpers.itemsInContainer().from(0).to(11).by(1)
 
     // Assert indices before
     assert.strictEqual(first.children.length, 3)
 
-    var rootNode = render(first)
+    var rootNode = createelement_createElementjs(first)
 
     for (var i = 0; i < 3; i++) {
         itemHelpers.expectTextOfChild(assert, rootNode, i, (4*i).toString())
@@ -541,7 +538,7 @@ test('3 elements in a container, add 3 elements after each', function (assert) {
     // Assert indices after
     assert.strictEqual(second.children.length, 12)
 
-    var newRoot = patch(rootNode, diff(first, second))
+    var newRoot = patch_patchjs(rootNode, diff_diffjs(first, second))
 
     for (var j = 0; j < 12; j++) {
         itemHelpers.expectTextOfChild(assert, newRoot, j, j.toString())
@@ -550,7 +547,7 @@ test('3 elements in a container, add 3 elements after each', function (assert) {
     assert.end()
 })
 
-test('10 in container, add 1 after every 2nd element', function (assert) {
+ext_tape_test('10 in container, add 1 after every 2nd element', function (assert) {
     function skipEveryThird(i) {
         return i % 3 === 0 || i % 3 === 1
     }
@@ -566,7 +563,7 @@ test('10 in container, add 1 after every 2nd element', function (assert) {
     // Assert indices before
     assert.strictEqual(first.children.length, 10)
 
-    var rootNode = render(first)
+    var rootNode = createelement_createElementjs(first)
     var expectedIndices = [0, 1, 3, 4, 6, 7, 9, 10, 12, 13]
 
     for (var i = 0; i < 10; i++) {
@@ -578,9 +575,9 @@ test('10 in container, add 1 after every 2nd element', function (assert) {
     // Assert indices after
     assert.strictEqual(second.children.length, 15)
 
-    var patches = diff(first, second)
+    var patches = diff_diffjs(first, second)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patchjs(rootNode, patches)
 
     for (var j = 0; j < 15; j++) {
         itemHelpers.expectTextOfChild(assert, newRoot, j, j.toString())
@@ -589,11 +586,11 @@ test('10 in container, add 1 after every 2nd element', function (assert) {
     assert.end()
 })
 
-test('move a single element to the end', function (assert) {
-    var start = nodesFromArray([0, 5, 1, 2, 3, 4])
-    var end = nodesFromArray([0, 1, 2, 3, 4, 5])
+ext_tape_test('move a single element to the end', function (assert) {
+    var start = libnodesfromarray_nodesFromArrayjs([0, 5, 1, 2, 3, 4])
+    var end = libnodesfromarray_nodesFromArrayjs([0, 1, 2, 3, 4, 5])
 
-    var patches = diff(start, end)
+    var patches = diff_diffjs(start, end)
 
     assertReorderEquals(assert, patches, {
         removes: [{key: '5', from: 1}],
@@ -602,11 +599,11 @@ test('move a single element to the end', function (assert) {
     assert.end()
 })
 
-test('move a single element to a later position', function (assert) {
-    var start = nodesFromArray([0, 4, 1, 2, 3, 5])
-    var end = nodesFromArray([0, 1, 2, 3, 4, 5])
+ext_tape_test('move a single element to a later position', function (assert) {
+    var start = libnodesfromarray_nodesFromArrayjs([0, 4, 1, 2, 3, 5])
+    var end = libnodesfromarray_nodesFromArrayjs([0, 1, 2, 3, 4, 5])
 
-    var patches = diff(start, end)
+    var patches = diff_diffjs(start, end)
 
     assertReorderEquals(assert, patches, {
         removes: [{ key: '4', from: 1 }],
@@ -615,22 +612,22 @@ test('move a single element to a later position', function (assert) {
     assert.end()
 })
 
-test('remove a single element from early in the list', function (assert) {
-    var start = nodesFromArray([0, 1, 2, 3, 4])
-    var end = nodesFromArray([0, 2, 3, 4])
+ext_tape_test('remove a single element from early in the list', function (assert) {
+    var start = libnodesfromarray_nodesFromArrayjs([0, 1, 2, 3, 4])
+    var end = libnodesfromarray_nodesFromArrayjs([0, 2, 3, 4])
 
-    var patches = diff(start, end)
+    var patches = diff_diffjs(start, end)
 
     var reorderPatch = getReorderPatch(patches)
     assert.strictEqual(reorderPatch, null)
     assert.end()
 })
 
-test('move an element to a position after a removed element', function (assert) {
-    var start = nodesFromArray([0, 1, 2, 3, 4, 5])
-    var end = nodesFromArray([0, 2, 3, 5, 4])
+ext_tape_test('move an element to a position after a removed element', function (assert) {
+    var start = libnodesfromarray_nodesFromArrayjs([0, 1, 2, 3, 4, 5])
+    var end = libnodesfromarray_nodesFromArrayjs([0, 2, 3, 5, 4])
 
-    var patches = diff(start, end)
+    var patches = diff_diffjs(start, end)
 
     assertReorderEquals(assert, patches, {
         removes: [
@@ -642,11 +639,11 @@ test('move an element to a position after a removed element', function (assert) 
     assert.end()
 })
 
-test('mixed keys move from i>0 to i<length-1', function (assert) {
-    var start = nodesFromArray([undefined, undefined, 'key', undefined, undefined, undefined])
-    var end = nodesFromArray([undefined, undefined, undefined, undefined, 'key', undefined])
+ext_tape_test('mixed keys move from i>0 to i<length-1', function (assert) {
+    var start = libnodesfromarray_nodesFromArrayjs([undefined, undefined, 'key', undefined, undefined, undefined])
+    var end = libnodesfromarray_nodesFromArrayjs([undefined, undefined, undefined, undefined, 'key', undefined])
 
-    var patches = diff(start, end)
+    var patches = diff_diffjs(start, end)
 
     assertReorderEquals(assert, patches, {
         removes: [{from: 2, key: 'key'}],
@@ -757,23 +754,23 @@ function automateTests(options) {
 }
 
 function keyTest(itemsA, itemsB) {
-    test(
+    ext_tape_test(
         'keyTest([' + itemsA.join() + '], [' + itemsB.join() + '])',
         assertKeys
     )
 
     function assertKeys(assert) {
-        var nodesA = nodesFromArray(itemsA)
-        var nodesB = nodesFromArray(itemsB)
+        var nodesA = libnodesfromarray_nodesFromArrayjs(itemsA)
+        var nodesB = libnodesfromarray_nodesFromArrayjs(itemsB)
 
-        var patches = diff(nodesA, nodesB)
+        var patches = diff_diffjs(nodesA, nodesB)
 
-        var rootNode = render(nodesA)
-        patch(rootNode, patches)
+        var rootNode = createelement_createElementjs(nodesA)
+        patch_patchjs(rootNode, patches)
 
         var childNodes = rootNode.childNodes
 
-        assertChildNodesFromArray(assert, itemsB, childNodes)
+        libassertchildNodesfromarray_assertChildNodesFromArrayjs(assert, itemsB, childNodes)
 
 
         assert.end()
@@ -792,8 +789,8 @@ function getReorderPatch(patches) {
     for (var key in patches) {
         if (key !== "a" && patches.hasOwnProperty(key)) {
             var patch = patches[key]
-            if (patch.type === VPatch.ORDER) {
-                return patch
+            if (patch_patchjs.type === vpatchjs_ORDER) {
+                return patch_patchjs;
             }
         }
     }
