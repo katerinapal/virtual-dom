@@ -1,11 +1,9 @@
+var parsetag_parseTag = parseTag;
+import ext_browsersplit_split from "browser-split";
 'use strict';
-
-var split = require('browser-split');
 
 var classIdSplit = /([\.#]?[a-zA-Z0-9\u007F-\uFFFF_:-]+)/;
 var notClassId = /^\.|#/;
-
-module.exports = parseTag;
 
 function parseTag(tag, props) {
     if (!tag) {
@@ -14,7 +12,7 @@ function parseTag(tag, props) {
 
     var noId = !(props.hasOwnProperty('id'));
 
-    var tagParts = split(tag, classIdSplit);
+    var tagParts = ext_browsersplit_split(tag, classIdSplit);
     var tagName = null;
 
     if (notClassId.test(tagParts[1])) {
@@ -52,3 +50,4 @@ function parseTag(tag, props) {
 
     return props.namespace ? tagName : tagName.toUpperCase();
 }
+export { parsetag_parseTag as parseTag };

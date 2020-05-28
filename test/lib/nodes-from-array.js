@@ -1,6 +1,5 @@
-var h = require("../../h.js")
-
-module.exports = nodesFromArray
+var nodesfromarray_nodesFromArray = nodesFromArray;
+import { h as h_hjs } from "../../h.js";
 
 function nodesFromArray(array) {
     var i =0
@@ -23,8 +22,9 @@ function nodesFromArray(array) {
             }
         }
 
-        children.push(h('div', properties, properties.id))
+        children.push(h_hjs('div', properties, properties.id))
     }
 
-    return h('div', children)
+    return h_hjs('div', children);
 }
+export { nodesfromarray_nodesFromArray as nodesFromArray };
