@@ -1,80 +1,106 @@
 {
-  "name": "virtual-dom",
-  "version": "2.1.0",
-  "description": "A batched diff-based DOM rendering strategy",
-  "keywords": [
-    "virtual",
-    "dom",
-    "vdom",
-    "vtree",
-    "diff",
-    "patch",
-    "browser"
-  ],
-  "author": "Matt-Esch <matt@mattesch.info>",
-  "repository": "git://github.com/Matt-Esch/virtual-dom.git",
-  "main": "index",
-  "homepage": "https://github.com/Matt-Esch/virtual-dom",
-  "contributors": [
-    {
-      "name": "Matt-Esch"
+    "name": "virtual-dom",
+    "version": "2.1.0",
+    "description": "A batched diff-based DOM rendering strategy",
+    "keywords": [
+        "virtual",
+        "dom",
+        "vdom",
+        "vtree",
+        "diff",
+        "patch",
+        "browser"
+    ],
+    "author": "Matt-Esch <matt@mattesch.info>",
+    "repository": "git://github.com/Matt-Esch/virtual-dom.git",
+    "main": "index",
+    "homepage": "https://github.com/Matt-Esch/virtual-dom",
+    "contributors": [
+        {
+            "name": "Matt-Esch"
+        }
+    ],
+    "bugs": {
+        "url": "https://github.com/Matt-Esch/virtual-dom/issues",
+        "email": "matt@mattesch.info"
+    },
+    "dependencies": {
+        "browser-split": "0.0.1",
+        "error": "^4.3.0",
+        "ev-store": "^7.0.0",
+        "global": "^4.3.0",
+        "is-object": "^1.0.1",
+        "next-tick": "^0.2.2",
+        "x-is-array": "0.1.0",
+        "x-is-string": "0.1.0"
+    },
+    "devDependencies": {
+        "browserify": "^9.0.7",
+        "istanbul": "^0.3.13",
+        "min-document": "^2.14.0",
+        "opn": "^1.0.1",
+        "run-browser": "^2.0.2",
+        "tap-dot": "^1.0.0",
+        "tap-spec": "^3.0.0",
+        "tape": "^4.0.0",
+        "zuul": "^2.1.1",
+        "babel-cli": "latest",
+        "babel-core": "latest",
+        "babel-plugin-add-module-exports": "latest",
+        "babel-plugin-transform-es2015-modules-commonjs": "latest",
+        "babel-polyfill": "latest",
+        "babel-plugin-transform-object-rest-spread": "latest",
+        "babel-preset-env": "latest"
+    },
+    "license": "MIT",
+    "scripts": {
+        "test": "node ./test/index.js | tap-spec",
+        "dot": "node ./test/index.js | tap-dot",
+        "start": "node ./index.js",
+        "cover": "istanbul cover --report html --print detail ./test/index.js",
+        "view-cover": "istanbul report html && opn ./coverage/index.html",
+        "browser": "run-browser test/index.js",
+        "phantom": "run-browser test/index.js -b | tap-spec",
+        "dist": "browserify --standalone virtual-dom index.js > dist/virtual-dom.js",
+        "travis-test": "npm run phantom && npm run cover && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
+        "release": "npm run release-patch",
+        "release-patch": "git checkout master && npm version patch && git push origin master --tags && npm publish",
+        "release-minor": "git checkout master && npm version minor && git push origin master --tags && npm publish",
+        "release-major": "git checkout master && npm version major && git push origin master --tags && npm publish",
+        "compile-coverage": "babel coverage --out-dir coverage --require babel-polyfill --presets env",
+        "compile-testlib": "babel test\\lib --out-dir test\\lib --require babel-polyfill --presets env",
+        "compile-test": "babel test --out-dir test --require babel-polyfill --presets env",
+        "compile-virtualhyperscripttest": "babel virtual-hyperscript\\test --out-dir virtual-hyperscript\\test --require babel-polyfill --presets env",
+        "compile-vnode": "babel vnode --out-dir vnode --require babel-polyfill --presets env",
+        "compile-vdom": "babel vdom --out-dir vdom --require babel-polyfill --presets env",
+        "compile-virtualhyperscripthooks": "babel virtual-hyperscript\\hooks --out-dir virtual-hyperscript\\hooks --require babel-polyfill --presets env",
+        "compile-virtualhyperscript": "babel virtual-hyperscript --out-dir virtual-hyperscript --require babel-polyfill --presets env",
+        "compile-vnodetest": "babel vnode\\test --out-dir vnode\\test --require babel-polyfill --presets env",
+        "compile-vdomtest": "babel vdom\\test --out-dir vdom\\test --require babel-polyfill --presets env",
+        "compile-vtree": "babel vtree --out-dir vtree --require babel-polyfill --presets env",
+        "compile-vtreetest": "babel vtree\\test --out-dir vtree\\test --require babel-polyfill --presets env",
+        "compile-createelementjs": "babel create-element.js -o create-element.js --require babel-polyfill --presets env",
+        "compile-diffjs": "babel diff.js -o diff.js --require babel-polyfill --presets env",
+        "compile-indexjs": "babel index.js -o index.js --require babel-polyfill --presets env",
+        "compile-patchjs": "babel patch.js -o patch.js --require babel-polyfill --presets env",
+        "compile-hjs": "babel h.js -o h.js --require babel-polyfill --presets env",
+        "compile-1_script": "npm run compile-coverage && npm run compile-testlib && npm run compile-test && npm run compile-virtualhyperscripttest && npm run compile-vnode && npm run compile-vdom && npm run compile-virtualhyperscripthooks && npm run compile-virtualhyperscript && npm run compile-vnodetest && npm run compile-vdomtest && npm run compile-vtree && npm run compile-vtreetest && npm run compile-createelementjs && npm run compile-diffjs && npm run compile-indexjs && npm run compile-patchjs && npm run compile-hjs",
+        "compile": "npm run compile-1_script"
+    },
+    "testling": {
+        "files": "test/*.js",
+        "browsers": [
+            "ie/8..latest",
+            "firefox/17..latest",
+            "firefox/nightly",
+            "chrome/22..latest",
+            "chrome/canary",
+            "opera/12..latest",
+            "opera/next",
+            "safari/5.1..latest",
+            "ipad/6.0..latest",
+            "iphone/6.0..latest",
+            "android-browser/4.2..latest"
+        ]
     }
-  ],
-  "bugs": {
-    "url": "https://github.com/Matt-Esch/virtual-dom/issues",
-    "email": "matt@mattesch.info"
-  },
-  "dependencies": {
-    "browser-split": "0.0.1",
-    "error": "^4.3.0",
-    "ev-store": "^7.0.0",
-    "global": "^4.3.0",
-    "is-object": "^1.0.1",
-    "next-tick": "^0.2.2",
-    "x-is-array": "0.1.0",
-    "x-is-string": "0.1.0"
-  },
-  "devDependencies": {
-    "browserify": "^9.0.7",
-    "istanbul": "^0.3.13",
-    "min-document": "^2.14.0",
-    "opn": "^1.0.1",
-    "run-browser": "^2.0.2",
-    "tap-dot": "^1.0.0",
-    "tap-spec": "^3.0.0",
-    "tape": "^4.0.0",
-    "zuul": "^2.1.1"
-  },
-  "license": "MIT",
-  "scripts": {
-    "test": "node ./test/index.js | tap-spec",
-    "dot": "node ./test/index.js | tap-dot",
-    "start": "node ./index.js",
-    "cover": "istanbul cover --report html --print detail ./test/index.js",
-    "view-cover": "istanbul report html && opn ./coverage/index.html",
-    "browser": "run-browser test/index.js",
-    "phantom": "run-browser test/index.js -b | tap-spec",
-    "dist": "browserify --standalone virtual-dom index.js > dist/virtual-dom.js",
-    "travis-test": "npm run phantom && npm run cover && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
-    "release": "npm run release-patch",
-    "release-patch": "git checkout master && npm version patch && git push origin master --tags && npm publish",
-    "release-minor": "git checkout master && npm version minor && git push origin master --tags && npm publish",
-    "release-major": "git checkout master && npm version major && git push origin master --tags && npm publish"
-  },
-  "testling": {
-    "files": "test/*.js",
-    "browsers": [
-      "ie/8..latest",
-      "firefox/17..latest",
-      "firefox/nightly",
-      "chrome/22..latest",
-      "chrome/canary",
-      "opera/12..latest",
-      "opera/next",
-      "safari/5.1..latest",
-      "ipad/6.0..latest",
-      "iphone/6.0..latest",
-      "android-browser/4.2..latest"
-    ]
-  }
 }

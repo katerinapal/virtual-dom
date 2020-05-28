@@ -1,7 +1,5 @@
-var isObject = require("is-object")
-var isHook = require("../vnode/is-vhook.js")
-
-module.exports = applyProperties
+var applyproperties_applyProperties = applyProperties;
+import ext_isobject_isObject from "is-object";
 
 function applyProperties(node, props, previous) {
     for (var propName in props) {
@@ -9,7 +7,7 @@ function applyProperties(node, props, previous) {
 
         if (propValue === undefined) {
             removeProperty(node, propName, propValue, previous);
-        } else if (isHook(propValue)) {
+        } else if (vnodeisvhook_isHookjs(propValue)) {
             removeProperty(node, propName, propValue, previous)
             if (propValue.hook) {
                 propValue.hook(node,
@@ -17,7 +15,7 @@ function applyProperties(node, props, previous) {
                     previous ? previous[propName] : undefined)
             }
         } else {
-            if (isObject(propValue)) {
+            if (ext_isobject_isObject(propValue)) {
                 patchObject(node, props, previous, propName, propValue);
             } else {
                 node[propName] = propValue
@@ -30,7 +28,7 @@ function removeProperty(node, propName, propValue, previous) {
     if (previous) {
         var previousValue = previous[propName]
 
-        if (!isHook(previousValue)) {
+        if (!vnodeisvhook_isHookjs(previousValue)) {
             if (propName === "attributes") {
                 for (var attrName in previousValue) {
                     node.removeAttribute(attrName)
@@ -68,13 +66,13 @@ function patchObject(node, props, previous, propName, propValue) {
         return
     }
 
-    if(previousValue && isObject(previousValue) &&
+    if(previousValue && ext_isobject_isObject(previousValue) &&
         getPrototype(previousValue) !== getPrototype(propValue)) {
         node[propName] = propValue
         return
     }
 
-    if (!isObject(node[propName])) {
+    if (!ext_isobject_isObject(node[propName])) {
         node[propName] = {}
     }
 
@@ -95,3 +93,4 @@ function getPrototype(value) {
         return value.constructor.prototype
     }
 }
+export { applyproperties_applyProperties as applyProperties };

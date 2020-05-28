@@ -1,3 +1,3 @@
-require("./dom-index")
-require("./patch-index")
-require("./patch-op-index")
+import "./dom-index";
+import "./patch-index";
+import "./patch-op-index";
