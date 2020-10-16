@@ -1,4 +1,5 @@
-var version = require("./version")
+var vpatch_VirtualPatch = VirtualPatch;
+import { versionjs as version_versionjsjs } from "./version";
 
 VirtualPatch.NONE = 0
 VirtualPatch.VTEXT = 1
@@ -10,13 +11,12 @@ VirtualPatch.INSERT = 6
 VirtualPatch.REMOVE = 7
 VirtualPatch.THUNK = 8
 
-module.exports = VirtualPatch
-
 function VirtualPatch(type, vNode, patch) {
     this.type = Number(type)
     this.vNode = vNode
     this.patch = patch
 }
 
-VirtualPatch.prototype.version = version
+VirtualPatch.prototype.version = version_versionjsjs
 VirtualPatch.prototype.type = "VirtualPatch"
+export { vpatch_VirtualPatch as VirtualPatch };
