@@ -1,3 +1,7 @@
-import "./dom-index";
-import "./patch-index";
-import "./patch-op-index";
+"use strict";
+
+require("./dom-index");
+
+require("./patch-index");
+
+require("./patch-op-index");

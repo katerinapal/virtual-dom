@@ -1,5 +1,13 @@
-import { createElement as vdomcreateelement_createElementjs } from "./vdom/create-element.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createElement = undefined;
+
+var _createElement = require("./vdom/create-element.js");
+
 var createelement_createElement;
 
-createelement_createElement = vdomcreateelement_createElementjs
-export { createelement_createElement as createElement };
+exports.createElement = createelement_createElement = _createElement.createElement;
+exports.createElement = createelement_createElement;

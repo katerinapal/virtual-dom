@@ -1,5 +1,17 @@
-import ext_globaldocument_document from "global/document";
-import ext_nexttick_nextTick from "next-tick";
+"use strict";
+
+var _document = require("global/document");
+
+var _document2 = _interopRequireDefault(_document);
+
+var _nextTick = require("next-tick");
+
+var _nextTick2 = _interopRequireDefault(_nextTick);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
 'use strict';
 
 var encapsulated_MutableFocusHook;
@@ -13,8 +25,8 @@ function MutableFocusHook() {
 }
 
 MutableFocusHook.prototype.hook = function (node) {
-    ext_nexttick_nextTick(function () {
-        if (ext_globaldocument_document.activeElement !== node) {
+    (0, _nextTick2.default)(function () {
+        if (_document2.default.activeElement !== node) {
             node.focus();
         }
     });

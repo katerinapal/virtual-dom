@@ -1,72 +1,85 @@
-var vnode_VirtualNode = VirtualNode;
-import { versionjs as version_versionjsjs } from "./version";
-import { isVirtualNode as isvnode_isVirtualNodejs } from "./is-vnode";
-import { isWidget as iswidget_isWidgetjs } from "./is-widget";
-import { isThunk as isthunk_isThunkjs } from "./is-thunk";
-import { isHook as isvhook_isHookjs } from "./is-vhook";
+"use strict";
 
-var noProperties = {}
-var noChildren = []
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.VirtualNode = undefined;
+
+var _version = require("./version");
+
+var _isVnode = require("./is-vnode");
+
+var _isWidget = require("./is-widget");
+
+var _isThunk = require("./is-thunk");
+
+var _isVhook = require("./is-vhook");
+
+var vnode_VirtualNode = VirtualNode;
+
+
+var noProperties = {};
+var noChildren = [];
 
 function VirtualNode(tagName, properties, children, key, namespace) {
-    this.tagName = tagName
-    this.properties = properties || noProperties
-    this.children = children || noChildren
-    this.key = key != null ? String(key) : undefined
-    this.namespace = (typeof namespace === "string") ? namespace : null
+    this.tagName = tagName;
+    this.properties = properties || noProperties;
+    this.children = children || noChildren;
+    this.key = key != null ? String(key) : undefined;
+    this.namespace = typeof namespace === "string" ? namespace : null;
 
-    var count = (children && children.length) || 0
-    var descendants = 0
-    var hasWidgets = false
-    var hasThunks = false
-    var descendantHooks = false
-    var hooks
+    var count = children && children.length || 0;
+    var descendants = 0;
+    var hasWidgets = false;
+    var hasThunks = false;
+    var descendantHooks = false;
+    var hooks;
 
     for (var propName in properties) {
         if (properties.hasOwnProperty(propName)) {
-            var property = properties[propName]
-            if (isvhook_isHookjs(property) && property.unhook) {
+            var property = properties[propName];
+            if ((0, _isVhook.isHook)(property) && property.unhook) {
                 if (!hooks) {
-                    hooks = {}
+                    hooks = {};
                 }
 
-                hooks[propName] = property
+                hooks[propName] = property;
             }
         }
     }
 
     for (var i = 0; i < count; i++) {
-        var child = children[i]
-        if (isvnode_isVirtualNodejs(child)) {
-            descendants += child.count || 0
+        var child = children[i];
+        if ((0, _isVnode.isVirtualNode)(child)) {
+            descendants += child.count || 0;
 
             if (!hasWidgets && child.hasWidgets) {
-                hasWidgets = true
+                hasWidgets = true;
             }
 
             if (!hasThunks && child.hasThunks) {
-                hasThunks = true
+                hasThunks = true;
             }
 
             if (!descendantHooks && (child.hooks || child.descendantHooks)) {
-                descendantHooks = true
+                descendantHooks = true;
             }
-        } else if (!hasWidgets && iswidget_isWidgetjs(child)) {
+        } else if (!hasWidgets && (0, _isWidget.isWidget)(child)) {
             if (typeof child.destroy === "function") {
-                hasWidgets = true
+                hasWidgets = true;
             }
-        } else if (!hasThunks && isthunk_isThunkjs(child)) {
+        } else if (!hasThunks && (0, _isThunk.isThunk)(child)) {
             hasThunks = true;
         }
     }
 
-    this.count = count + descendants
-    this.hasWidgets = hasWidgets
-    this.hasThunks = hasThunks
-    this.hooks = hooks
-    this.descendantHooks = descendantHooks
+    this.count = count + descendants;
+    this.hasWidgets = hasWidgets;
+    this.hasThunks = hasThunks;
+    this.hooks = hooks;
+    this.descendantHooks = descendantHooks;
 }
 
-VirtualNode.prototype.version = version_versionjsjs
-VirtualNode.prototype.type = "VirtualNode"
-export { vnode_VirtualNode as VirtualNode };
+VirtualNode.prototype.version = _version.versionjs;
+VirtualNode.prototype.type = "VirtualNode";
+exports.VirtualNode = vnode_VirtualNode;

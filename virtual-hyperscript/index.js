@@ -1,15 +1,38 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.h = undefined;
+
+var _xIsArray = require("x-is-array");
+
+var _xIsArray2 = _interopRequireDefault(_xIsArray);
+
+var _vnode = require("../vnode/vnode.js");
+
+var _vtext = require("../vnode/vtext.js");
+
+var _isVnode = require("../vnode/is-vnode");
+
+var _isVtext = require("../vnode/is-vtext");
+
+var _isWidget = require("../vnode/is-widget");
+
+var _isVhook = require("../vnode/is-vhook");
+
+var _isThunk = require("../vnode/is-thunk");
+
+var _parseTag = require("./parse-tag.js");
+
+var _softSetHook = require("./hooks/soft-set-hook.js");
+
+var _evHook = require("./hooks/ev-hook.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var index_h = h;
-import ext_xisarray_isArray from "x-is-array";
-import { VirtualNode as vnodevnode_VirtualNodejs } from "../vnode/vnode.js";
-import { VirtualText as vnodevtext_VirtualTextjs } from "../vnode/vtext.js";
-import { isVirtualNode as vnodeisvnode_isVirtualNodejs } from "../vnode/is-vnode";
-import { isVirtualText as vnodeisvtext_isVirtualTextjs } from "../vnode/is-vtext";
-import { isWidget as vnodeiswidget_isWidgetjs } from "../vnode/is-widget";
-import { isHook as vnodeisvhook_isHookjs } from "../vnode/is-vhook";
-import { isThunk as vnodeisthunk_isThunkjs } from "../vnode/is-thunk";
-import { parseTag as parsetag_parseTagjs } from "./parse-tag.js";
-import { SoftSetHook as hookssoftsethook_SoftSetHookjs } from "./hooks/soft-set-hook.js";
-import { EvHook as hooksevhook_EvHookjs } from "./hooks/ev-hook.js";
+
 'use strict';
 
 function h(tagName, properties, children) {
@@ -22,7 +45,7 @@ function h(tagName, properties, children) {
     }
 
     props = props || properties || {};
-    tag = parsetag_parseTagjs(tagName, props);
+    tag = (0, _parseTag.parseTag)(tagName, props);
 
     // support keys
     if (props.hasOwnProperty('key')) {
@@ -37,13 +60,8 @@ function h(tagName, properties, children) {
     }
 
     // fix cursor bug
-    if (tag === 'INPUT' &&
-        !namespace &&
-        props.hasOwnProperty('value') &&
-        props.value !== undefined &&
-        !vnodeisvhook_isHookjs(props.value)
-    ) {
-        props.value = hookssoftsethook_SoftSetHookjs(props.value);
+    if (tag === 'INPUT' && !namespace && props.hasOwnProperty('value') && props.value !== undefined && !(0, _isVhook.isHook)(props.value)) {
+        props.value = (0, _softSetHook.SoftSetHook)(props.value);
     }
 
     transformProperties(props);
@@ -52,18 +70,17 @@ function h(tagName, properties, children) {
         addChild(children, childNodes, tag, props);
     }
 
-
-    return new vnodevnode_VirtualNodejs(tag, props, childNodes, key, namespace);
+    return new _vnode.VirtualNode(tag, props, childNodes, key, namespace);
 }
 
 function addChild(c, childNodes, tag, props) {
     if (typeof c === 'string') {
-        childNodes.push(new vnodevtext_VirtualTextjs(c));
+        childNodes.push(new _vtext.VirtualText(c));
     } else if (typeof c === 'number') {
-        childNodes.push(new vnodevtext_VirtualTextjs(String(c)));
+        childNodes.push(new _vtext.VirtualText(String(c)));
     } else if (isChild(c)) {
         childNodes.push(c);
-    } else if (ext_xisarray_isArray(c)) {
+    } else if ((0, _xIsArray2.default)(c)) {
         for (var i = 0; i < c.length; i++) {
             addChild(c[i], childNodes, tag, props);
         }
@@ -85,39 +102,32 @@ function transformProperties(props) {
         if (props.hasOwnProperty(propName)) {
             var value = props[propName];
 
-            if (vnodeisvhook_isHookjs(value)) {
+            if ((0, _isVhook.isHook)(value)) {
                 continue;
             }
 
             if (propName.substr(0, 3) === 'ev-') {
                 // add ev-foo support
-                props[propName] = hooksevhook_EvHookjs(value);
+                props[propName] = (0, _evHook.EvHook)(value);
             }
         }
     }
 }
 
 function isChild(x) {
-    return vnodeisvnode_isVirtualNodejs(x) || vnodeisvtext_isVirtualTextjs(x) || vnodeiswidget_isWidgetjs(x) || vnodeisthunk_isThunkjs(x);
+    return (0, _isVnode.isVirtualNode)(x) || (0, _isVtext.isVirtualText)(x) || (0, _isWidget.isWidget)(x) || (0, _isThunk.isThunk)(x);
 }
 
 function isChildren(x) {
-    return typeof x === 'string' || ext_xisarray_isArray(x) || isChild(x);
+    return typeof x === 'string' || (0, _xIsArray2.default)(x) || isChild(x);
 }
 
 function UnexpectedVirtualElement(data) {
     var err = new Error();
 
     err.type = 'virtual-hyperscript.unexpected.virtual-element';
-    err.message = 'Unexpected virtual child passed to h().\n' +
-        'Expected a VNode / Vthunk / VWidget / string but:\n' +
-        'got:\n' +
-        errorString(data.foreignObject) +
-        '.\n' +
-        'The parent vnode is:\n' +
-        errorString(data.parentVnode)
-        '\n' +
-        'Suggested fix: change your `h(..., [ ... ])` callsite.';
+    err.message = 'Unexpected virtual child passed to h().\n' + 'Expected a VNode / Vthunk / VWidget / string but:\n' + 'got:\n' + errorString(data.foreignObject) + '.\n' + 'The parent vnode is:\n' + errorString(data.parentVnode);
+    '\n' + 'Suggested fix: change your `h(..., [ ... ])` callsite.';
     err.foreignObject = data.foreignObject;
     err.parentVnode = data.parentVnode;
 
@@ -131,4 +141,4 @@ function errorString(obj) {
         return String(obj);
     }
 }
-export { index_h as h };
+exports.h = index_h;
