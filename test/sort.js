@@ -1,10 +1,25 @@
-import { nodesFromArray as nodesfromarray_nodesFromArray } from "./lib/nodes-from-array.js";
-import {     assertChildNodesFromArray as assertchildNodesfromarray_assertChildNodesFromArray, } from "./lib/assert-childNodes-from-array.js";
-import { diff as diff_diff } from "../vtree/diff";
-import { createElement as render } from "../create-element.js";
-import { patch as patch_patch } from "../patch.js";
-import ext_assert_assert from "assert";
-import ext_document from "global/document";
+"use strict";
+
+var _nodesFromArray = require("./lib/nodes-from-array.js");
+
+var _assertChildNodesFromArray = require("./lib/assert-childNodes-from-array.js");
+
+var _diff = require("../vtree/diff");
+
+var _createElement = require("../create-element.js");
+
+var _patch = require("../patch.js");
+
+var _assert = require("assert");
+
+var _assert2 = _interopRequireDefault(_assert);
+
+var _document = require("global/document");
+
+var _document2 = _interopRequireDefault(_document);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 //
 // This tests the performance of vtree/diff.
 //
@@ -31,7 +46,7 @@ var SAMPLE_END = 1000;
 var SAMPLE_COUNT = 100;
 var SAMPLE_INTERVAL = 10;
 
-var testlingOutput = ext_document.getElementById('__testling_output');
+var testlingOutput = _document2.default.getElementById('__testling_output');
 if (testlingOutput) {
     testlingOutput.parentNode.removeChild(testlingOutput);
 }
@@ -70,20 +85,20 @@ function runBench(permutations) {
 
     for (var i = 0; i < count; i++) {
         var item = permutations[i];
-        var goal = nodesfromarray_nodesFromArray(item.goal);
-        var shuffled = nodesfromarray_nodesFromArray(item.shuffled);
+        var goal = (0, _nodesFromArray.nodesFromArray)(item.goal);
+        var shuffled = (0, _nodesFromArray.nodesFromArray)(item.shuffled);
 
-        var rootNode = render(shuffled);
-        ext_document.body.appendChild(rootNode);
+        var rootNode = (0, _createElement.createElement)(shuffled);
+        _document2.default.body.appendChild(rootNode);
         var reflow = rootNode.offsetWidth;
-        var patches = diff_diff(shuffled, goal);
-        patch_patch(rootNode, patches);
+        var patches = (0, _diff.diff)(shuffled, goal);
+        (0, _patch.patch)(rootNode, patches);
         reflow = rootNode.offsetWidth;
-        ext_document.body.removeChild(rootNode);
+        _document2.default.body.removeChild(rootNode);
     }
 
     var totalTime = Date.now() - startTime;
-    var average = totalTime / count >> 0
+    var average = totalTime / count >> 0;
 
     console.log('All (' + count + ') arrays sorted in', totalTime, 'ms');
     console.log('An array of length', arrayLength, 'sorts in', average, 'ms');
@@ -96,14 +111,14 @@ function runSort(permutations) {
 
     for (var i = 0; i < count; i++) {
         var item = permutations[i];
-        var goal = nodesfromarray_nodesFromArray(item.goal);
-        var shuffled = nodesfromarray_nodesFromArray(item.shuffled);
+        var goal = (0, _nodesFromArray.nodesFromArray)(item.goal);
+        var shuffled = (0, _nodesFromArray.nodesFromArray)(item.shuffled);
 
-        var rootNode = render(shuffled);
-        var patches = diff_diff(shuffled, goal);
-        patch_patch(rootNode, patches);
+        var rootNode = (0, _createElement.createElement)(shuffled);
+        var patches = (0, _diff.diff)(shuffled, goal);
+        (0, _patch.patch)(rootNode, patches);
 
-        assertchildNodesfromarray_assertChildNodesFromArray(ext_assert_assert, item.goal, rootNode.childNodes);
+        (0, _assertChildNodesFromArray.assertChildNodesFromArray)(_assert2.default, item.goal, rootNode.childNodes);
     }
 
     console.log('All permutations sorted correctly');

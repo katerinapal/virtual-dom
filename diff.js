@@ -1,5 +1,13 @@
-import { diff as diff_diff } from "./vtree/diff.js";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.diff = undefined;
+
+var _diff = require("./vtree/diff.js");
+
 var mod_diff;
 
-mod_diff = diff_diff
-export { mod_diff as diff };
+exports.diff = mod_diff = _diff.diff;
+exports.diff = mod_diff;

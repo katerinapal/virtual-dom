@@ -1,10 +1,19 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.VirtualText = undefined;
+
+var _version = require("./version");
+
 var mod_VirtualText = VirtualText;
-import { versionjs as version } from "./version";
+
 
 function VirtualText(text) {
-    this.text = String(text)
+    this.text = String(text);
 }
 
-VirtualText.prototype.version = version
-VirtualText.prototype.type = "VirtualText"
-export { mod_VirtualText as VirtualText };
+VirtualText.prototype.version = _version.versionjs;
+VirtualText.prototype.type = "VirtualText";
+exports.VirtualText = mod_VirtualText;

@@ -1,177 +1,196 @@
-import ext_test from "tape";
-import ext_EvStore from "ev-store";
-import { h as index_h } from "../index";
+"use strict";
 
-ext_test("h is a function", function (assert) {
-    assert.equal(typeof index_h, "function")
-    assert.end()
-})
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-ext_test("h returns a vnode", function (assert) {
-    assert.equal(index_h("div").tagName, "DIV")
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+    return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
 
-    assert.end()
-})
+var _tape = require("tape");
 
-ext_test("h defaults tagName to uppercase", function (assert) {
-    assert.equal(index_h("").tagName, "DIV")
-    assert.equal(index_h("div").tagName, "DIV")
-    assert.end()
-})
+var _tape2 = _interopRequireDefault(_tape);
 
-ext_test("h preserves tagName case if namespace is given", function (assert) {
-    assert.equal(index_h("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test")
-    assert.end()
-})
+var _evStore = require("ev-store");
 
-ext_test("h has props", function (assert) {
-    assert.equal(index_h("div", {
+var _evStore2 = _interopRequireDefault(_evStore);
+
+var _index = require("../index");
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _tape2.default)("h is a function", function (assert) {
+    assert.equal(typeof _index.h === "undefined" ? "undefined" : _typeof(_index.h), "function");
+    assert.end();
+});
+
+(0, _tape2.default)("h returns a vnode", function (assert) {
+    assert.equal((0, _index.h)("div").tagName, "DIV");
+
+    assert.end();
+});
+
+(0, _tape2.default)("h defaults tagName to uppercase", function (assert) {
+    assert.equal((0, _index.h)("").tagName, "DIV");
+    assert.equal((0, _index.h)("div").tagName, "DIV");
+    assert.end();
+});
+
+(0, _tape2.default)("h preserves tagName case if namespace is given", function (assert) {
+    assert.equal((0, _index.h)("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test");
+    assert.end();
+});
+
+(0, _tape2.default)("h has props", function (assert) {
+    assert.equal((0, _index.h)("div", {
         foo: "bar"
-    }).properties.foo, "bar")
+    }).properties.foo, "bar");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with text", function (assert) {
-    var node = index_h("div", "text")
+(0, _tape2.default)("h with text", function (assert) {
+    var node = (0, _index.h)("div", "text");
 
-    assert.equal(node.children[0].text, "text")
+    assert.equal(node.children[0].text, "text");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with key", function (assert) {
-    var node = index_h("div", { key: "bar" })
+(0, _tape2.default)("h with key", function (assert) {
+    var node = (0, _index.h)("div", { key: "bar" });
 
-    assert.equal(node.key, "bar")
+    assert.equal(node.key, "bar");
 
-    assert.end()
-})
+    assert.end();
+});
 
+(0, _tape2.default)("h with ev-", function (assert) {
+    var node = (0, _index.h)("div", { "ev-foo": "bar" });
 
-ext_test("h with ev-", function (assert) {
-    var node = index_h("div", { "ev-foo": "bar" })
+    assert.ok(node.properties["ev-foo"]);
 
-    assert.ok(node.properties["ev-foo"])
+    var hook = node.properties["ev-foo"];
+    var elem = {};
+    hook.hook(elem, "ev-foo");
+    assert.equal((0, _evStore2.default)(elem).foo, "bar");
 
-    var hook = node.properties["ev-foo"]
-    var elem = {}
-    hook.hook(elem, "ev-foo")
-    assert.equal(ext_EvStore(elem).foo, "bar")
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("input.value soft hook", function (assert) {
+    var node = (0, _index.h)("input", { value: "text" });
 
-ext_test("input.value soft hook", function (assert) {
-    var node = index_h("input", { value: "text" })
+    assert.equal(_typeof(node.properties.value), "object");
+    var elem = {};
+    node.properties.value.hook(elem, "value");
 
-    assert.equal(typeof node.properties.value, "object")
-    var elem = {}
-    node.properties.value.hook(elem, "value")
+    assert.equal(elem.value, "text");
 
-    assert.equal(elem.value, "text")
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("h with child", function (assert) {
+    var node = (0, _index.h)("div", (0, _index.h)("span"));
 
-ext_test("h with child", function (assert) {
-    var node = index_h("div", index_h("span"))
+    assert.equal(node.children[0].tagName, "SPAN");
 
-    assert.equal(node.children[0].tagName, "SPAN")
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("h with children", function (assert) {
+    var node = (0, _index.h)("div", [(0, _index.h)("span")]);
 
-ext_test("h with children", function (assert) {
-    var node = index_h("div", [index_h("span")])
+    assert.equal(node.children[0].tagName, "SPAN");
 
-    assert.equal(node.children[0].tagName, "SPAN")
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("h with null", function (assert) {
+    var node = (0, _index.h)("div", null);
+    var node2 = (0, _index.h)("div", [null]);
 
-ext_test("h with null", function (assert) {
-    var node = index_h("div", null)
-    var node2 = index_h("div", [null])
+    assert.equal(node.children.length, 0);
+    assert.equal(node2.children.length, 0);
 
-    assert.equal(node.children.length, 0)
-    assert.equal(node2.children.length, 0)
+    assert.end();
+});
 
-    assert.end()
-})
+(0, _tape2.default)("h with undefined", function (assert) {
+    var node = (0, _index.h)("div", undefined);
+    var node2 = (0, _index.h)("div", [undefined]);
 
-ext_test("h with undefined", function (assert) {
-    var node = index_h("div", undefined)
-    var node2 = index_h("div", [undefined])
+    assert.equal(node.children.length, 0);
+    assert.equal(node2.children.length, 0);
 
-    assert.equal(node.children.length, 0)
-    assert.equal(node2.children.length, 0)
+    assert.end();
+});
 
-    assert.end()
-})
-
-ext_test("h with foreign object", function (assert) {
-    var errorSingleChild
+(0, _tape2.default)("h with foreign object", function (assert) {
+    var errorSingleChild;
 
     try {
-        index_h("div", null, { foreign: "object" })
+        (0, _index.h)("div", null, { foreign: "object" });
     } catch (e) {
-        errorSingleChild = e
+        errorSingleChild = e;
     }
 
-    var errorChildren
+    var errorChildren;
 
     try {
-        index_h("div", [{ foreign: "object" }])
+        (0, _index.h)("div", [{ foreign: "object" }]);
     } catch (e) {
-        errorChildren = e
+        errorChildren = e;
     }
 
     assert.ok(errorSingleChild);
-    assert.ok(/Unexpected virtual child/.test(errorSingleChild.message))
+    assert.ok(/Unexpected virtual child/.test(errorSingleChild.message));
 
     assert.ok(errorChildren);
-    assert.ok(/Unexpected virtual child/.test(errorChildren.message))
+    assert.ok(/Unexpected virtual child/.test(errorChildren.message));
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with class", function (assert) {
-    var node = index_h(".foo")
+(0, _tape2.default)("h with class", function (assert) {
+    var node = (0, _index.h)(".foo");
 
-    assert.equal(node.properties.className, "foo")
+    assert.equal(node.properties.className, "foo");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with id", function (assert) {
-    var node = index_h("#foo")
+(0, _tape2.default)("h with id", function (assert) {
+    var node = (0, _index.h)("#foo");
 
-    assert.equal(node.properties.id, "foo")
+    assert.equal(node.properties.id, "foo");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with empty string", function (assert) {
-    var node = index_h("")
+(0, _tape2.default)("h with empty string", function (assert) {
+    var node = (0, _index.h)("");
 
-    assert.equal(node.tagName, "DIV")
+    assert.equal(node.tagName, "DIV");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with two classes", function (assert) {
-    var node = index_h(".foo", { className: "bar" })
+(0, _tape2.default)("h with two classes", function (assert) {
+    var node = (0, _index.h)(".foo", { className: "bar" });
 
-    assert.equal(node.properties.className, "foo bar")
+    assert.equal(node.properties.className, "foo bar");
 
-    assert.end()
-})
+    assert.end();
+});
 
-ext_test("h with two ids", function (assert) {
-    var node = index_h("#foo", { id: "bar" })
+(0, _tape2.default)("h with two ids", function (assert) {
+    var node = (0, _index.h)("#foo", { id: "bar" });
 
-    assert.equal(node.properties.id, "bar")
+    assert.equal(node.properties.id, "bar");
 
-    assert.end()
-})
+    assert.end();
+});

@@ -1,5 +1,20 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.EvHook = undefined;
+
+var _evStore = require("ev-store");
+
+var _evStore2 = _interopRequireDefault(_evStore);
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
 var mod_EvHook = EvHook;
-import ext_EvStore from "ev-store";
+
 'use strict';
 
 function EvHook(value) {
@@ -11,16 +26,16 @@ function EvHook(value) {
 }
 
 EvHook.prototype.hook = function (node, propertyName) {
-    var es = ext_EvStore(node);
+    var es = (0, _evStore2.default)(node);
     var propName = propertyName.substr(3);
 
     es[propName] = this.value;
 };
 
-EvHook.prototype.unhook = function(node, propertyName) {
-    var es = ext_EvStore(node);
+EvHook.prototype.unhook = function (node, propertyName) {
+    var es = (0, _evStore2.default)(node);
     var propName = propertyName.substr(3);
 
     es[propName] = undefined;
 };
-export { mod_EvHook as EvHook };
+exports.EvHook = mod_EvHook;

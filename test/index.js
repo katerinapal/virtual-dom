@@ -1,13 +1,27 @@
-import "./main.js";
-import "./hook.js";
-import "./nested-properties.js";
-import "./undefined-properties.js";
-import "./keys.js";
-import "./thunk.js";
-import "./style.js";
-import "./attributes";
-import "./non-string.js";
-import "../vdom/test/";
-import "../vtree/test/";
-import "../virtual-hyperscript/test/";
-import "../vnode/test/";
+"use strict";
+
+require("./main.js");
+
+require("./hook.js");
+
+require("./nested-properties.js");
+
+require("./undefined-properties.js");
+
+require("./keys.js");
+
+require("./thunk.js");
+
+require("./style.js");
+
+require("./attributes");
+
+require("./non-string.js");
+
+require("../vdom/test/");
+
+require("../vtree/test/");
+
+require("../virtual-hyperscript/test/");
+
+require("../vnode/test/");

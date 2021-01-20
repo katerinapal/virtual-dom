@@ -1,6 +1,11 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var mod_isWidget = isWidget;
 
 function isWidget(w) {
-    return w && w.type === "Widget"
+    return w && w.type === "Widget";
 }
-export { mod_isWidget as isWidget };
+exports.isWidget = mod_isWidget;

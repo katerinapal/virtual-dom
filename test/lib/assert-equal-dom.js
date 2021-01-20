@@ -1,72 +1,67 @@
+"use strict";
+
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+    return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
+
 var mod_assertEqualDom = assertEqualDom;
 
 function assertEqualDom(assert, a, b) {
-    assert.ok(areEqual(a, b) && areEqual(b, a), "Dom structures are equal")
+    assert.ok(areEqual(a, b) && areEqual(b, a), "Dom structures are equal");
 }
 
 function areEqual(a, b) {
     for (var key in a) {
-        if (key !== "parentNode" &&
-            key !== "parentElement" &&
-            key !== "defaultView" &&
-            key !== "ownerElement" &&
-            key !== "nextElementSibling" &&
-            key !== "nextSibling" &&
-            key !== "previousElementSibling" &&
-            key !== "previousSibling" &&
-            key !== "document" &&
-            key !== "window" &&
-            key !== "frames" &&
-            key !== "top" &&
-            key !== "parent" &&
-            key !== "self" &&
-            key !== "outerHTML" &&
-            key !== "innerHTML" &&
-            key !== "spellcheck" &&
-            key !== "bind" &&
-            "" + parseInt(key, 10) !== key
-        ) {
+        if (key !== "parentNode" && key !== "parentElement" && key !== "defaultView" && key !== "ownerElement" && key !== "nextElementSibling" && key !== "nextSibling" && key !== "previousElementSibling" && key !== "previousSibling" && key !== "document" && key !== "window" && key !== "frames" && key !== "top" && key !== "parent" && key !== "self" && key !== "outerHTML" && key !== "innerHTML" && key !== "spellcheck" && key !== "bind" && "" + parseInt(key, 10) !== key) {
             if (key === "ownerDocument") {
-                return a[key] === b[key]
+                return a[key] === b[key];
             }
             if (key === "style") {
-                return equalStyle(a[key], b[key])
+                return equalStyle(a[key], b[key]);
             }
-            if (typeof a === "object" || typeof a === "function") {
+            if ((typeof a === "undefined" ? "undefined" : _typeof(a)) === "object" || typeof a === "function") {
                 if (!areEqual(a[key], b[key])) {
-                    return false
+                    return false;
                 }
             } else {
                 if (a !== b) {
-                    return false
+                    return false;
                 }
             }
         }
     }
 
-    return true
+    return true;
 }
 
 // CssStyleDeclaration indexes the styles, which could be out of order
 // This is a left sided check. Note that we call equal(a, b) and equal(b, a)
 function equalStyle(a, b) {
-    var keys = []
+    var keys = [];
     for (var key in a) {
         if ("" + parseInt(key, 10) === key) {
-            continue
+            continue;
         } else {
-            keys.push(key)
+            keys.push(key);
         }
     }
 
-    keys.sort()
+    keys.sort();
 
     for (var i = 0; i < keys.length; i++) {
         if (a[key] !== b[key]) {
-            return false
+            return false;
         }
     }
 
-    return true
+    return true;
 }
-export { mod_assertEqualDom as assertEqualDom };
+exports.assertEqualDom = mod_assertEqualDom;
