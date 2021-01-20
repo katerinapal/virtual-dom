@@ -1,4 +1,4 @@
-module.exports = assertEqualDom
+var mod_assertEqualDom = assertEqualDom;
 
 function assertEqualDom(assert, a, b) {
     assert.ok(areEqual(a, b) && areEqual(b, a), "Dom structures are equal")
@@ -69,3 +69,4 @@ function equalStyle(a, b) {
 
     return true
 }
+export { mod_assertEqualDom as assertEqualDom };

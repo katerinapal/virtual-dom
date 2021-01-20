@@ -1,3 +1,5 @@
-var patch = require("./vdom/patch.js")
+import { patch as patch_patch } from "./vdom/patch.js";
+var mod_patch;
 
-module.exports = patch
+mod_patch = patch_patch
+export { mod_patch as patch };

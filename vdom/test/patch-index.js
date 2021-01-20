@@ -1,12 +1,8 @@
-var test = require("tape")
-var VNode = require("../../vnode/vnode")
-var VText = require("../../vnode/vtext")
-var diff = require("../../vtree/diff")
+import ext_test from "tape";
+import { VirtualNode as VNode } from "../../vnode/vnode";
+import { patch as patch_patch } from "../patch";
 
-var createElement = require("../create-element")
-var patch = require("../patch")
-
-test("overrided patch function is correctly used and received correct options", function (assert) {
+ext_test("overrided patch function is correctly used and received correct options", function (assert) {
 
     function patchCustom(rootNode, patches, renderOptions) {
         return {
@@ -21,7 +17,7 @@ test("overrided patch function is correctly used and received correct options", 
     var patches = {}
     var renderOptions = { patch: patchCustom, render: createElementCustom }
 
-    var result = patch(rootNode, patches, renderOptions)
+    var result = patch_patch(rootNode, patches, renderOptions)
     assert.equal(result.rootNode, rootNode)
     assert.equal(result.patches, patches)
     assert.equal(result.renderOptions, renderOptions)

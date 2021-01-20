@@ -1,7 +1,7 @@
-var test = require("tape")
-var diffProps = require("../diff-props")
+import ext_test from "tape";
+import { diffProps as diffprops_diffProps } from "../diff-props";
 
-test("add attributes to empty attributes", function (assert) {
+ext_test("add attributes to empty attributes", function (assert) {
     var propsA = {
       attributes : {}
     }
@@ -12,7 +12,7 @@ test("add attributes to empty attributes", function (assert) {
         }
     }
 
-    var diff = diffProps(propsA,propsB)
+    var diff = diffprops_diffProps(propsA,propsB)
     assert.equal(diff.attributes.class, "standard")
     assert.equal(diff.attributes["e-text"], "custom")
 

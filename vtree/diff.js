@@ -1,15 +1,12 @@
-var isArray = require("x-is-array")
-
-var VPatch = require("../vnode/vpatch")
-var isVNode = require("../vnode/is-vnode")
-var isVText = require("../vnode/is-vtext")
-var isWidget = require("../vnode/is-widget")
-var isThunk = require("../vnode/is-thunk")
-var handleThunk = require("../vnode/handle-thunk")
-
-var diffProps = require("./diff-props")
-
-module.exports = diff
+var mod_diff = diff;
+import ext_isArray from "x-is-array";
+import { VirtualPatch as VPatch } from "../vnode/vpatch";
+import { isVirtualNode as isVNode } from "../vnode/is-vnode";
+import { isVirtualText as isVText } from "../vnode/is-vtext";
+import { isWidget as iswidget_isWidget } from "../vnode/is-widget";
+import { isThunk as isthunk_isThunk } from "../vnode/is-thunk";
+import { handleThunk as handlethunk_handleThunk } from "../vnode/handle-thunk";
+import { diffProps as diffprops_diffProps } from "./diff-props";
 
 function diff(a, b) {
     var patch = { a: a }
@@ -25,14 +22,14 @@ function walk(a, b, patch, index) {
     var apply = patch[index]
     var applyClear = false
 
-    if (isThunk(a) || isThunk(b)) {
+    if (isthunk_isThunk(a) || isthunk_isThunk(b)) {
         thunks(a, b, patch, index)
     } else if (b == null) {
 
         // If a is a widget we will add a remove patch for it
         // Otherwise any child widgets/hooks must be destroyed.
         // This prevents adding two remove patches for a widget.
-        if (!isWidget(a)) {
+        if (!iswidget_isWidget(a)) {
             clearState(a, patch, index)
             apply = patch[index]
         }
@@ -43,7 +40,7 @@ function walk(a, b, patch, index) {
             if (a.tagName === b.tagName &&
                 a.namespace === b.namespace &&
                 a.key === b.key) {
-                var propsPatch = diffProps(a.properties, b.properties)
+                var propsPatch = diffprops_diffProps(a.properties, b.properties)
                 if (propsPatch) {
                     apply = appendPatch(apply,
                         new VPatch(VPatch.PROPS, a, propsPatch))
@@ -64,8 +61,8 @@ function walk(a, b, patch, index) {
         } else if (a.text !== b.text) {
             apply = appendPatch(apply, new VPatch(VPatch.VTEXT, a, b))
         }
-    } else if (isWidget(b)) {
-        if (!isWidget(a)) {
+    } else if (iswidget_isWidget(b)) {
+        if (!iswidget_isWidget(a)) {
             applyClear = true
         }
 
@@ -131,7 +128,7 @@ function clearState(vNode, patch, index) {
 // Patch records for all destroyed widgets must be added because we need
 // a DOM node reference for the destroy function
 function destroyWidgets(vNode, patch, index) {
-    if (isWidget(vNode)) {
+    if (iswidget_isWidget(vNode)) {
         if (typeof vNode.destroy === "function") {
             patch[index] = appendPatch(
                 patch[index],
@@ -151,14 +148,14 @@ function destroyWidgets(vNode, patch, index) {
                 index += child.count
             }
         }
-    } else if (isThunk(vNode)) {
+    } else if (isthunk_isThunk(vNode)) {
         thunks(vNode, null, patch, index)
     }
 }
 
 // Create a sub-patch for thunks
 function thunks(a, b, patch, index) {
-    var nodes = handleThunk(a, b)
+    var nodes = handlethunk_handleThunk(a, b)
     var thunkPatch = diff(nodes.a, nodes.b)
     if (hasPatches(thunkPatch)) {
         patch[index] = new VPatch(VPatch.THUNK, null, thunkPatch)
@@ -203,7 +200,7 @@ function unhook(vNode, patch, index) {
                 }
             }
         }
-    } else if (isThunk(vNode)) {
+    } else if (isthunk_isThunk(vNode)) {
         thunks(vNode, null, patch, index)
     }
 }
@@ -414,7 +411,7 @@ function keyIndex(children) {
 
 function appendPatch(apply, patch) {
     if (apply) {
-        if (isArray(apply)) {
+        if (ext_isArray(apply)) {
             apply.push(patch)
         } else {
             apply = [apply, patch]
@@ -425,3 +422,4 @@ function appendPatch(apply, patch) {
         return patch
     }
 }
+export { mod_diff as diff };

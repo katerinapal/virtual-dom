@@ -1,11 +1,8 @@
-var applyProperties = require("./apply-properties")
-
-var isWidget = require("../vnode/is-widget.js")
-var VPatch = require("../vnode/vpatch.js")
-
-var updateWidget = require("./update-widget")
-
-module.exports = applyPatch
+var mod_applyPatch = applyPatch;
+import { applyProperties as applyproperties_applyProperties } from "./apply-properties";
+import { isWidget as iswidget_isWidget } from "../vnode/is-widget.js";
+import { VirtualPatch as VPatch } from "../vnode/vpatch.js";
+import { updateWidget as updatewidget_updateWidget } from "./update-widget";
 
 function applyPatch(vpatch, domNode, renderOptions) {
     var type = vpatch.type
@@ -27,7 +24,7 @@ function applyPatch(vpatch, domNode, renderOptions) {
             reorderChildren(domNode, patch)
             return domNode
         case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties)
+            applyproperties_applyProperties(domNode, patch, vNode.properties)
             return domNode
         case VPatch.THUNK:
             return replaceRoot(domNode,
@@ -78,7 +75,7 @@ function stringPatch(domNode, leftVNode, vText, renderOptions) {
 }
 
 function widgetPatch(domNode, leftVNode, widget, renderOptions) {
-    var updating = updateWidget(leftVNode, widget)
+    var updating = updatewidget_updateWidget(leftVNode, widget)
     var newNode
 
     if (updating) {
@@ -112,7 +109,7 @@ function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
 }
 
 function destroyWidget(domNode, w) {
-    if (typeof w.destroy === "function" && isWidget(w)) {
+    if (typeof w.destroy === "function" && iswidget_isWidget(w)) {
         w.destroy(domNode)
     }
 }
@@ -149,3 +146,4 @@ function replaceRoot(oldRoot, newRoot) {
 
     return newRoot;
 }
+export { mod_applyPatch as applyPatch };

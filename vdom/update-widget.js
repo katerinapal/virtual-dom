@@ -1,9 +1,8 @@
-var isWidget = require("../vnode/is-widget.js")
-
-module.exports = updateWidget
+var mod_updateWidget = updateWidget;
+import { isWidget as iswidget_isWidget } from "../vnode/is-widget.js";
 
 function updateWidget(a, b) {
-    if (isWidget(a) && isWidget(b)) {
+    if (iswidget_isWidget(a) && iswidget_isWidget(b)) {
         if ("name" in a && "name" in b) {
             return a.id === b.id
         } else {
@@ -13,3 +12,4 @@ function updateWidget(a, b) {
 
     return false
 }
+export { mod_updateWidget as updateWidget };

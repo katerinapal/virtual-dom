@@ -1,35 +1,34 @@
-var test = require("tape")
-
-var h = require("../h.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
-var render = require("../create-element.js")
-var Node = require("../vnode/vnode")
-var TextNode = require("../vnode/vtext")
-var version = require("../vnode/version")
-var assertEqualDom = require("./lib/assert-equal-dom.js")
-var patchCount = require("./lib/patch-count.js")
+import ext_test from "tape";
+import { h as h_h } from "../h.js";
+import { diff as diff_diff } from "../diff.js";
+import { patch as patch_patch } from "../patch.js";
+import { createElement as createelement_createElement } from "../create-element.js";
+import { VirtualNode as Node } from "../vnode/vnode";
+import { VirtualText as TextNode } from "../vnode/vtext";
+import { versionjs as version } from "../vnode/version";
+import { assertEqualDom as assertequaldom_assertEqualDom } from "./lib/assert-equal-dom.js";
+import { patchCount as patchcount_patchCount } from "./lib/patch-count.js";
 
 
 
 // VirtualNode tests
-test("Node is a function", function (assert) {
+ext_test("Node is a function", function (assert) {
     assert.equal(typeof Node, "function")
     assert.end()
 })
 
-test("Node type and version are set", function (assert) {
+ext_test("Node type and version are set", function (assert) {
     assert.equal(Node.prototype.type, "VirtualNode")
     assert.deepEqual(Node.prototype.version, version)
     assert.end()
 })
 
-test("TextNode is a function", function (assert) {
+ext_test("TextNode is a function", function (assert) {
     assert.equal(typeof TextNode, "function")
     assert.end()
 })
 
-test("TextNode type and version are set", function (assert) {
+ext_test("TextNode type and version are set", function (assert) {
     assert.equal(TextNode.prototype.type, "VirtualText")
     assert.deepEqual(TextNode.prototype.version, version)
     assert.end()
@@ -37,58 +36,58 @@ test("TextNode type and version are set", function (assert) {
 
 // h tests
 
-test("h is a function", function (assert) {
-    assert.equal(typeof h, "function")
+ext_test("h is a function", function (assert) {
+    assert.equal(typeof h_h, "function")
     assert.end()
 })
 
-test("defaults to div node", function (assert) {
-    var node = h()
+ext_test("defaults to div node", function (assert) {
+    var node = h_h()
     assertNode(assert, node, "DIV")
     assert.end()
 })
 
-test("can use class selector", function (assert) {
-    var node = h("div.pretty")
+ext_test("can use class selector", function (assert) {
+    var node = h_h("div.pretty")
     assertNode(assert, node, "DIV", { className: "pretty" })
     assert.end()
 })
 
-test("can use non-ascii class selector", function (assert) {
-    var node = h("div.ΑΒΓΔΕΖ")
+ext_test("can use non-ascii class selector", function (assert) {
+    var node = h_h("div.ΑΒΓΔΕΖ")
     assertNode(assert, node, "DIV", { className: "ΑΒΓΔΕΖ" })
     assert.end()
 })
 
-test("class selectors combine with className property", function (assert) {
-    var node = h("div.very", { className: "pretty" })
+ext_test("class selectors combine with className property", function (assert) {
+    var node = h_h("div.very", { className: "pretty" })
     assertNode(assert, node, "DIV", { className: "very pretty" })
     assert.end()
 })
 
-test("can use id selector", function (assert) {
-    var node = h("div#important")
+ext_test("can use id selector", function (assert) {
+    var node = h_h("div#important")
     assertNode(assert, node, "DIV", { id: "important" })
     assert.end()
 })
 
-test("can use non-ascii id selector", function (assert) {
-    var node = h("div#ΑΒΓΔΕΖ")
+ext_test("can use non-ascii id selector", function (assert) {
+    var node = h_h("div#ΑΒΓΔΕΖ")
     assertNode(assert, node, "DIV", { id: "ΑΒΓΔΕΖ" })
     assert.end()
 })
 
-test("properties id overrides selector id", function (assert) {
-    var node = h("div#very", { id: "important" })
+ext_test("properties id overrides selector id", function (assert) {
+    var node = h_h("div#very", { id: "important" })
     assertNode(assert, node, "DIV", { id: "important" })
     assert.end()
 })
 
-test("defaults to div when using selectors", function (assert) {
-    var node1 = h("#important")
-    var node2 = h(".pretty")
-    var node3 = h("#important.pretty")
-    var node4 = h(".pretty#important")
+ext_test("defaults to div when using selectors", function (assert) {
+    var node1 = h_h("#important")
+    var node2 = h_h(".pretty")
+    var node3 = h_h("#important.pretty")
+    var node4 = h_h(".pretty#important")
 
     assertNode(assert, node1, "DIV", { id: "important" })
     assertNode(assert, node2, "DIV", { className: "pretty" })
@@ -97,11 +96,11 @@ test("defaults to div when using selectors", function (assert) {
     assert.end()
 })
 
-test("second argument can be children", function (assert) {
-    var node1 = h("#important.pretty", "test")
-    var node2 = h("#important.pretty", ["test"])
-    var node3 = h("#important.pretty", h("p", "testing"))
-    var node4 = h("#important.pretty", [h("p", "testing")])
+ext_test("second argument can be children", function (assert) {
+    var node1 = h_h("#important.pretty", "test")
+    var node2 = h_h("#important.pretty", ["test"])
+    var node3 = h_h("#important.pretty", h_h("p", "testing"))
+    var node4 = h_h("#important.pretty", [h_h("p", "testing")])
 
     var props = { id: "important", className: "pretty" }
 
@@ -112,11 +111,11 @@ test("second argument can be children", function (assert) {
     assert.end()
 })
 
-test("third argument can be child or children", function (assert) {
-    var node1 = h("#important.pretty", { a: "b" }, "test")
-    var node2 = h("#important.pretty", { a: "b" }, ["test"])
-    var node3 = h("#important.pretty", { a: "b" }, h("p", "testing"))
-    var node4 = h("#important.pretty", { a: "b" }, [h("p", "testing")])
+ext_test("third argument can be child or children", function (assert) {
+    var node1 = h_h("#important.pretty", { a: "b" }, "test")
+    var node2 = h_h("#important.pretty", { a: "b" }, ["test"])
+    var node3 = h_h("#important.pretty", { a: "b" }, h_h("p", "testing"))
+    var node4 = h_h("#important.pretty", { a: "b" }, [h_h("p", "testing")])
 
     var props = { a: "b", id: "important", className: "pretty" }
 
@@ -153,14 +152,14 @@ function assertNode(assert, node, tagName, properties, children) {
 
 
 // render tests
-test("render is a function", function (assert) {
-    assert.equal(typeof h, "function")
+ext_test("render is a function", function (assert) {
+    assert.equal(typeof h_h, "function")
     assert.end()
 })
 
-test("render text node", function (assert) {
-    var vdom = h("span", "hello")
-    var dom = render(vdom)
+ext_test("render text node", function (assert) {
+    var vdom = h_h("span", "hello")
+    var dom = createelement_createElement(vdom)
     assert.equal(dom.tagName, "SPAN")
     assert.notOk(dom.id)
     assert.notOk(dom.className)
@@ -169,9 +168,9 @@ test("render text node", function (assert) {
     assert.end()
 })
 
-test("render div", function (assert) {
-    var vdom = h()
-    var dom = render(vdom)
+ext_test("render div", function (assert) {
+    var vdom = h_h()
+    var dom = createelement_createElement(vdom)
     assert.notOk(dom.id)
     assert.notOk(dom.className)
     assert.equal(dom.tagName, "DIV")
@@ -179,9 +178,9 @@ test("render div", function (assert) {
     assert.end()
 })
 
-test("node id is applied correctly", function (assert) {
-    var vdom = h("#important")
-    var dom = render(vdom)
+ext_test("node id is applied correctly", function (assert) {
+    var vdom = h_h("#important")
+    var dom = createelement_createElement(vdom)
     assert.equal(dom.id, "important")
     assert.notOk(dom.className)
     assert.equal(dom.tagName, "DIV")
@@ -189,9 +188,9 @@ test("node id is applied correctly", function (assert) {
     assert.end()
 })
 
-test("node class name is applied correctly", function (assert) {
-    var vdom = h(".pretty")
-    var dom = render(vdom)
+ext_test("node class name is applied correctly", function (assert) {
+    var vdom = h_h(".pretty")
+    var dom = createelement_createElement(vdom)
     assert.notOk(dom.id)
     assert.equal(dom.className, "pretty")
     assert.equal(dom.tagName, "DIV")
@@ -199,9 +198,9 @@ test("node class name is applied correctly", function (assert) {
     assert.end()
 })
 
-test("mixture of node/classname applied correctly", function (assert) {
-    var vdom = h("#override.very", { id: "important", className: "pretty"})
-    var dom = render(vdom)
+ext_test("mixture of node/classname applied correctly", function (assert) {
+    var vdom = h_h("#override.very", { id: "important", className: "pretty"})
+    var dom = createelement_createElement(vdom)
     assert.equal(dom.id, "important")
     assert.equal(dom.className, "very pretty")
     assert.equal(dom.tagName, "DIV")
@@ -209,12 +208,12 @@ test("mixture of node/classname applied correctly", function (assert) {
     assert.end()
 })
 
-test("style object is applied correctly", function (assert) {
-    var vdom = h("#important.pretty", { style: {
+ext_test("style object is applied correctly", function (assert) {
+    var vdom = h_h("#important.pretty", { style: {
         border: "1px solid rgb(0, 0, 0)",
         padding: "2px"
     } })
-    var dom = render(vdom)
+    var dom = createelement_createElement(vdom)
     assert.equal(dom.id, "important")
     assert.equal(dom.className, "pretty")
     assert.equal(dom.tagName, "DIV")
@@ -224,18 +223,18 @@ test("style object is applied correctly", function (assert) {
     assert.end()
 })
 
-test("children are added", function (assert) {
-    var vdom = h("div", [
-        h("div", [
+ext_test("children are added", function (assert) {
+    var vdom = h_h("div", [
+        h_h("div", [
             "just testing",
             "multiple",
-            h("b", "nodes")
+            h_h("b", "nodes")
         ]),
         "hello",
-        h("span", "test")
+        h_h("span", "test")
     ])
 
-    var dom = render(vdom)
+    var dom = createelement_createElement(vdom)
 
     assert.equal(dom.childNodes.length, 3)
 
@@ -261,15 +260,15 @@ test("children are added", function (assert) {
     assert.end()
 })
 
-test("incompatible children are ignored", function (assert) {
-    var vdom = h("#important.pretty", {
+ext_test("incompatible children are ignored", function (assert) {
+    var vdom = h_h("#important.pretty", {
         style: {
             "cssText": "color: red;"
         }
     }, [
         null
     ])
-    var dom = render(vdom)
+    var dom = createelement_createElement(vdom)
     assert.equal(dom.id, "important")
     assert.equal(dom.className, "pretty")
     assert.equal(dom.tagName, "DIV")
@@ -278,8 +277,8 @@ test("incompatible children are ignored", function (assert) {
     assert.end()
 })
 
-test("injected document object is used", function (assert) {
-    var vdom = h("div", "hello")
+ext_test("injected document object is used", function (assert) {
+    var vdom = h_h("div", "hello")
     var count = 0
     var doc = {
         createElement: function createElement(tagName) {
@@ -296,14 +295,14 @@ test("injected document object is used", function (assert) {
             return text
         }
     }
-    render(vdom, { document: doc })
+    createelement_createElement(vdom, { document: doc })
     assert.equal(count, 3)
     assert.end()
 })
 
-test("injected warning is used", function (assert) {
+ext_test("injected warning is used", function (assert) {
     var badObject = {}
-    var vdom = h("#important.pretty", {
+    var vdom = h_h("#important.pretty", {
         style: {
             cssText: "color: red;"
         }
@@ -328,7 +327,7 @@ test("injected warning is used", function (assert) {
         i++
     }
 
-    var dom = render(vdom, { warn: warn })
+    var dom = createelement_createElement(vdom, { warn: warn })
     assert.equal(dom.id, "important")
     assert.equal(dom.className, "pretty")
     assert.equal(dom.tagName, "DIV")
@@ -339,136 +338,136 @@ test("injected warning is used", function (assert) {
 })
 
 // Complete patch tests
-test("textnode update test", function (assert) {
-    var hello = h("div", "hello")
-    var goodbye = h("div", "goodbye")
-    var rootNode = render(hello)
-    var equalNode = render(goodbye)
-    var patches = diff(hello, goodbye)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("textnode update test", function (assert) {
+    var hello = h_h("div", "hello")
+    var goodbye = h_h("div", "goodbye")
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(goodbye)
+    var patches = diff_diff(hello, goodbye)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("textnode replace test", function (assert) {
-    var hello = h("div", "hello")
-    var goodbye = h("div", [h("span", "goodbye")])
-    var rootNode = render(hello)
-    var equalNode = render(goodbye)
-    var patches = diff(hello, goodbye)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("textnode replace test", function (assert) {
+    var hello = h_h("div", "hello")
+    var goodbye = h_h("div", [h_h("span", "goodbye")])
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(goodbye)
+    var patches = diff_diff(hello, goodbye)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("textnode insert test", function (assert) {
-    var hello = h("div", "hello")
-    var again = h("span", ["hello", "again"])
-    var rootNode = render(hello)
-    var equalNode = render(again)
-    var patches = diff(hello, again)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("textnode insert test", function (assert) {
+    var hello = h_h("div", "hello")
+    var again = h_h("span", ["hello", "again"])
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(again)
+    var patches = diff_diff(hello, again)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("textnode remove", function (assert) {
-    var again = h("span", ["hello", "again"])
-    var hello = h("div", "hello")
-    var rootNode = render(again)
-    var equalNode = render(hello)
-    var patches = diff(again, hello)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("textnode remove", function (assert) {
+    var again = h_h("span", ["hello", "again"])
+    var hello = h_h("div", "hello")
+    var rootNode = createelement_createElement(again)
+    var equalNode = createelement_createElement(hello)
+    var patches = diff_diff(again, hello)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("dom node update test", function (assert) {
-    var hello = h("div.hello", "hello")
-    var goodbye = h("div.goodbye", "goodbye")
-    var rootNode = render(hello)
-    var equalNode = render(goodbye)
-    var patches = diff(hello, goodbye)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("dom node update test", function (assert) {
+    var hello = h_h("div.hello", "hello")
+    var goodbye = h_h("div.goodbye", "goodbye")
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(goodbye)
+    var patches = diff_diff(hello, goodbye)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("dom node replace test", function (assert) {
-    var hello = h("div", "hello")
-    var goodbye = h("span", "goodbye")
-    var rootNode = render(hello)
-    var equalNode = render(goodbye)
-    var patches = diff(hello, goodbye)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("dom node replace test", function (assert) {
+    var hello = h_h("div", "hello")
+    var goodbye = h_h("span", "goodbye")
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(goodbye)
+    var patches = diff_diff(hello, goodbye)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("dom node insert", function (assert) {
-    var hello = h("div", [h("span", "hello")])
-    var again = h("div", [h("span", "hello"), h("span", "again")])
-    var rootNode = render(hello)
-    var equalNode = render(again)
-    var patches = diff(hello, again)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("dom node insert", function (assert) {
+    var hello = h_h("div", [h_h("span", "hello")])
+    var again = h_h("div", [h_h("span", "hello"), h_h("span", "again")])
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(again)
+    var patches = diff_diff(hello, again)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
-test("dom node remove", function (assert) {
-    var hello = h("div", [h("span", "hello")])
-    var again = h("div", [h("span", "hello"), h("span", "again")])
-    var rootNode = render(again)
-    var equalNode = render(hello)
-    var patches = diff(again, hello)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("dom node remove", function (assert) {
+    var hello = h_h("div", [h_h("span", "hello")])
+    var again = h_h("div", [h_h("span", "hello"), h_h("span", "again")])
+    var rootNode = createelement_createElement(again)
+    var equalNode = createelement_createElement(hello)
+    var patches = diff_diff(again, hello)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
     assert.end()
 })
 
 
-test("reuse dom node without breaking", function (assert) {
-    var hSpan = h("span", "hello")
-    var hello = h("div", [hSpan, hSpan, hSpan])
-    var goodbye = h("div", [h("span", "hello"), hSpan, h("span", "goodbye")])
-    var rootNode = render(hello)
-    var equalNode = render(goodbye)
-    var patches = diff(hello, goodbye)
-    var newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, equalNode)
+ext_test("reuse dom node without breaking", function (assert) {
+    var hSpan = h_h("span", "hello")
+    var hello = h_h("div", [hSpan, hSpan, hSpan])
+    var goodbye = h_h("div", [h_h("span", "hello"), hSpan, h_h("span", "goodbye")])
+    var rootNode = createelement_createElement(hello)
+    var equalNode = createelement_createElement(goodbye)
+    var patches = diff_diff(hello, goodbye)
+    var newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, equalNode)
 
     // Undo the rendering with new trees
-    hello = h("div", [hSpan, hSpan, hSpan])
-    goodbye = h("div", [h("span", "hello"), hSpan, h("span", "goodbye")])
-    patches = diff(goodbye, hello)
-    newRoot = patch(rootNode, patches)
-    assertEqualDom(assert, newRoot, rootNode)
+    hello = h_h("div", [hSpan, hSpan, hSpan])
+    goodbye = h_h("div", [h_h("span", "hello"), hSpan, h_h("span", "goodbye")])
+    patches = diff_diff(goodbye, hello)
+    newRoot = patch_patch(rootNode, patches)
+    assertequaldom_assertEqualDom(assert, newRoot, rootNode)
 
     assert.end()
 })
 
-test("Allow empty textnode", function (assert) {
-    var empty = h("span", "")
-    var rootNode = render(empty)
+ext_test("Allow empty textnode", function (assert) {
+    var empty = h_h("span", "")
+    var rootNode = createelement_createElement(empty)
     assert.equal(rootNode.childNodes.length, 1)
     assert.equal(rootNode.childNodes[0].data, "")
     assert.end()
 })
 
-test("Can replace vnode with vtext", function (assert) {
+ext_test("Can replace vnode with vtext", function (assert) {
 
-    var leftNode = h("div", h("div"))
-    var rightNode = h("div", "text")
+    var leftNode = h_h("div", h_h("div"))
+    var rightNode = h_h("div", "text")
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElement(leftNode)
 
     assert.equal(rootNode.childNodes.length, 1)
     assert.equal(rootNode.childNodes[0].nodeType, 1)
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diff(leftNode, rightNode)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patch(rootNode, patches)
 
     assert.equal(newRoot, rootNode)
 
@@ -479,9 +478,9 @@ test("Can replace vnode with vtext", function (assert) {
 })
 
 // Widget tests
-test("Widget is initialised on render", function (assert) {
+ext_test("Widget is initialised on render", function (assert) {
     var initCount = 0
-    var testNode = render(h("div"))
+    var testNode = createelement_createElement(h_h("div"))
     var Widget = {
         init: function () {
             initCount++
@@ -493,16 +492,16 @@ test("Widget is initialised on render", function (assert) {
         type: "Widget"
     }
 
-    var result = render(Widget)
+    var result = createelement_createElement(Widget)
 
     assert.equal(initCount, 1)
     assert.equal(result, testNode)
     assert.end()
 })
 
-test("Nested widget is initialised on render", function (assert) {
+ext_test("Nested widget is initialised on render", function (assert) {
     var initCount = 0
-    var testNode = render(h("div"))
+    var testNode = createelement_createElement(h_h("div"))
     var Widget = {
         init: function () {
             initCount++
@@ -514,22 +513,22 @@ test("Nested widget is initialised on render", function (assert) {
         type: "Widget"
     }
 
-    var vdom = h("div", [
-        h("span", "text"),
-        h("div.widgetContainer", [
+    var vdom = h_h("div", [
+        h_h("span", "text"),
+        h_h("div.widgetContainer", [
             Widget
         ]),
-        h("p", "more text")
+        h_h("p", "more text")
     ])
 
-    var result = render(vdom)
+    var result = createelement_createElement(vdom)
 
     assert.equal(initCount, 1)
     assert.equal(result.childNodes[1].childNodes[0], testNode)
     assert.end()
 })
 
-test("Patch widgets at the root", function (assert) {
+ext_test("Patch widgets at the root", function (assert) {
     var initCount = 0
     var updateCount = 0
     var leftState = { a: 1 }
@@ -543,7 +542,7 @@ test("Patch widgets at the root", function (assert) {
 
     Widget.prototype.init = function () {
         initCount++
-        return render(this.vdom)
+        return createelement_createElement(this.vdom);
     }
 
     Widget.prototype.update = function (leftNode, dom) {
@@ -551,38 +550,38 @@ test("Patch widgets at the root", function (assert) {
         assert.equal(this.state, rightState)
         assert.equal(leftNode.state, leftState)
         assert.equal(dom, domNode)
-        patch(dom, diff(leftNode.vdom, this.vdom))
+        patch_patch(dom, diff_diff(leftNode.vdom, this.vdom))
     }
 
     Widget.prototype.render = function (state) {
-        return h("div", "" + state.a)
+        return h_h("div", "" + state.a);
     }
 
     Widget.prototype.type = "Widget"
 
     var leftTree = new Widget(leftState)
     var rightTree = new Widget(rightState)
-    domNode = render(leftTree)
+    domNode = createelement_createElement(leftTree)
     assert.equal(initCount, 1, "initCount after left render")
     assert.equal(updateCount, 0, "updateCount after left render")
 
-    var patches = diff(leftTree, rightTree)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diff(leftTree, rightTree)
+    assert.equal(patchcount_patchCount(patches), 1)
     assert.equal(initCount, 1, "initCount after diff")
     assert.equal(updateCount, 0, "updateCount after diff")
 
-    var newRoot = patch(domNode, patches)
+    var newRoot = patch_patch(domNode, patches)
     assert.equal(initCount, 1, "initCount after patch")
     assert.equal(updateCount, 1, "updateCount after patch")
 
     // The patch should only update sibling value in this use case
-    var expectedNode = render(rightTree)
+    var expectedNode = createelement_createElement(rightTree)
     assert.equal(newRoot, domNode)
-    assertEqualDom(assert, newRoot, expectedNode)
+    assertequaldom_assertEqualDom(assert, newRoot, expectedNode)
     assert.end()
 })
 
-test("Patch nested widgets", function (assert) {
+ext_test("Patch nested widgets", function (assert) {
     var initCount = 0
     var updateCount = 0
     var leftState = { a: 1 }
@@ -596,7 +595,7 @@ test("Patch nested widgets", function (assert) {
 
     Widget.prototype.init = function () {
         initCount++
-        return render(this.vdom)
+        return createelement_createElement(this.vdom);
     }
 
     Widget.prototype.update = function (leftNode, dom) {
@@ -604,11 +603,11 @@ test("Patch nested widgets", function (assert) {
         assert.equal(this.state, rightState)
         assert.equal(leftNode.state, leftState)
         assert.equal(dom, domNode.childNodes[1].childNodes[0])
-        patch(dom, diff(leftNode.vdom, this.vdom))
+        patch_patch(dom, diff_diff(leftNode.vdom, this.vdom))
     }
 
     Widget.prototype.render = function (state) {
-        return h("div", "" + state.a)
+        return h_h("div", "" + state.a);
     }
 
     Widget.prototype.type = "Widget"
@@ -616,63 +615,63 @@ test("Patch nested widgets", function (assert) {
     var leftWidget = new Widget(leftState)
     var rightWidget = new Widget(rightState)
 
-    var leftTree = h("div", [
-        h("span", "text"),
-        h("div.widgetContainer", [
+    var leftTree = h_h("div", [
+        h_h("span", "text"),
+        h_h("div.widgetContainer", [
             leftWidget
         ]),
-        h("p", "more text")
+        h_h("p", "more text")
     ])
 
-    var rightTree = h("div", [
-        h("span", "text"),
-        h("div.widgetContainer", [
+    var rightTree = h_h("div", [
+        h_h("span", "text"),
+        h_h("div.widgetContainer", [
             rightWidget
         ]),
-        h("p", "more text")
+        h_h("p", "more text")
     ])
 
-    domNode = render(leftTree)
+    domNode = createelement_createElement(leftTree)
     assert.equal(initCount, 1, "initCount after left render")
     assert.equal(updateCount, 0, "updateCount after left render")
 
-    var patches = diff(leftTree, rightTree)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diff(leftTree, rightTree)
+    assert.equal(patchcount_patchCount(patches), 1)
     assert.equal(initCount, 1, "initCount after diff")
     assert.equal(updateCount, 0, "updateCount after diff")
 
-    var newRoot = patch(domNode, patches)
+    var newRoot = patch_patch(domNode, patches)
     assert.equal(initCount, 1, "initCount after patch")
     assert.equal(updateCount, 1, "updateCount after patch")
 
     // The patch should only update sibling value in this use case
-    var expectedNode = render(rightTree)
+    var expectedNode = createelement_createElement(rightTree)
     assert.equal(newRoot, domNode)
-    assertEqualDom(assert, newRoot, expectedNode)
+    assertequaldom_assertEqualDom(assert, newRoot, expectedNode)
     assert.end()
 })
 
-test("Can replace stateful widget with vnode", function (assert) {
+ext_test("Can replace stateful widget with vnode", function (assert) {
     var statefulWidget  = {
         init: function () {
-            return render(h("div.widget"))
+            return createelement_createElement(h_h("div.widget"));
         },
         update: function () {},
         destroy: function () {},
         type: "Widget"
     }
 
-    var leftNode = h("div", statefulWidget)
-    var rightNode = h("div", h("div.vnode"))
+    var leftNode = h_h("div", statefulWidget)
+    var rightNode = h_h("div", h_h("div.vnode"))
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElement(leftNode)
 
     assert.equal(rootNode.childNodes.length, 1)
     assert.equal(rootNode.childNodes[0].className, 'widget')
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diff(leftNode, rightNode)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patch(rootNode, patches)
 
     assert.equal(newRoot, rootNode)
 
@@ -682,27 +681,27 @@ test("Can replace stateful widget with vnode", function (assert) {
     assert.end()
 })
 
-test("Can replace vnode with stateful widget with vnode", function (assert) {
+ext_test("Can replace vnode with stateful widget with vnode", function (assert) {
     var statefulWidget  = {
         init: function () {
-            return render(h("div.widget"))
+            return createelement_createElement(h_h("div.widget"));
         },
         update: function () {},
         destroy: function () {},
         type: "Widget"
     }
 
-    var leftNode = h("div", h("div.vnode"))
-    var rightNode = h("div", statefulWidget)
+    var leftNode = h_h("div", h_h("div.vnode"))
+    var rightNode = h_h("div", statefulWidget)
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElement(leftNode)
 
     assert.equal(rootNode.childNodes.length, 1)
     assert.equal(rootNode.childNodes[0].className, 'vnode')
 
-    var patches = diff(leftNode, rightNode)
+    var patches = diff_diff(leftNode, rightNode)
 
-    var newRoot = patch(rootNode, patches)
+    var newRoot = patch_patch(rootNode, patches)
 
     assert.equal(newRoot, rootNode)
 
@@ -712,7 +711,7 @@ test("Can replace vnode with stateful widget with vnode", function (assert) {
     assert.end()
 })
 
-test("Ensure children are not rendered more than once", function (assert) {
+ext_test("Ensure children are not rendered more than once", function (assert) {
     var initCount = 0
     var updateCount = 0
     var rightState = { a: 1 }
@@ -725,51 +724,51 @@ test("Ensure children are not rendered more than once", function (assert) {
 
     Widget.prototype.init = function () {
         initCount++
-        return render(this.vdom)
+        return createelement_createElement(this.vdom);
     }
 
     Widget.prototype.update = function (leftNode, dom) {
         updateCount++
-        patch(dom, diff(leftNode.vdom, this.vdom))
+        patch_patch(dom, diff_diff(leftNode.vdom, this.vdom))
     }
 
     Widget.prototype.render = function (state) {
-        return h("div", "" + state.a)
+        return h_h("div", "" + state.a);
     }
 
     Widget.prototype.type = "Widget"
 
     var rightWidget = new Widget(rightState)
 
-    var leftTree = h("div.container", [
-        h("div")
+    var leftTree = h_h("div.container", [
+        h_h("div")
     ])
 
-    var rightTree = h("div.container", [
-        h("section.widgetContainer", rightWidget)
+    var rightTree = h_h("div.container", [
+        h_h("section.widgetContainer", rightWidget)
     ])
 
-    domNode = render(leftTree)
+    domNode = createelement_createElement(leftTree)
     assert.equal(initCount, 0, "initCount after left render")
     assert.equal(updateCount, 0, "updateCount after left render")
 
-    var patches = diff(leftTree, rightTree)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diff(leftTree, rightTree)
+    assert.equal(patchcount_patchCount(patches), 1)
     assert.equal(initCount, 0, "initCount after diff")
     assert.equal(updateCount, 0, "updateCount after diff")
 
-    var newRoot = patch(domNode, patches)
+    var newRoot = patch_patch(domNode, patches)
     assert.equal(initCount, 1, "initCount after patch")
     assert.equal(updateCount, 0, "updateCount after patch")
 
     // The patch should only update sibling value in this use case
-    var expectedNode = render(rightTree)
+    var expectedNode = createelement_createElement(rightTree)
     assert.equal(newRoot, domNode)
-    assertEqualDom(assert, newRoot, expectedNode)
+    assertequaldom_assertEqualDom(assert, newRoot, expectedNode)
     assert.end()
 })
 
-test("VNode indicates stateful sibling", function (assert) {
+ext_test("VNode indicates stateful sibling", function (assert) {
     var statefulWidget  = {
         init: function () {},
         update: function () {},
@@ -783,15 +782,15 @@ test("VNode indicates stateful sibling", function (assert) {
         type: "Widget"
     }
 
-    var stateful = h("div", [statefulWidget])
-    var pure = h("div", [pureWidget])
+    var stateful = h_h("div", [statefulWidget])
+    var pure = h_h("div", [pureWidget])
 
     assert.ok(stateful.hasWidgets)
     assert.notOk(pure.hasWidgets)
     assert.end()
 })
 
-test("Replacing stateful widget with vnode calls destroy", function (assert) {
+ext_test("Replacing stateful widget with vnode calls destroy", function (assert) {
     var count = 0
     var statefulWidget  = {
         init: function () {},
@@ -802,13 +801,13 @@ test("Replacing stateful widget with vnode calls destroy", function (assert) {
         type: "Widget"
     }
 
-    var rootNode = render(h("div"))
-    patch(rootNode, diff(statefulWidget, h("div")))
+    var rootNode = createelement_createElement(h_h("div"))
+    patch_patch(rootNode, diff_diff(statefulWidget, h_h("div")))
     assert.equal(count, 1)
     assert.end()
 })
 
-test("Replacing stateful widget with stateful widget", function (assert) {
+ext_test("Replacing stateful widget with stateful widget", function (assert) {
     var count = 0
     var statefulWidget  = {
         init: function () {},
@@ -828,14 +827,14 @@ test("Replacing stateful widget with stateful widget", function (assert) {
         type: "Widget"
     }
 
-    var rootNode = render(h("div"))
-    var patches = diff(statefulWidget, newWidget)
-    patch(rootNode, patches)
+    var rootNode = createelement_createElement(h_h("div"))
+    var patches = diff_diff(statefulWidget, newWidget)
+    patch_patch(rootNode, patches)
     assert.equal(count, 1)
     assert.end()
 })
 
-test("Replacing stateful widget with pure widget", function (assert) {
+ext_test("Replacing stateful widget with pure widget", function (assert) {
     var count = 0
     var statefulWidget  = {
         init: function () {},
@@ -852,13 +851,13 @@ test("Replacing stateful widget with pure widget", function (assert) {
         type: "Widget"
     }
 
-    var rootNode = render(h("div"))
-    patch(rootNode, diff(statefulWidget, newWidget))
+    var rootNode = createelement_createElement(h_h("div"))
+    patch_patch(rootNode, diff_diff(statefulWidget, newWidget))
     assert.equal(count, 1)
     assert.end()
 })
 
-test("Removing stateful widget calls destroy", function (assert) {
+ext_test("Removing stateful widget calls destroy", function (assert) {
     var count = 0
     var statefulWidget  = {
         init: function () {},
@@ -869,15 +868,15 @@ test("Removing stateful widget calls destroy", function (assert) {
         type: "Widget"
     }
 
-    var rootNode = render(h("div"))
-    patch(rootNode, diff(statefulWidget, null))
+    var rootNode = createelement_createElement(h_h("div"))
+    patch_patch(rootNode, diff_diff(statefulWidget, null))
     assert.equal(count, 1)
     assert.end()
 })
 
-test("Patching parent destroys stateful sibling", function (assert) {
+ext_test("Patching parent destroys stateful sibling", function (assert) {
     var count = 0
-    var widgetRoot = render(h("span"))
+    var widgetRoot = createelement_createElement(h_h("span"))
     var statefulWidget  = {
         init: function () {
             return widgetRoot
@@ -892,37 +891,37 @@ test("Patching parent destroys stateful sibling", function (assert) {
         type: "Widget"
     }
 
-    var deepTree = h("div", [
+    var deepTree = h_h("div", [
         "hello",
-        h("span", "test"),
-        h("div", [
-            h("article", [statefulWidget])
+        h_h("span", "test"),
+        h_h("div", [
+            h_h("article", [statefulWidget])
         ]),
-        h("div", [
-            h("div", "test")
+        h_h("div", [
+            h_h("div", "test")
         ])
     ])
 
     var rootNode
 
-    rootNode = render(deepTree)
-    patch(rootNode, diff(deepTree, null))
+    rootNode = createelement_createElement(deepTree)
+    patch_patch(rootNode, diff_diff(deepTree, null))
     assert.equal(count, 1)
 
-    rootNode = render(deepTree)
-    patch(rootNode, diff(deepTree, h("span")))
+    rootNode = createelement_createElement(deepTree)
+    patch_patch(rootNode, diff_diff(deepTree, h_h("span")))
     assert.equal(count, 2)
 
-    rootNode = render(deepTree)
-    patch(rootNode, diff(deepTree, h("div")))
+    rootNode = createelement_createElement(deepTree)
+    patch_patch(rootNode, diff_diff(deepTree, h_h("div")))
     assert.equal(count, 3)
 
     assert.end()
 })
 
-test("Widget update can replace domNode", function (assert) {
-    var widgetInit = render(h("span.init"))
-    var widgetUpdate = render(h("span.update"))
+ext_test("Widget update can replace domNode", function (assert) {
+    var widgetInit = createelement_createElement(h_h("span.init"))
+    var widgetUpdate = createelement_createElement(h_h("span.update"))
 
     function Widget () {}
     Widget.prototype.init = function () {
@@ -934,22 +933,22 @@ test("Widget update can replace domNode", function (assert) {
     Widget.prototype.destroy = function () {}
     Widget.prototype.type = "Widget"
 
-    var initTree = h("div.init", [new Widget])
-    var updateTree = h("div.update", [new Widget])
+    var initTree = h_h("div.init", [new Widget])
+    var updateTree = h_h("div.update", [new Widget])
     var rootNode
 
-    rootNode = render(initTree)
+    rootNode = createelement_createElement(initTree)
     assert.equal(rootNode.childNodes[0], widgetInit)
 
-    patch(rootNode, diff(initTree, updateTree))
+    patch_patch(rootNode, diff_diff(initTree, updateTree))
 
     assert.equal(rootNode.childNodes[0], widgetUpdate)
     assert.end()
 })
 
-test("Destroy widget nested in removed thunk", function (assert) {
+ext_test("Destroy widget nested in removed thunk", function (assert) {
     var count = 0
-    var widgetRoot = render(h(".widget"))
+    var widgetRoot = createelement_createElement(h_h(".widget"))
     var statefulWidget  = {
         init: function () {
             return widgetRoot
@@ -963,7 +962,7 @@ test("Destroy widget nested in removed thunk", function (assert) {
         },
         type: "Widget"
     }
-    var vnode = h(".wrapper", statefulWidget)
+    var vnode = h_h(".wrapper", statefulWidget)
 
     function Thunk() {}
 
@@ -973,22 +972,22 @@ test("Destroy widget nested in removed thunk", function (assert) {
 
     Thunk.prototype.type = "Thunk"
 
-    var thunkTree = h(".page", [
-        h(".section", [
+    var thunkTree = h_h(".page", [
+        h_h(".section", [
             new Thunk()
         ])
     ])
 
-    var empty = h(".empty")
+    var empty = h_h(".empty")
 
-    var rootNode = render(thunkTree)
-    patch(rootNode, diff(thunkTree, empty))
+    var rootNode = createelement_createElement(thunkTree)
+    patch_patch(rootNode, diff_diff(thunkTree, empty))
     assert.equal(count, 1)
 
     assert.end()
 })
 
-test("Create element respects namespace", function (assert) {
+ext_test("Create element respects namespace", function (assert) {
     if (!supportsNamespace()) {
         assert.skip("browser doesn't support namespaces");
         return assert.end();
@@ -996,14 +995,14 @@ test("Create element respects namespace", function (assert) {
 
     var svgURI = "http://www.w3.org/2000/svg"
     var vnode = new Node("svg", {}, [], null, svgURI)
-    var node = render(vnode)
+    var node = createelement_createElement(vnode)
 
     assert.equal(node.tagName, "svg")
     assert.equal(node.namespaceURI, svgURI)
     assert.end()
 })
 
-test("Different namespaces creates a patch", function (assert) {
+ext_test("Different namespaces creates a patch", function (assert) {
     if (!supportsNamespace()) {
         assert.skip("browser doesn't support namespaces");
         return assert.end();
@@ -1012,14 +1011,14 @@ test("Different namespaces creates a patch", function (assert) {
     var leftNode = new Node("div", {}, [], null, "testing")
     var rightNode = new Node("div", {}, [], null, "undefined")
 
-    var rootNode = render(leftNode)
+    var rootNode = createelement_createElement(leftNode)
     assert.equal(rootNode.tagName, "div")
     assert.equal(rootNode.namespaceURI, "testing")
 
-    var patches = diff(leftNode, rightNode)
-    assert.equal(patchCount(patches), 1)
+    var patches = diff_diff(leftNode, rightNode)
+    assert.equal(patchcount_patchCount(patches), 1)
 
-    rootNode = patch(rootNode, patches)
+    rootNode = patch_patch(rootNode, patches)
 
     assert.equal(rootNode.tagName, "div")
     assert.equal(rootNode.namespaceURI, "undefined")
@@ -1029,14 +1028,14 @@ test("Different namespaces creates a patch", function (assert) {
 
 // Safely translates style values using the DOM in the browser
 function style(name, value) {
-    var node = render(h())
+    var node = createelement_createElement(h_h())
     node.style[name] = value
     return node.style[name]
 }
 
 // Determine if namespace is supported by the DOM
 function supportsNamespace() {
-    var node = render(h())
+    var node = createelement_createElement(h_h())
     return 'namespaceURI' in node;
 }
 

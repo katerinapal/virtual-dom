@@ -1,6 +1,5 @@
+var mod_AttributeHook = AttributeHook;
 'use strict';
-
-module.exports = AttributeHook;
 
 function AttributeHook(namespace, value) {
     if (!(this instanceof AttributeHook)) {
@@ -33,3 +32,4 @@ AttributeHook.prototype.unhook = function (node, prop, next) {
 };
 
 AttributeHook.prototype.type = 'AttributeHook';
+export { mod_AttributeHook as AttributeHook };

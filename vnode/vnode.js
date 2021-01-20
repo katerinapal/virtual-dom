@@ -1,10 +1,9 @@
-var version = require("./version")
-var isVNode = require("./is-vnode")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
-var isVHook = require("./is-vhook")
-
-module.exports = VirtualNode
+var mod_VirtualNode = VirtualNode;
+import { versionjs as version } from "./version";
+import { isVirtualNode as isVNode } from "./is-vnode";
+import { isWidget as iswidget_isWidget } from "./is-widget";
+import { isThunk as isthunk_isThunk } from "./is-thunk";
+import { isHook as isVHook } from "./is-vhook";
 
 var noProperties = {}
 var noChildren = []
@@ -52,11 +51,11 @@ function VirtualNode(tagName, properties, children, key, namespace) {
             if (!descendantHooks && (child.hooks || child.descendantHooks)) {
                 descendantHooks = true
             }
-        } else if (!hasWidgets && isWidget(child)) {
+        } else if (!hasWidgets && iswidget_isWidget(child)) {
             if (typeof child.destroy === "function") {
                 hasWidgets = true
             }
-        } else if (!hasThunks && isThunk(child)) {
+        } else if (!hasThunks && isthunk_isThunk(child)) {
             hasThunks = true;
         }
     }
@@ -70,3 +69,4 @@ function VirtualNode(tagName, properties, children, key, namespace) {
 
 VirtualNode.prototype.version = version
 VirtualNode.prototype.type = "VirtualNode"
+export { mod_VirtualNode as VirtualNode };

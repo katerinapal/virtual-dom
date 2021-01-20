@@ -1,30 +1,29 @@
-var test = require("tape")
+import ext_test from "tape";
+import { h as h_h } from "../h.js";
+import { createElement as createelement_createElement } from "../create-element.js";
+import { diff as diff_diff } from "../diff.js";
+import { patch as patch_patch } from "../patch.js";
 
-var h = require("../h.js")
-var createElement = require("../create-element.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
+ext_test("attributes can be set", function (assert) {
+    var leftTree = h_h("div")
 
-test("attributes can be set", function (assert) {
-    var leftTree = h("div")
-
-    var rightTree = h("div",{
+    var rightTree = h_h("div",{
         attributes: {
             src: "test.jpg"
         }
     })
 
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
+    var rootNode = createelement_createElement(leftTree)
+    var patches = diff_diff(leftTree, rightTree)
 
-    var newRootNode = patch(rootNode, patches)
+    var newRootNode = patch_patch(rootNode, patches)
 
     assert.equal(newRootNode.getAttribute("src"), "test.jpg")
     assert.end()
 })
 
-test("individual attributes can be unset", function (assert) {
-    var leftTree = h("div", {
+ext_test("individual attributes can be unset", function (assert) {
+    var leftTree = h_h("div", {
         attributes: {
             a: "1",
             b: "2",
@@ -32,17 +31,17 @@ test("individual attributes can be unset", function (assert) {
         }
     })
 
-    var rightTree = h("div", {
+    var rightTree = h_h("div", {
         attributes: {
             a: "1",
             c: "3"
         }
     })
 
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
+    var rootNode = createelement_createElement(leftTree)
+    var patches = diff_diff(leftTree, rightTree)
 
-    var newRootNode = patch(rootNode, patches)
+    var newRootNode = patch_patch(rootNode, patches)
 
     assert.equal(newRootNode, rootNode)
     assert.equal(newRootNode.getAttribute("a"), "1")
@@ -51,8 +50,8 @@ test("individual attributes can be unset", function (assert) {
     assert.end()
 })
 
-test("attributes can be completely unset", function (assert) {
-    var leftTree = h("div", {
+ext_test("attributes can be completely unset", function (assert) {
+    var leftTree = h_h("div", {
         attributes: {
             a: "1",
             b: "2",
@@ -60,13 +59,13 @@ test("attributes can be completely unset", function (assert) {
         }
     })
 
-    var rightTree = h("div")
+    var rightTree = h_h("div")
 
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
+    var rootNode = createelement_createElement(leftTree)
+    var patches = diff_diff(leftTree, rightTree)
 
 
-    var newRootNode = patch(rootNode, patches)
+    var newRootNode = patch_patch(rootNode, patches)
 
     assert.equal(newRootNode, rootNode)
     assert.ok(newRootNode.getAttribute("a") == null)

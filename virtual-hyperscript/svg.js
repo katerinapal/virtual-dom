@@ -1,16 +1,11 @@
+var mod_svg = svg;
+import ext_isArray from "x-is-array";
+import { h as index_h } from "./index.js";
+import { SVGAttributeNamespace as svgattributenamespace_SVGAttributeNamespace } from "./svg-attribute-namespace";
+import { AttributeHook as attributeHook } from "./hooks/attribute-hook";
 'use strict';
 
-var isArray = require('x-is-array');
-
-var h = require('./index.js');
-
-
-var SVGAttributeNamespace = require('./svg-attribute-namespace');
-var attributeHook = require('./hooks/attribute-hook');
-
 var SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
-
-module.exports = svg;
 
 function svg(tagName, properties, children) {
     if (!children && isChildren(properties)) {
@@ -30,7 +25,7 @@ function svg(tagName, properties, children) {
             continue;
         }
 
-        var namespace = SVGAttributeNamespace(key);
+        var namespace = svgattributenamespace_SVGAttributeNamespace(key);
 
         if (namespace === undefined) { // not a svg attribute
             continue;
@@ -54,9 +49,10 @@ function svg(tagName, properties, children) {
         properties[key] = undefined
     }
 
-    return h(tagName, properties, children);
+    return index_h(tagName, properties, children);
 }
 
 function isChildren(x) {
-    return typeof x === 'string' || isArray(x);
+    return typeof x === 'string' || ext_isArray(x);
 }
+export { mod_svg as svg };
