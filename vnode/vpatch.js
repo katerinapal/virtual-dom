@@ -1,16 +1,23 @@
-var version = require("./version")
+import { versionjs as version } from "./version";
+var THUNK;
+var REMOVE;
+var INSERT;
+var ORDER;
+var PROPS;
+var WIDGET;
+var VNODE;
+var VTEXT;
+var NONE;
 
-VirtualPatch.NONE = 0
-VirtualPatch.VTEXT = 1
-VirtualPatch.VNODE = 2
-VirtualPatch.WIDGET = 3
-VirtualPatch.PROPS = 4
-VirtualPatch.ORDER = 5
-VirtualPatch.INSERT = 6
-VirtualPatch.REMOVE = 7
-VirtualPatch.THUNK = 8
-
-module.exports = VirtualPatch
+NONE = 0
+VTEXT = 1
+VNODE = 2
+WIDGET = 3
+PROPS = 4
+ORDER = 5
+INSERT = 6
+REMOVE = 7
+THUNK = 8
 
 function VirtualPatch(type, vNode, patch) {
     this.type = Number(type)
@@ -20,3 +27,4 @@ function VirtualPatch(type, vNode, patch) {
 
 VirtualPatch.prototype.version = version
 VirtualPatch.prototype.type = "VirtualPatch"
+export { VTEXT, VNODE, WIDGET, PROPS, ORDER, INSERT, REMOVE, THUNK, VirtualPatch };

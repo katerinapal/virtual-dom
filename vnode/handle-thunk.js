@@ -1,19 +1,18 @@
-var isVNode = require("./is-vnode")
-var isVText = require("./is-vtext")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
-
-module.exports = handleThunk
+var mod_handleThunk = handleThunk;
+import { isVirtualNode as isVNode } from "./is-vnode";
+import { isVirtualText as isVText } from "./is-vtext";
+import { isWidget as iswidget_isWidget } from "./is-widget";
+import { isThunk as isthunk_isThunk } from "./is-thunk";
 
 function handleThunk(a, b) {
     var renderedA = a
     var renderedB = b
 
-    if (isThunk(b)) {
+    if (isthunk_isThunk(b)) {
         renderedB = renderThunk(b, a)
     }
 
-    if (isThunk(a)) {
+    if (isthunk_isThunk(a)) {
         renderedA = renderThunk(a, null)
     }
 
@@ -32,9 +31,10 @@ function renderThunk(thunk, previous) {
 
     if (!(isVNode(renderedThunk) ||
             isVText(renderedThunk) ||
-            isWidget(renderedThunk))) {
+            iswidget_isWidget(renderedThunk))) {
         throw new Error("thunk did not return a valid node");
     }
 
     return renderedThunk
 }
+export { mod_handleThunk as handleThunk };

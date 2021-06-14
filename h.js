@@ -1,3 +1,5 @@
-var h = require("./virtual-hyperscript/index.js")
+import { h as index_h } from "./virtual-hyperscript/index.js";
+var mod_h;
 
-module.exports = h
+mod_h = index_h
+export { mod_h as h };

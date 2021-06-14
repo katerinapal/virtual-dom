@@ -1,10 +1,9 @@
-var document = require("global/document")
-var isArray = require("x-is-array")
-
-var render = require("./create-element")
-var domIndex = require("./dom-index")
-var patchOp = require("./patch-op")
-module.exports = patch
+var mod_patch = patch;
+import ext_document from "global/document";
+import ext_isArray from "x-is-array";
+import { createElement as render } from "./create-element";
+import { domIndex as domindex_domIndex } from "./dom-index";
+import { applyPatch as patchop_applyPatch } from "./patch-op";
 
 function patch(rootNode, patches, renderOptions) {
     renderOptions = renderOptions || {}
@@ -21,10 +20,10 @@ function patchRecursive(rootNode, patches, renderOptions) {
         return rootNode
     }
 
-    var index = domIndex(rootNode, patches.a, indices)
+    var index = domindex_domIndex(rootNode, patches.a, indices)
     var ownerDocument = rootNode.ownerDocument
 
-    if (!renderOptions.document && ownerDocument !== document) {
+    if (!renderOptions.document && ownerDocument !== ext_document) {
         renderOptions.document = ownerDocument
     }
 
@@ -46,16 +45,16 @@ function applyPatch(rootNode, domNode, patchList, renderOptions) {
 
     var newNode
 
-    if (isArray(patchList)) {
+    if (ext_isArray(patchList)) {
         for (var i = 0; i < patchList.length; i++) {
-            newNode = patchOp(patchList[i], domNode, renderOptions)
+            newNode = patchop_applyPatch(patchList[i], domNode, renderOptions)
 
             if (domNode === rootNode) {
                 rootNode = newNode
             }
         }
     } else {
-        newNode = patchOp(patchList, domNode, renderOptions)
+        newNode = patchop_applyPatch(patchList, domNode, renderOptions)
 
         if (domNode === rootNode) {
             rootNode = newNode
@@ -76,3 +75,4 @@ function patchIndices(patches) {
 
     return indices
 }
+export { mod_patch as patch };

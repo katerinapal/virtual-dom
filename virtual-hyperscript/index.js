@@ -1,20 +1,16 @@
+var mod_h = h;
+import ext_isArray from "x-is-array";
+import { VirtualNode as VNode } from "../vnode/vnode.js";
+import { VirtualText as VText } from "../vnode/vtext.js";
+import { isVirtualNode as isVNode } from "../vnode/is-vnode";
+import { isVirtualText as isVText } from "../vnode/is-vtext";
+import { isWidget as iswidget_isWidget } from "../vnode/is-widget";
+import { isHook as isvhook_isHook } from "../vnode/is-vhook";
+import { isThunk as isVThunk } from "../vnode/is-thunk";
+import { parseTag as parsetag_parseTag } from "./parse-tag.js";
+import { SoftSetHook as softSetHook } from "./hooks/soft-set-hook.js";
+import { EvHook as evHook } from "./hooks/ev-hook.js";
 'use strict';
-
-var isArray = require('x-is-array');
-
-var VNode = require('../vnode/vnode.js');
-var VText = require('../vnode/vtext.js');
-var isVNode = require('../vnode/is-vnode');
-var isVText = require('../vnode/is-vtext');
-var isWidget = require('../vnode/is-widget');
-var isHook = require('../vnode/is-vhook');
-var isVThunk = require('../vnode/is-thunk');
-
-var parseTag = require('./parse-tag.js');
-var softSetHook = require('./hooks/soft-set-hook.js');
-var evHook = require('./hooks/ev-hook.js');
-
-module.exports = h;
 
 function h(tagName, properties, children) {
     var childNodes = [];
@@ -26,7 +22,7 @@ function h(tagName, properties, children) {
     }
 
     props = props || properties || {};
-    tag = parseTag(tagName, props);
+    tag = parsetag_parseTag(tagName, props);
 
     // support keys
     if (props.hasOwnProperty('key')) {
@@ -45,7 +41,7 @@ function h(tagName, properties, children) {
         !namespace &&
         props.hasOwnProperty('value') &&
         props.value !== undefined &&
-        !isHook(props.value)
+        !isvhook_isHook(props.value)
     ) {
         props.value = softSetHook(props.value);
     }
@@ -67,7 +63,7 @@ function addChild(c, childNodes, tag, props) {
         childNodes.push(new VText(String(c)));
     } else if (isChild(c)) {
         childNodes.push(c);
-    } else if (isArray(c)) {
+    } else if (ext_isArray(c)) {
         for (var i = 0; i < c.length; i++) {
             addChild(c[i], childNodes, tag, props);
         }
@@ -89,7 +85,7 @@ function transformProperties(props) {
         if (props.hasOwnProperty(propName)) {
             var value = props[propName];
 
-            if (isHook(value)) {
+            if (isvhook_isHook(value)) {
                 continue;
             }
 
@@ -102,11 +98,11 @@ function transformProperties(props) {
 }
 
 function isChild(x) {
-    return isVNode(x) || isVText(x) || isWidget(x) || isVThunk(x);
+    return isVNode(x) || isVText(x) || iswidget_isWidget(x) || isVThunk(x);
 }
 
 function isChildren(x) {
-    return typeof x === 'string' || isArray(x) || isChild(x);
+    return typeof x === 'string' || ext_isArray(x) || isChild(x);
 }
 
 function UnexpectedVirtualElement(data) {
@@ -135,3 +131,4 @@ function errorString(obj) {
         return String(obj);
     }
 }
+export { mod_h as h };

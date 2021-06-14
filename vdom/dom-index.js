@@ -1,3 +1,4 @@
+var mod_domIndex = domIndex;
 // Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
 // We don't want to read all of the DOM nodes in the tree so we use
 // the in-order tree indexing to eliminate recursion down certain branches.
@@ -5,8 +6,6 @@
 // interest.
 
 var noChild = {}
-
-module.exports = domIndex
 
 function domIndex(rootNode, tree, indices, nodes) {
     if (!indices || indices.length === 0) {
@@ -83,3 +82,4 @@ function indexInRange(indices, left, right) {
 function ascending(a, b) {
     return a > b ? 1 : -1
 }
+export { mod_domIndex as domIndex };

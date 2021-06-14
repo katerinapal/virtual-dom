@@ -1,48 +1,47 @@
-var test = require("tape")
-var EvStore = require('ev-store')
+import ext_test from "tape";
+import ext_EvStore from "ev-store";
+import { h as index_h } from "../index";
 
-var h = require("../index")
-
-test("h is a function", function (assert) {
-    assert.equal(typeof h, "function")
+ext_test("h is a function", function (assert) {
+    assert.equal(typeof index_h, "function")
     assert.end()
 })
 
-test("h returns a vnode", function (assert) {
-    assert.equal(h("div").tagName, "DIV")
+ext_test("h returns a vnode", function (assert) {
+    assert.equal(index_h("div").tagName, "DIV")
 
     assert.end()
 })
 
-test("h defaults tagName to uppercase", function (assert) {
-    assert.equal(h("").tagName, "DIV")
-    assert.equal(h("div").tagName, "DIV")
+ext_test("h defaults tagName to uppercase", function (assert) {
+    assert.equal(index_h("").tagName, "DIV")
+    assert.equal(index_h("div").tagName, "DIV")
     assert.end()
 })
 
-test("h preserves tagName case if namespace is given", function (assert) {
-    assert.equal(h("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test")
+ext_test("h preserves tagName case if namespace is given", function (assert) {
+    assert.equal(index_h("test", { namespace: "http://www.w3.org/XML/1998/namespace" }).tagName, "test")
     assert.end()
 })
 
-test("h has props", function (assert) {
-    assert.equal(h("div", {
+ext_test("h has props", function (assert) {
+    assert.equal(index_h("div", {
         foo: "bar"
     }).properties.foo, "bar")
 
     assert.end()
 })
 
-test("h with text", function (assert) {
-    var node = h("div", "text")
+ext_test("h with text", function (assert) {
+    var node = index_h("div", "text")
 
     assert.equal(node.children[0].text, "text")
 
     assert.end()
 })
 
-test("h with key", function (assert) {
-    var node = h("div", { key: "bar" })
+ext_test("h with key", function (assert) {
+    var node = index_h("div", { key: "bar" })
 
     assert.equal(node.key, "bar")
 
@@ -50,21 +49,21 @@ test("h with key", function (assert) {
 })
 
 
-test("h with ev-", function (assert) {
-    var node = h("div", { "ev-foo": "bar" })
+ext_test("h with ev-", function (assert) {
+    var node = index_h("div", { "ev-foo": "bar" })
 
     assert.ok(node.properties["ev-foo"])
 
     var hook = node.properties["ev-foo"]
     var elem = {}
     hook.hook(elem, "ev-foo")
-    assert.equal(EvStore(elem).foo, "bar")
+    assert.equal(ext_EvStore(elem).foo, "bar")
 
     assert.end()
 })
 
-test("input.value soft hook", function (assert) {
-    var node = h("input", { value: "text" })
+ext_test("input.value soft hook", function (assert) {
+    var node = index_h("input", { value: "text" })
 
     assert.equal(typeof node.properties.value, "object")
     var elem = {}
@@ -75,25 +74,25 @@ test("input.value soft hook", function (assert) {
     assert.end()
 })
 
-test("h with child", function (assert) {
-    var node = h("div", h("span"))
+ext_test("h with child", function (assert) {
+    var node = index_h("div", index_h("span"))
 
     assert.equal(node.children[0].tagName, "SPAN")
 
     assert.end()
 })
 
-test("h with children", function (assert) {
-    var node = h("div", [h("span")])
+ext_test("h with children", function (assert) {
+    var node = index_h("div", [index_h("span")])
 
     assert.equal(node.children[0].tagName, "SPAN")
 
     assert.end()
 })
 
-test("h with null", function (assert) {
-    var node = h("div", null)
-    var node2 = h("div", [null])
+ext_test("h with null", function (assert) {
+    var node = index_h("div", null)
+    var node2 = index_h("div", [null])
 
     assert.equal(node.children.length, 0)
     assert.equal(node2.children.length, 0)
@@ -101,9 +100,9 @@ test("h with null", function (assert) {
     assert.end()
 })
 
-test("h with undefined", function (assert) {
-    var node = h("div", undefined)
-    var node2 = h("div", [undefined])
+ext_test("h with undefined", function (assert) {
+    var node = index_h("div", undefined)
+    var node2 = index_h("div", [undefined])
 
     assert.equal(node.children.length, 0)
     assert.equal(node2.children.length, 0)
@@ -111,11 +110,11 @@ test("h with undefined", function (assert) {
     assert.end()
 })
 
-test("h with foreign object", function (assert) {
+ext_test("h with foreign object", function (assert) {
     var errorSingleChild
 
     try {
-        h("div", null, { foreign: "object" })
+        index_h("div", null, { foreign: "object" })
     } catch (e) {
         errorSingleChild = e
     }
@@ -123,7 +122,7 @@ test("h with foreign object", function (assert) {
     var errorChildren
 
     try {
-        h("div", [{ foreign: "object" }])
+        index_h("div", [{ foreign: "object" }])
     } catch (e) {
         errorChildren = e
     }
@@ -137,40 +136,40 @@ test("h with foreign object", function (assert) {
     assert.end()
 })
 
-test("h with class", function (assert) {
-    var node = h(".foo")
+ext_test("h with class", function (assert) {
+    var node = index_h(".foo")
 
     assert.equal(node.properties.className, "foo")
 
     assert.end()
 })
 
-test("h with id", function (assert) {
-    var node = h("#foo")
+ext_test("h with id", function (assert) {
+    var node = index_h("#foo")
 
     assert.equal(node.properties.id, "foo")
 
     assert.end()
 })
 
-test("h with empty string", function (assert) {
-    var node = h("")
+ext_test("h with empty string", function (assert) {
+    var node = index_h("")
 
     assert.equal(node.tagName, "DIV")
 
     assert.end()
 })
 
-test("h with two classes", function (assert) {
-    var node = h(".foo", { className: "bar" })
+ext_test("h with two classes", function (assert) {
+    var node = index_h(".foo", { className: "bar" })
 
     assert.equal(node.properties.className, "foo bar")
 
     assert.end()
 })
 
-test("h with two ids", function (assert) {
-    var node = h("#foo", { id: "bar" })
+ext_test("h with two ids", function (assert) {
+    var node = index_h("#foo", { id: "bar" })
 
     assert.equal(node.properties.id, "bar")
 

@@ -1,21 +1,18 @@
-var document = require("global/document")
-
-var applyProperties = require("./apply-properties")
-
-var isVNode = require("../vnode/is-vnode.js")
-var isVText = require("../vnode/is-vtext.js")
-var isWidget = require("../vnode/is-widget.js")
-var handleThunk = require("../vnode/handle-thunk.js")
-
-module.exports = createElement
+var mod_createElement = createElement;
+import ext_document from "global/document";
+import { applyProperties as applyproperties_applyProperties } from "./apply-properties";
+import { isVirtualNode as isVNode } from "../vnode/is-vnode.js";
+import { isVirtualText as isVText } from "../vnode/is-vtext.js";
+import { isWidget as iswidget_isWidget } from "../vnode/is-widget.js";
+import { handleThunk as handlethunk_handleThunk } from "../vnode/handle-thunk.js";
 
 function createElement(vnode, opts) {
-    var doc = opts ? opts.document || document : document
+    var doc = opts ? opts.document || ext_document : ext_document
     var warn = opts ? opts.warn : null
 
-    vnode = handleThunk(vnode).a
+    vnode = handlethunk_handleThunk(vnode).a
 
-    if (isWidget(vnode)) {
+    if (iswidget_isWidget(vnode)) {
         return vnode.init()
     } else if (isVText(vnode)) {
         return doc.createTextNode(vnode.text)
@@ -31,7 +28,7 @@ function createElement(vnode, opts) {
         doc.createElementNS(vnode.namespace, vnode.tagName)
 
     var props = vnode.properties
-    applyProperties(node, props)
+    applyproperties_applyProperties(node, props)
 
     var children = vnode.children
 
@@ -44,3 +41,4 @@ function createElement(vnode, opts) {
 
     return node
 }
+export { mod_createElement as createElement };
