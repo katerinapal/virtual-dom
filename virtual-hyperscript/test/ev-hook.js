@@ -1,33 +1,48 @@
-import ext_test from "tape";
-import ext_EvStore from "ev-store";
-import { h as index_h } from "../index.js";
-import { createElement as createelement_createElement } from "../../vdom/create-element";
-import { patch as patch_patch } from "../../vdom/patch";
-import { diff as diff_diff } from "../../vtree/diff";
+"use strict";
 
-ext_test("h with events", function (assert) {
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _evStore = require("ev-store");
+
+var _evStore2 = _interopRequireDefault(_evStore);
+
+var _index = require("../index.js");
+
+var _createElement = require("../../vdom/create-element");
+
+var _patch = require("../../vdom/patch");
+
+var _diff = require("../../vtree/diff");
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _tape2.default)("h with events", function (assert) {
     function one() {}
 
-    var left = index_h(".foo", {
+    var left = (0, _index.h)(".foo", {
         "ev-click": one
-    })
+    });
 
-    var right = index_h(".bar", {})
+    var right = (0, _index.h)(".bar", {});
 
-    var elem = createelement_createElement(left)
+    var elem = (0, _createElement.createElement)(left);
 
-    var ds1 = ext_EvStore(elem)
-    assert.ok(ds1)
-    assert.equal(ds1.click, one)
+    var ds1 = (0, _evStore2.default)(elem);
+    assert.ok(ds1);
+    assert.equal(ds1.click, one);
 
-    var patches = diff_diff(left, right)
+    var patches = (0, _diff.diff)(left, right);
 
-    patch_patch(elem, patches)
+    (0, _patch.patch)(elem, patches);
 
-    var ds2 = ext_EvStore(elem)
-    assert.ok(ds2)
-    assert.equal(ds1, ds2)
-    assert.equal(ds2.click, undefined)
+    var ds2 = (0, _evStore2.default)(elem);
+    assert.ok(ds2);
+    assert.equal(ds1, ds2);
+    assert.equal(ds2.click, undefined);
 
-    assert.end()
-})
+    assert.end();
+});

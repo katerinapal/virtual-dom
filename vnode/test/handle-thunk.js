@@ -1,161 +1,171 @@
-import ext_test from "tape";
-import { handleThunk as handlethunk_handleThunk } from "../handle-thunk";
-import { VirtualNode as VNode } from "../vnode";
-import { VirtualText as VText } from "../vtext";
+"use strict";
 
-ext_test("render a new thunk to vnode", function (assert) {
+var _tape = require("tape");
+
+var _tape2 = _interopRequireDefault(_tape);
+
+var _handleThunk = require("../handle-thunk");
+
+var _vnode = require("../vnode");
+
+var _vtext = require("../vtext");
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+(0, _tape2.default)("render a new thunk to vnode", function (assert) {
     var aNode = {
-        render: function (previous) {
-            assert.error("Render should not be called for cached thunk")
+        render: function render(previous) {
+            assert.error("Render should not be called for cached thunk");
         },
         type: "Thunk"
-    }
+    };
 
-    aNode.vnode = new VNode("div")
+    aNode.vnode = new _vnode.VirtualNode("div");
 
-    var renderedBNode = new VNode("div")
+    var renderedBNode = new _vnode.VirtualNode("div");
 
     var bNode = {
-        render: function (previous) {
-            assert.equal(previous, aNode)
-            return renderedBNode
+        render: function render(previous) {
+            assert.equal(previous, aNode);
+            return renderedBNode;
         },
         type: "Thunk"
-    }
+    };
 
-    var result = handlethunk_handleThunk(aNode, bNode)
+    var result = (0, _handleThunk.handleThunk)(aNode, bNode);
 
-    assert.equal(result.a, aNode.vnode)
-    assert.equal(result.b, renderedBNode)
-    assert.equal(bNode.vnode, renderedBNode)
-    assert.end()
-})
+    assert.equal(result.a, aNode.vnode);
+    assert.equal(result.b, renderedBNode);
+    assert.equal(bNode.vnode, renderedBNode);
+    assert.end();
+});
 
-ext_test("render a new thunk to vtext", function (assert) {
+(0, _tape2.default)("render a new thunk to vtext", function (assert) {
     var aNode = {
-        render: function (previous) {
-            assert.error("Render should not be called for cached thunk")
+        render: function render(previous) {
+            assert.error("Render should not be called for cached thunk");
         },
         type: "Thunk"
-    }
+    };
 
-    aNode.vnode = new VNode("div")
+    aNode.vnode = new _vnode.VirtualNode("div");
 
-    var renderedBNode = new VText("text")
+    var renderedBNode = new _vtext.VirtualText("text");
 
     var bNode = {
-        render: function (previous) {
-            assert.equal(previous, aNode)
-            return renderedBNode
+        render: function render(previous) {
+            assert.equal(previous, aNode);
+            return renderedBNode;
         },
         type: "Thunk"
-    }
+    };
 
-    var result = handlethunk_handleThunk(aNode, bNode)
+    var result = (0, _handleThunk.handleThunk)(aNode, bNode);
 
-    assert.equal(result.a, aNode.vnode)
-    assert.equal(result.b, renderedBNode)
-    assert.equal(bNode.vnode, renderedBNode)
-    assert.end()
-})
+    assert.equal(result.a, aNode.vnode);
+    assert.equal(result.b, renderedBNode);
+    assert.equal(bNode.vnode, renderedBNode);
+    assert.end();
+});
 
-ext_test("render a new thunk to a widget", function (assert) {
+(0, _tape2.default)("render a new thunk to a widget", function (assert) {
     var aNode = {
-        render: function (previous) {
-            assert.error("Render should not be called for cached thunk")
+        render: function render(previous) {
+            assert.error("Render should not be called for cached thunk");
         },
         type: "Thunk"
-    }
+    };
 
-    aNode.vnode = new VNode("div")
+    aNode.vnode = new _vnode.VirtualNode("div");
 
-    var renderedBNode = { type: "Widget" }
+    var renderedBNode = { type: "Widget" };
 
     var bNode = {
-        render: function (previous) {
-            assert.equal(previous, aNode)
-            return renderedBNode
+        render: function render(previous) {
+            assert.equal(previous, aNode);
+            return renderedBNode;
         },
         type: "Thunk"
-    }
+    };
 
-    var result = handlethunk_handleThunk(aNode, bNode)
+    var result = (0, _handleThunk.handleThunk)(aNode, bNode);
 
-    assert.equal(result.a, aNode.vnode)
-    assert.equal(result.b, renderedBNode)
-    assert.equal(bNode.vnode, renderedBNode)
-    assert.end()
-})
+    assert.equal(result.a, aNode.vnode);
+    assert.equal(result.b, renderedBNode);
+    assert.equal(bNode.vnode, renderedBNode);
+    assert.end();
+});
 
-ext_test("render current thunk to a thunk throws exception", function (assert) {
+(0, _tape2.default)("render current thunk to a thunk throws exception", function (assert) {
     var aNode = {
-        render: function (previous) {
-            assert.error("Render should not be called for cached thunk")
+        render: function render(previous) {
+            assert.error("Render should not be called for cached thunk");
         },
         type: "Thunk"
-    }
+    };
 
-    aNode.vnode = new VNode("div")
+    aNode.vnode = new _vnode.VirtualNode("div");
 
     var bNode = {
-        render: function (previous) {
-            assert.equal(previous, aNode)
-            return { type: "Thunk" }
+        render: function render(previous) {
+            assert.equal(previous, aNode);
+            return { type: "Thunk" };
         },
         type: "Thunk"
-    }
+    };
 
-    var result
+    var result;
 
     try {
-        handlethunk_handleThunk(aNode, bNode)
+        (0, _handleThunk.handleThunk)(aNode, bNode);
     } catch (e) {
-        result = e
+        result = e;
     }
 
-    assert.equal(result.message, "thunk did not return a valid node")
-    assert.end()
-})
+    assert.equal(result.message, "thunk did not return a valid node");
+    assert.end();
+});
 
-ext_test("render previous thunk to a thunk throws exception", function (assert) {
+(0, _tape2.default)("render previous thunk to a thunk throws exception", function (assert) {
     var aNode = {
-        render: function (previous) {
-            assert.equal(previous, null)
-            return { type: "Thunk" }
+        render: function render(previous) {
+            assert.equal(previous, null);
+            return { type: "Thunk" };
         },
         type: "Thunk"
-    }
+    };
 
-    var renderedBNode = new VNode("div")
+    var renderedBNode = new _vnode.VirtualNode("div");
 
     var bNode = {
-        render: function (previous) {
-            assert.equal(previous, aNode)
-            return renderedBNode
+        render: function render(previous) {
+            assert.equal(previous, aNode);
+            return renderedBNode;
         },
         type: "Thunk"
-    }
+    };
 
-    var result
+    var result;
 
     try {
-        handlethunk_handleThunk(aNode, bNode)
+        (0, _handleThunk.handleThunk)(aNode, bNode);
     } catch (e) {
-        result = e
+        result = e;
     }
 
-    assert.equal(result.message, "thunk did not return a valid node")
-    assert.end()
-})
+    assert.equal(result.message, "thunk did not return a valid node");
+    assert.end();
+});
 
-ext_test("normal nodes are returned", function (assert) {
-    var aNode = new VNode('div')
-    var bNode = new VNode('div')
+(0, _tape2.default)("normal nodes are returned", function (assert) {
+    var aNode = new _vnode.VirtualNode('div');
+    var bNode = new _vnode.VirtualNode('div');
 
-    var result = handlethunk_handleThunk(aNode, bNode)
+    var result = (0, _handleThunk.handleThunk)(aNode, bNode);
 
-    assert.equal(result.a, aNode)
-    assert.equal(result.b, bNode)
-    assert.end()
-})
-
+    assert.equal(result.a, aNode);
+    assert.equal(result.b, bNode);
+    assert.end();
+});

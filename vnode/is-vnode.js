@@ -1,7 +1,16 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.isVirtualNode = undefined;
+
+var _version = require("./version");
+
 var mod_isVirtualNode = isVirtualNode;
-import { versionjs as version } from "./version";
+
 
 function isVirtualNode(x) {
-    return x && x.type === "VirtualNode" && x.version === version;
+    return x && x.type === "VirtualNode" && x.version === _version.versionjs;
 }
-export { mod_isVirtualNode as isVirtualNode };
+exports.isVirtualNode = mod_isVirtualNode;
