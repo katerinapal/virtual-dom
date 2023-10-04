@@ -43,7 +43,8 @@
     "tap-dot": "^1.0.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0",
-    "zuul": "^2.1.1"
+    "zuul": "^2.1.1",
+    "jest": "^28.1.3"
   },
   "license": "MIT",
   "scripts": {
@@ -57,9 +58,9 @@
     "dist": "browserify --standalone virtual-dom index.js > dist/virtual-dom.js",
     "travis-test": "npm run phantom && npm run cover && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
     "release": "npm run release-patch",
-    "release-patch": "git checkout master && npm version patch && git push origin master --tags && npm publish",
-    "release-minor": "git checkout master && npm version minor && git push origin master --tags && npm publish",
-    "release-major": "git checkout master && npm version major && git push origin master --tags && npm publish"
+    "gen-test-suite-thunk": "jest --verbose ./generated-tests/createElement_handle_thunk_js.test.js --coverage=true",
+    "gen-test-suite-isWidget": "jest --verbose ./generated-tests/createElement_is_widget_js.test.js --coverage=true",
+    "gen-test-createElement": "jest --verbose ./generated-tests/createElement_*.test.js --coverage=true"
   },
   "testling": {
     "files": "test/*.js",

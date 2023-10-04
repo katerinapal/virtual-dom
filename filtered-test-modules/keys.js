@@ -5,10 +5,10 @@ var diff = require("../diff.js")
 var patch = require("../patch.js")
 var render = require("../create-element.js")
 
-var patchCount = require("./lib/patch-count.js")
-var assertEqualDom = require("./lib/assert-equal-dom.js")
-var nodesFromArray = require("./lib/nodes-from-array.js")
-var assertChildNodesFromArray = require("./lib/assert-childNodes-from-array.js")
+var patchCount = require("../test/lib/patch-count.js")
+var assertEqualDom = require("../test/lib/assert-equal-dom.js")
+var nodesFromArray = require("../test/lib/nodes-from-array.js")
+var assertChildNodesFromArray = require("../test/lib/assert-childNodes-from-array.js")
 
 var VPatch = require("../vnode/vpatch.js")
 
