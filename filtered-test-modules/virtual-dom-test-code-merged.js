@@ -1,77 +1,77 @@
 var test = require("tape")
+var VNode = require("../vnode/vnode")
+var VText = require("../vnode/vtext")
+var diff = require("../vtree/diff")
 
-var h = require("../h.js")
-var createElement = require("../create-element.js")
-var diff = require("../diff.js")
-var patch = require("../patch.js")
+var createElement = require("../create-element")
+var patch = require("../patch")
 
-test("attributes can be set", function (assert) {
-    var leftTree = h("div")
-
-    var rightTree = h("div",{
-        attributes: {
-            src: "test.jpg"
+test("indexing over thunk root", function (assert) {
+    var leftThunk = {
+        type: "Thunk",
+        render: function () {
+            return new VNode("div", {
+                className:"test"
+            }, [new VText("Left")])
         }
-    })
+    }
 
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
+    var rightThunk = {
+        type: "Thunk",
+        render: function () {
+            return new VNode("div", {
+                className: "test"
+            }, [new VText("Right")])
+        }
+    }
 
-    var newRootNode = patch(rootNode, patches)
+    var root = createElement(leftThunk)
+    var patches = diff(leftThunk, rightThunk)
+    var newRoot = patch(root, patches)
 
-    assert.equal(newRootNode.getAttribute("src"), "test.jpg")
+    assert.equal(newRoot.childNodes[0].data, "Right")
     assert.end()
 })
 
-test("individual attributes can be unset", function (assert) {
-    var leftTree = h("div", {
-        attributes: {
-            a: "1",
-            b: "2",
-            c: "3"
-        }
-    })
+test("indexing over thunk child", function (assert) {
+    var leftNode = new VNode("div", {
+        className: "parent-node"
+    }, [
+        new VNode("div"),
+        new VText("test"),
+        {
+            type: "Thunk",
+            render: function () {
+                return new VNode("div", {
+                    className:"test"
+                }, [new VText("Left")])
+            }
+        },
+        new VNode("div"),
+        new VText("test")
+    ])
 
-    var rightTree = h("div", {
-        attributes: {
-            a: "1",
-            c: "3"
-        }
-    })
+    var rightNode = new VNode("div", {
+        className: "parent-node"
+    }, [
+        new VNode("div"),
+        new VText("test"),
+        {
+            type: "Thunk",
+            render: function () {
+                return new VNode("div", {
+                    className:"test"
+                }, [new VText("Right")])
+            }
+        },
+        new VNode("div"),
+        new VText("test")
+    ])
 
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
-
-    var newRootNode = patch(rootNode, patches)
-
-    assert.equal(newRootNode, rootNode)
-    assert.equal(newRootNode.getAttribute("a"), "1")
-    assert.ok(newRootNode.getAttribute("b") == null)
-    assert.equal(newRootNode.getAttribute("c"), "3")
-    assert.end()
-})
-
-test("attributes can be completely unset", function (assert) {
-    var leftTree = h("div", {
-        attributes: {
-            a: "1",
-            b: "2",
-            c: "3"
-        }
-    })
-
-    var rightTree = h("div")
-
-    var rootNode = createElement(leftTree)
-    var patches = diff(leftTree, rightTree)
-
-
-    var newRootNode = patch(rootNode, patches)
-
-    assert.equal(newRootNode, rootNode)
-    assert.ok(newRootNode.getAttribute("a") == null)
-    assert.ok(newRootNode.getAttribute("b") == null)
-    assert.ok(newRootNode.getAttribute("c") == null)
+    var root = createElement(leftNode)
+    var patches = diff(leftNode, rightNode)
+    patch(root, patches)
+    assert.equal(root.childNodes[2].childNodes[0].data, "Right")
     assert.end()
 })
 
