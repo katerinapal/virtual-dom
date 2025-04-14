@@ -58,9 +58,9 @@
     "dist": "browserify --standalone virtual-dom index.js > dist/virtual-dom.js",
     "travis-test": "npm run phantom && npm run cover && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
     "release": "npm run release-patch",
-    "gen-test-suite-thunk": "jest --verbose ./generated-tests/createElement_handle_thunk_js.test.js --coverage=true",
+    "gen-test-suite-thunk": "jest --verbose ./generated-tests-attributes-keys/*.test.js --coverage=true",
     "gen-test-suite-isWidget": "jest --verbose ./generated-tests/createElement_is_widget_js.test.js --coverage=true",
-    "gen-test-createElement": "jest --verbose ./generated-tests/createElement_*.test.js --coverage=true"
+    "gen-test-createElement": "jest --verbose ./generated-tests-attributes-*/createElement_*.test.js --coverage=true"
   },
   "testling": {
     "files": "test/*.js",
